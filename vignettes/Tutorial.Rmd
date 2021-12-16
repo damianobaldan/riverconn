@@ -1,0 +1,391 @@
+---
+title: "riverconn vignette"
+author: "Damiano Baldan"
+date: "`r Sys.Date()`"
+output: 
+rmarkdown::pdf_vignette 
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{riverconn vignette}
+  %\usepackage[UTF-8]{inputenc}
+toc: TRUE
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+## Indices to assess riverscape connectivity
+
+### Riverscape graphs
+
+This package implements algorithms to compute commonly used indices to assess landscape fragmentation. All those indices assume a conceptualization of the landscape as a graph $L = (E,V)$, where vertices (nodes) $V$ represent single reaches, and edges (links) $E$ represent either confluences or longitudinal barriers. 
+
+For example, the graphs below represents a river with ten reaches. The graph on the right is directed, i.e. edges are defined for ordered pair of vertices. The graph on the left is undirected, as the order of vertices for the definition of edges is unimportant. Both graph have a 'tree-like' structure, since no loops exist (acyclic graphs): this structure can be used to describe a river system. In both examples, both barriers and confluences are present. The edges between nodes 1 and 2 and 3 and 2 are confluences. The edge between node 2 and 4 is a barrier. 
+
+```{r graph example, message = FALSE, collapse = TRUE, width = 60, warning = FALSE, echo = FALSE}
+library(igraph)
+g <- graph_from_literal(1-+2, 2-+4, 3-+2, 4-+6, 6-+7, 5-+6, 7-+8, 9-+5, 10-+5 )
+par(mfrow=c(1,2))
+plot(g, layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE), main="Directed graph")
+plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE), main="Undirected graph")
+
+```
+
+### Generalized riverscape connectivity index 
+
+Landscape-level connectivity can be expressed in terms of coincidence probability (Pascual-Hortal and Saura, 2006), i.e. the probability that two random points in a river network are connected. Once the coincidence probability $I_{ij}$ is defined for each couple of $i,j$ nodes in the graph, generalized connectivity indices for catchment and reach scales can be calculated.
+
+
+##### Catchment Connectvity index.
+
+Given this conceptualization, a catchment-scale connectivity index (CCI) can be calculated as:
+
+$$
+\ CCI = \sum_{i = 1}^{n} \sum_{j = 1}^{n} I_{ij} \frac{w_i w_j}{W^2}
+$$
+Where $w_i$ and $w_j$ are some node-level attributes (weights), and $W$ is the sum of sum of the nodes weights for the whole landscape.
+
+#### Reach Connectivity Index for rivers.
+A reach-scale connectivity index (RCI) can be calculated by limiting the summation to all the connections to the single node $i$.
+$$
+\ RCI_i = \sum_{j = 1}^{n} I_{ij} \frac{w_j}{W}
+$$
+#### Reach Connectivity Index for rivers.
+Nodes weights can be arbitrarily chosen. Common features used are the reach length ($l_i$), area($A_i$), or volume($V_i$). Alternatively, the habitat suitability index (HSI) can be used, defined as the ratio of length/area that is suitable for a specific organism.
+$$
+\ HSI_i = \frac{l_i,suitable}{l_i} \mbox{  ;         } HSI_i = \frac{A_i,suitable}{A_i}
+$$
+Here $l_i,suitable$ and $A_i,suitable$ are the fractions of length/area of reach $i$ that are suitable, and are usually refferred to as weighted suitable length or weighted suitable area.
+
+### Coincidence probability definition
+The coincidence probability depends on several factors: the presence of barriers between nodes $i$ and $j$ , the presence of suitable habitats in nodes $i$ and $j$, the distance between $i$ and $j$, and the quality of the habitat alongside the connection. The value of $I_{ij}$ is thus determined by several contributions. The harmonic mean of such contributions is used to follow a 'one-bad-all-bad' approach:
+
+$$
+\ I_{ij} = c_{ij}B_{ij}
+$$
+where $c_{ij}$ is a 'barrier coincidence probability' depending on the presence of barriers between nodes $i$ and $j$, $f_{ij}$ is a 'landscape coincidence probability' depending on the landscape friction in the movement between nodes $i$ and $j$, and  $B_{ij}$ is a 'dispersal coincidence probability' depends on the distance between nodes $i$ and $j$.
+
+##### Barrier coincidence probability. 
+The barriers factor depends on the presence of barriers between nodes $i$ and $j$, and can be expressed as a function of the types of barriers present in the path expressed as a sequence of passability values. The passability $p_m$ for the $m$-th barrier is defined as the probability that the reaches immediately upstream and downstream the barrier $m$ are connected.
+
+If the flow directionality is not relevant (i.e. the river graph is undirected),
+
+$$
+\ c_{ij} = \prod_{m = 1}^{k} p_m^u p_m^d
+$$
+Where the product extends over the $k$ nodes that are part of the path connecting reaches $i$ and $j$, $p_m^u$ is the upsstream passability of the $m$-th barrier and $p_m^u$ is the upstream passability of the $m$-th barrier. This definition based solely on products yields a symmetric coincidence probability (i.e. $c_{ij} = c_{ji}$).
+
+A directional version of $c_{ij}$ can be defined as:
+$$
+\ c_{ij} = \prod_{m = 1}^{k} p_m^{eq}
+$$
+$$
+p_m^{eq} = \begin{cases}
+p_m^u & \mbox{if m is crossed moving upstream going from i to j}\\
+p_m^d & \mbox{if m is crossed moving downstream going from i to j}
+\end{cases}
+$$
+If $i$ and $j$ are located in different sub-catchments, the path from i to j will be moving downstream in some sections and upstream in some other secions: this $p_m^{eq}$ definition ensures the retained passability value is consistent with the directionality of the path from $i$ to $j$ (i.e. $c_{ij} \ne c_{ji}$)
+
+
+##### Dispersal coincidence probability.
+
+The dispersal coincidence probability can be calculated as a function of the distance between reaches. An exponential dispersal kernel can be used:
+
+$$
+\ B_{ij} = PD^{d_{ij}}
+$$
+where $PD$ is in the $(0,1)$ interval (smaller values mean more restricted movement), and $d_{ij}$ is the distance between reaches $i$ and $j$. Alternatively, a threshold based probability can be used: 
+$$
+\ B_{ij} = \begin{cases}
+0 & \mbox{when } d_{ij} > d_{tr}  \\
+1 & \mbox{when } d_{ij} \le d_{tr}  
+\end{cases}
+$$
+Both definitions can be easily adapted to asymmetric dispersal by defining $PD_{d}$, $PD_{u}$, $d_{tr,u}$, and $d_{tr,d}$, and calculating $B_{ij} = B_{ij}^u B_{ij}^d$ where $B_{ij}^u$ and $B_{ij}^d$ are the index $B_{ij}$ contribution calculated for the 'downstream moving' and 'upstream moving' sections in the path from  reach $i$ to $j$.
+
+The distance $d_{ij}$ can be either the geometric distance, or any other measure of effective distance (e.g. $d_{ij} / (1-HSI)$ provides an estimate of effective distance that depends on the habitat suitability index between reaches $i$ and $j$)
+
+
+### Prioritization of barriers 
+All the defined connectivity index can be used to prioritize barriers removal with a 'leave-one-out' approach. For each barrier, the index $dCCI$ can be defined as:
+$$
+\ dCCI_{m} = 100 \frac{CCI - CCI_{m, removed}}{GCI} 
+$$
+where $GCI$ is the generalized connectivity index calculated for the original landscape with all the barriers implemented, and GCI_{m, removed} is the index recalculated when barrier $m$ is removed or its passability is changed ($dRCI_i$ can be defined similarly) .
+
+An alternative version of the index for prioritizing barriers can be calculated as the decrease in landscape connectivity after a single barrier is implemented, with a 'add-one' approach.
+
+### Time-dependent connectivity
+when barriers metadata on the year of construction and the year of implementation of mitigation measures are available, a time trajectory of GCI can be computed (e.g. segurado et al., 2013).
+
+
+## Preliminary steps
+
+```{r libraries, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+library(igraph)
+library(dplyr)
+library(tidyr)
+library(ggnetwork)
+library(viridis)
+library(riverconn)
+library(doParallel)
+```
+
+
+## Input data formatting
+
+This package relies heavily on the functionalities of the `igraph` package. The [`igraph`](https://cran.r-project.org/web/packages/igraph/index.html) package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy [construction](https://igraph.org/r/doc/aaa-igraph-package.html) of `igraph` objects based on edges and vertices lists or adjacency matrices. The book ['Statistical Analysis of Network Data with R' by Kolaczyk and Csardi (2014)](https://link.springer.com/book/10.1007%2F978-3-030-44129-6) offers a comprehensive tutorial on the possibilities offered by the 'igraph' package.
+
+Describe here why igraph is important.
+
+### Input class 'igraph' object
+
+All the functions implemented in this package use as main input an object of class `igraph`. There are different ways an object of class `igraph` can be created. A symbolic sequence of edges can be used with the function `graph_from_literal` for small, toy graphs.  
+
+```{r g definition, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+g <- graph_from_literal(1-+2, 2-+5, 3-+4, 4-+5, 6-+7, 7-+10, 8-+9, 9-+10, 
+                        5-+11, 11-+12, 10-+13, 13-+12, 12-+14, 14-+15, 15-+16)
+g
+```
+
+Note that when a graph is defined this way, edged and vertices attributes are not defined.
+```{r g inspection, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+# Edges
+E(g)
+
+# vertices
+V(g)
+
+```
+
+The graph can be converted to data frame with the function `as_data_frame`, specifying if edges or vertices are to be exported. Accordingly, the function `graph_from_data_frame` can be used to create an igraph object from a data frame.
+```{r g as sf, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+igraph::as_data_frame(g, what = "edges")
+
+igraph::as_data_frame(g, what = "vertices")
+
+```
+
+Finally, an igraph object can be exported to and generated from adjacency matrices using the functions `as_adjacency_matrix` and `graph_from_adjacency_matrix`, specifying if edges or vertices are to be exported.
+```{r g as adj, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+igraph::as_adjacency_matrix(g)
+```
+
+
+### Decorating the class 'igraph' object
+Once the structure of the network is defined, the graph can be decorated with edges and vertices attributes. Attributes can be either added directly to the graph or joined to the edges and vertices data frame. edges and vertices attributes are saved as vectors, so common, data.frame-like operations are possible.
+
+Here we add the dam information as edge attribute, including the field 'id_dam', and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.
+
+```{r g decorate, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+# Decorate edges 
+E(g)$id_dam <- c(1, NA, 2, 3, NA, 4, NA, 5, 6, NA,  NA, NA, NA, 7, NA)
+E(g)$type <- ifelse(is.na(E(g)$id_dam), "joint", "dam")
+E(g)
+
+# Decorate vertices
+V(g)$length <- c(1, 1, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 4, 5, 6, 9)
+V(g)$HSI <- c(0.2, 0.1, 0.3, 0.4, 0.5, 0.5, 0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8)
+V(g)$Id <- V(g)$name
+V(g)
+
+```
+
+
+### Visualizing the 'igraph' object
+The `ggnetwork` library can be used to plot a igraph object with `tidyverse`-friendly functions. The function `ggnetwork` is used to fortify `igraph` objects with a specified layout. Here the tree layout is used, but for real river networks the coordinates of the reaches centroids can be used.
+```{r plot igraph, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+gg0 <- ggnetwork(g, layout =  layout_as_tree(g %>% as.undirected, root = 16), scale = FALSE)
+
+ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_nodes(alpha = 0.3) +
+  geom_edges(alpha = 0.5, 
+             arrow = arrow(length = unit(10, "pt"), type = "closed"), 
+             aes(color = type)) + 
+  scale_color_viridis(discrete = TRUE)+
+  geom_nodetext(aes(label = name), fontface = "bold") +
+  theme_blank()
+
+```
+
+This function can be used to display all the graph attributes.
+```{r plot igraph 2, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_edges(alpha = 0.5, 
+             arrow = arrow(length = unit(10, "pt"), type = "open")) +
+  geom_nodes(aes(size = length, color = HSI)) +
+  scale_color_viridis()+
+  theme_blank()
+```
+
+
+### Assigning network directionality
+The `riverconn` package implements the function `set_graph_directionality` that allows to assign the directionality of the graph once an outlet is defined.
+```{r direction, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+par(mfrow=c(1,3))
+g1 <- set_graph_directionality(g, field_name = "Id", outlet_name = "16")
+g2 <- set_graph_directionality(g, field_name = "Id", outlet_name = "5")
+plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE), main="Undirected graph")
+plot(g1, layout = layout_as_tree(as.undirected(g1), root = 16, flip.y = FALSE), main="Outlet = 16")
+plot(g2, layout = layout_as_tree(as.undirected(g2), root = 5, flip.y = FALSE), main="Outlet = 5")
+```
+
+
+## Indices calculation
+
+The function `index_calcualtion` is used to calculate all the nuances of the CCI and RCI
+
+Before calculation, the information on the dams passability are needed.
+```{r pass def, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+# Check edged and nodes attributes
+g_v_df <- igraph::as_data_frame(g, what = "vertices")
+g_v_df
+g_e_df <- igraph::as_data_frame(g, what = "edges") %>%
+  mutate(pass_u = ifelse(!is.na(id_dam),0.1,NA),
+         pass_d = ifelse(!is.na(id_dam),0.7,NA))
+g_e_df
+
+# Recreate graph
+g <- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
+g 
+```
+
+Index with default settings.
+```{r index 1, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+index_calculation(g, param = 0.9)
+
+```
+
+Index with default settings, only $c_{ij}$ or $B_{ij}$ contributions
+```{r index 2, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+index_calculation(g, B_ij_flag = FALSE)
+index_calculation(g, param = 0.9, c_ij_flag = FALSE)
+
+```
+
+Index with default settings, only $B_{ij}$ contributions with threshold on the distance
+```{r index 3, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = "asymmetric", 
+                  disp_type = "threshold", param_u = 0, param_d = 5)
+index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = "asymmetric", 
+                  disp_type = "threshold", param_u = 5, param_d = 10)
+index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = "symmetric", 
+                  disp_type = "threshold", param = 10)
+
+```
+
+Index for reach, inbound connections used, only $B_{ij}$ contributions with threshold on the distance
+```{r index 4, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+index_calculation(g, c_ij_flag = FALSE,
+                  index_type = "reach", index_mode = "to",
+                  dir_distance_type = "asymmetric", 
+                  disp_type = "threshold", param_u = 0, param_d = 5)
+index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = "asymmetric",
+                  index_type = "reach", index_mode = "to",
+                  disp_type = "threshold", param_u = 5, param_d = 10)
+index_calculation(g, c_ij_flag = FALSE,
+                  index_type = "reach", index_mode = "to",
+                  dir_distance_type = "symmetric", 
+                  disp_type = "threshold", param = 10)
+
+```
+
+## Prioritization calculation and visualization
+
+The function `index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the 'dams_metadata' object. Parallel calculations can be activated.
+
+```{r idams metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+dams_metadata <- data.frame("id_dam" =  c(1, 2, 3, 4, 5, 6, 7),
+                            "pass_u_updated" = c(1, 1, 1, 1, 1, 1, 1),
+                            "pass_d_updated" = c(1, 1, 1, 1, 1, 1, 1))
+dams_metadata
+
+d_index_calculation(g,
+                    dams_metadata,
+                    c_ij_flag = TRUE,
+                    B_ij_flag = TRUE,
+                     parallel = FALSE, ncores = 3,
+                     param_u = 10,  param_d = 10,
+                     index_type = "full",
+                     dir_distance_type = "asymmetric",
+                     disp_type = "threshold")
+
+
+```
+
+
+Calculated index can be joined with the original graph and plotted to check spatial patterns.
+```{r plot join, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+
+d_index <- d_index_calculation (g,
+                     dams_metadata,
+                     parallel = FALSE, ncores = 3,
+                     param_u = 10,  param_d = 10,
+                     index_type = "full",
+                     B_ij_flag = FALSE)
+
+# Check edged and nodes attributes
+g_v_df <- igraph::as_data_frame(g, what = "vertices")
+g_v_df
+g_e_df <- igraph::as_data_frame(g, what = "edges") %>%
+  left_join(d_index, by = "id_dam")
+g_e_df
+
+# Recreate graph
+g <- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
+g 
+
+# Fortify and plot graph
+gg0 <- ggnetwork(g, layout =  layout_as_tree(g %>% as.undirected, root = 16), scale = FALSE)
+ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_edges(alpha = 0.5, size = 3,
+             arrow = arrow(length = unit(10, "pt"), type = "open"), 
+             aes(color = d_index)) +
+  geom_nodes() +
+  scale_color_viridis()+
+  theme_blank()
+
+
+```
+
+
+## Temporal developement calculation and visualization
+
+TO FILL
+
+
+
+
+
+
+
+## Relevant literature
+
+Cote, D., Kehler, D. G., Bourne, C., & Wiersma, Y. F. (2009). A new measure of longitudinal connectivity for stream networks. Landscape Ecology, 24(1), 101-113.
+
+Kolaczyk, E. D., & Csárdi, G. (2014). Statistical analysis of network data with R (Vol. 65). New York: Springer.
+
+Jumani, S., Deitch, M. J., Kaplan, D., Anderson, E. P., Krishnaswamy, J., Lecours, V., & Whiles, M. R. (2020). River fragmentation and flow alteration metrics: a review of methods and directions for future research. Environmental Research Letters.
+
+Branco, P., Segurado, P., Santos, J. M., & Ferreira, M. T. (2014). Prioritizing barrier removal to improve functional connectivity of rivers. Journal of Applied Ecology, 51(5), 1197-1206.
+
+Pascual-Hortal, L., & Saura, S. (2006). Comparison and development of new graph-based landscape connectivity indices: towards the priorization of habitat patches and corridors for conservation. Landscape ecology, 21(7), 959-967.
+
+Rodeles, A. A., Galicia, D., & Miranda, R. (2021). A simple method to assess the fragmentation of freshwater fish meta-populations: Implications for river management and conservation. Ecological Indicators, 125, 107557.
+
+Segurado, P., Branco, P., & Ferreira, M. T. (2013). Prioritizing restoration of structural connectivity in rivers: a graph based approach. Landscape Ecology, 28(7), 1231-1238.
+
+
+
+
+
+
