@@ -17,17 +17,21 @@
 set_c_directionality <- function(graph, dir_fragmentation_type = "symmetric", pass_confluence = 1, pass_u = "pass_u", pass_d = "pass_d"){
 
   # error messages
-  if( !(dir_fragmentation_type %in% c("symmetric", "asymmetric")) ) stop("'dir_fragmentation_type' must me either 'symmetric' or 'asymmetric'")
-  if( !(pass_u %in% igraph::edge_attr_names(graph) )) stop("edge attributes in river_graph must include the argument defined in 'pass_u' (upstream passability)")
-  if( !(pass_d %in% igraph::edge_attr_names(graph)) ) stop("edge attributes in river_graph must include the argument defined in'pass_d' (downstream passability)")
-  if( pass_confluence < 0 | pass_confluence > 1 ) stop("'pass_confluence' must be between 0 and 1")
+  if( !(dir_fragmentation_type %in% c("symmetric", "asymmetric")) ) stop(
+    "'dir_fragmentation_type' must me either 'symmetric' or 'asymmetric'")
+  if( !(pass_u %in% igraph::edge_attr_names(graph) )) stop(
+    "edge attributes in river_graph must include the argument defined in 'pass_u' (upstream passability)")
+  if( !(pass_d %in% igraph::edge_attr_names(graph)) ) stop(
+    "edge attributes in river_graph must include the argument defined in'pass_d' (downstream passability)")
+  if( pass_confluence < 0 | pass_confluence > 1 ) stop(
+    "'pass_confluence' must be between 0 and 1")
   if( TRUE %in% (stats::na.omit(igraph::get.edge.attribute(graph, pass_u) ) < 0) |
-      TRUE %in%  (stats::na.omit(igraph::get.edge.attribute(graph, pass_u) ) > 1) ) stop("'pass_u' must be between 0 and 1")
+      TRUE %in%  (stats::na.omit(igraph::get.edge.attribute(graph, pass_u) ) > 1) ) stop(
+        "'pass_u' must be between 0 and 1")
   if( TRUE %in% (stats::na.omit(igraph::get.edge.attribute(graph, pass_d) ) < 0) |
-      TRUE %in% (stats::na.omit(igraph::get.edge.attribute(graph, pass_d) ) > 1) ) stop("'pass_d' must be between 0 and 1")
+      TRUE %in% (stats::na.omit(igraph::get.edge.attribute(graph, pass_d) ) > 1) ) stop(
+        "'pass_d' must be between 0 and 1")
 
-
-  TRUE %in% (stats::na.omit(igraph::get.edge.attribute(graph, pass_u) ) < 0)
 
   # Rename the passabilities based on user names
   # Set the names of the vertices. By default keep the name argument.
@@ -56,18 +60,22 @@ set_c_directionality <- function(graph, dir_fragmentation_type = "symmetric", pa
       # "downstream" graph: graph with directions going downstream, uses pass_d as attribute
       igraph::as_data_frame(graph, what = "edges") %>%
         dplyr::select(-pass_u) %>%
-        rename(pass_eq = .data$pass_d),
+        dplyr::rename(pass_eq = .data$pass_d),
       # "upstream" graph: graph with directions going upstream, uses pass_u as attribute
       igraph::as_data_frame(graph, what = "edges") %>%
-        rename(from = .data$to, to = .data$from) %>%
+        dplyr::rename(from = .data$to, to = .data$from) %>%
         dplyr::select(-.data$pass_d) %>%
-        rename(pass_eq = .data$pass_u)
+        dplyr::rename(pass_eq = .data$pass_u)
     )
+
+    # Vertices dataframe
+    graph_df_bidir_v <- igraph::as_data_frame(graph, what = "vertices") %>%
+      dplyr::relocate(.data$name)
 
     # Create the bidirectional fraph
     graph_output <- igraph::graph_from_data_frame(
       d = graph_df_bidir,
-      vertices = igraph::as_data_frame(graph, what = "vertices") )
+      vertices = graph_df_bidir_v )
   }
 
 

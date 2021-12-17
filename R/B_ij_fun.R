@@ -10,9 +10,9 @@
 #' @param param_d the downstream dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See details.
 #' @param param the dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "symmetric"}. See details.
 #'
-#' @return a matrix in data.frame format whose columns are 'from', 'to', and 'B_ij'.
+#' @return a matrix in data.frame format whose most relevant columns are 'from', 'to', and 'B_ij'.
 #' For diagnosing purposes, also the distances are reported in the columns
-#' 'n' (undirected idstance), 'u'(upstream distance), and 'd'(downstream distance).
+#' 'n' (undirected distance), 'u'(upstream distance), and 'd'(downstream distance).
 #' @export
 #'
 #' @details

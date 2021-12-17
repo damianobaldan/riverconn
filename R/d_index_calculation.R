@@ -182,7 +182,7 @@ d_index_calculation <- function(graph,
   # Different outputs for reach and full
   if (index_type == "reach") {
     out_index <- out_index %>%
-      left_join(out_index_bl, by = "name") %>%
+      left_join(out_index_bl, by = nodes_id) %>%
       mutate(d_index = (.data$index - .data$index_bl) / .data$index_bl * 100) }
 
   if (index_type == "full") {

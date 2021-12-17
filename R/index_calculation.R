@@ -88,7 +88,9 @@ index_calculation <- function(graph, weight = "length", nodes_id = "name", index
 
 
   # What happens if B_ij_flag is false? suppress further warnings
-  if(B_ij_flag == FALSE) {param_u = param_d = param <- 0.5}
+  if(B_ij_flag == FALSE) {param_u = param_d = param <- NA}
+  if(dir_distance_type == "symmetric") {param_u = param_d <- NA}
+  if(dir_distance_type == "asymmetric") {param  <- NA}
 
   # Set the names of the vertices. By default keep the name argument.
   igraph::V(graph)$name <- igraph::vertex_attr(graph, nodes_id)
@@ -116,13 +118,17 @@ index_calculation <- function(graph, weight = "length", nodes_id = "name", index
 
   # 3. Aggregate results
   if(c_ij_flag == TRUE & B_ij_flag == TRUE) {
-    agg_mat <- c_ij_mat %>% dplyr::left_join(B_ij_mat, by = c("from", "to")) %>% dplyr::mutate(P = .data$c_ij * .data$B_ij) }
+    agg_mat <- c_ij_mat %>%
+      dplyr::left_join(B_ij_mat, by = c("from", "to")) %>%
+      dplyr::mutate(P = .data$c_ij * .data$B_ij) }
 
   if(c_ij_flag == TRUE & B_ij_flag == FALSE){
-    agg_mat <- c_ij_mat %>% dplyr::mutate(P = .data$c_ij ) }
+    agg_mat <- c_ij_mat %>%
+      dplyr::mutate(P = .data$c_ij ) }
 
   if(c_ij_flag == FALSE & B_ij_flag == TRUE) {
-    agg_mat <- B_ij_mat %>% dplyr::mutate(P = .data$B_ij) }
+    agg_mat <- B_ij_mat %>%
+      dplyr::mutate(P = .data$B_ij) }
 
   # 4. Get the weight information
 
@@ -143,7 +149,8 @@ index_calculation <- function(graph, weight = "length", nodes_id = "name", index
   # If the full index is to be calculated
   if (index_type == "full") {
 
-    agg_mat <- agg_mat %>% mutate(prod = .data$P * .data$weight_from * .data$weight_to)
+    agg_mat <- agg_mat %>%
+      dplyr::mutate(prod = .data$P * .data$weight_from * .data$weight_to)
     index_num <- sum( agg_mat$prod )
     index_den <- ( sum( g_v_df$weight_node ) )^2
     index = index_num / index_den
@@ -162,7 +169,8 @@ index_calculation <- function(graph, weight = "length", nodes_id = "name", index
       dplyr::mutate(prod = .data$weight_node * .data$P) %>%
       dplyr::group_by(.data$name) %>%
       dplyr::summarize(num = sum(.data$prod)) %>%
-      dplyr::mutate(den = sum( g_v_df$weight_node ), index = .data$num/.data$den )
+      dplyr::mutate(den = sum( g_v_df$weight_node ), index = .data$num/.data$den ) %>%
+      dplyr::rename_with(~nodes_id, contains("name") )
   }
 
   # Return value or df with output

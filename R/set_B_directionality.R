@@ -55,10 +55,14 @@ set_B_directionality <- function(graph, dir_distance_type = "symmetric", field_B
         mutate(flag_dir = "u")
     )
 
+    # Vertices dataframe
+    graph_df_bidir_v <- igraph::as_data_frame(graph, what = "vertices") %>%
+      dplyr::relocate(.data$name)
+
     # Create the bidirectional fraph
     graph_output <- igraph::graph_from_data_frame(
       d = graph_df_bidir,
-      vertices = igraph::as_data_frame(graph, what = "vertices") )
+      vertices = graph_df_bidir_v )
   }
 
 
