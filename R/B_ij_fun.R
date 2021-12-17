@@ -58,7 +58,7 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
   # Errors for symmetric distance
   if( dir_distance_type == "symmetric" ) {
     if( missing(param) )  stop(
-      "'param' must be specified when dir_distance_type = 'asymmetric'")
+      "'param' must be specified when dir_distance_type = 'symmetric'")
     if( param < 0  ) stop(
       "'param_u', 'param_d', and 'param' must be > 0")
     if(disp_type == "exponential") {

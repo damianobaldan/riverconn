@@ -13,22 +13,22 @@
 #' @param c_ij_flag include in the calculation the barriers.
 #' @param B_ij_flag include in the calculation the dispersal/movement among reaches.
 #' @param dir_fragmentation_type how directionality in c_ij calculations is dealt with:
-#' \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details.
+#' \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.
 #' @param pass_confluence a value in the range [0,1] that defines the passability of confluences (default is 1).
 #' @param pass_u the 'graph' edge attribute to be used as upstream passability. Default is "pass_u".
 #' @param pass_d the 'graph' edge attribute to be used as downstream passability. Default is "pass_d".
 #' @param field_B the 'graph' vertex attribute to be used to calculate the distance. Should not be also an edge attribute.
 #' Default is \code{"length"}.
 #' @param dir_distance_type how directionality in B_ij calculations is dealt with:
-#' \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details.
+#' \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.
 #' @param disp_type the formula used to calculate the probabilities in the B_ij matrix.
 #' Use \code{"exponential"} for exponential decay, or \code{"threshold"} for setting a distance threshold.
 #' @param param_u  upstream dispersal parameter. Must be a numeric value.
-#' Only used if \code{dir_distance_type = "asymmetric"}. See below for details.
+#' Only used if \code{dir_distance_type = "asymmetric"}. See details below.
 #' @param param_d  downstream dispersal parameter.
 #' Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See below for details.
 #' @param param  dispersal parameter. Must be a numeric value.
-#' Only used if \code{dir_distance_type = "symmetric"}. See below for details.
+#' Only used if \code{dir_distance_type = "symmetric"}. See details below.
 #'
 #' @return If \code{index_type = "full"}, returns a numeric value with the index value (column 'index').
 #' if \code{index_type = "reach"}, returns a data frame with the index value (column 'index') for each reach
