@@ -67,7 +67,7 @@ index_calculation <- function(graph, weight = "length", nodes_id = "name", index
   if( index_type == "reach" & !(index_mode %in% c("from", "to")) ) stop(
     "'index_mode' must me either 'from' or 'to'")
   if( index_type == "reach" & missing(index_mode) ) stop(
-    "'index_mode' must me either defined when index_type = 'reach'")
+    "'index_mode' must me defined when index_type = 'reach'")
   if( !(weight %in% igraph::vertex_attr_names(graph)) ) stop(
     "'weight' argument must be a valid vertex attribute in 'graph'")
   if( !(nodes_id %in% igraph::vertex_attr_names(graph)) ) stop(
@@ -81,10 +81,15 @@ index_calculation <- function(graph, weight = "length", nodes_id = "name", index
   if( (dir_fragmentation_type == "asymmetric" |  dir_distance_type == "asymmetric") & igraph::is_directed(graph) == FALSE ) stop(
     "'graph' must be directed when 'dir_fragmentation_type' or 'dir_distance_type' are set to 'asymmetric'")
   if( weight %in% igraph::edge_attr_names(graph) ) stop(
-    "'weight' argument must not be a edge attribute in 'graph'")
+    "'weight' argument must be a edge attribute in 'graph'")
   if( field_B %in% igraph::edge_attr_names(graph) ) stop(
-    "'field_B' argument must not be a edge attribute in 'graph'")
+    "'field_B' argument must be a edge attribute in 'graph'")
 
+  if(c_ij_flag == TRUE){
+    if( !( pass_u %in% igraph::edge_attr_names(graph)) ) stop(
+      "'pass_u' argument must be a edge attribute in 'graph'")
+    if( !(pass_d %in% igraph::edge_attr_names(graph)) ) stop(
+      "'pass_d' argument must be a edge attribute in 'graph'")  }
 
 
   # What happens if B_ij_flag is false? suppress further warnings

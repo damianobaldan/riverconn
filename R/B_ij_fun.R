@@ -40,9 +40,9 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
 
   # Errors for asymmetric distance
   if( dir_distance_type == "asymmetric"){
-    if( missing(param_u) ) stop(
+    if( missing(param_u) | is.na(param_u) ) stop(
       "'param_u' must be defined when dir_distance_type = 'asymmetric'")
-    if( missing(param_d) ) stop(
+    if( missing(param_d) | is.na(param_d) ) stop(
       "'param_d' must be defined when dir_distance_type = 'asymmetric'")
     if( param_u < 0 | param_d < 0 ) stop(
       "'param_u', 'param_d', and 'param' must be > 0")
@@ -57,7 +57,7 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
 
   # Errors for symmetric distance
   if( dir_distance_type == "symmetric" ) {
-    if( missing(param) )  stop(
+    if( missing(param) | is.na(param) )  stop(
       "'param' must be specified when dir_distance_type = 'symmetric'")
     if( param < 0  ) stop(
       "'param_u', 'param_d', and 'param' must be > 0")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/d_index_calculation.R
 \name{d_index_calculation}
 \alias{d_index_calculation}
-\title{Calculate index improvement for scenarios of barriers removal.}
+\title{Calculate index improvement for scenarios of barriers removal}
 \usage{
 d_index_calculation(
   graph,
@@ -13,12 +13,7 @@ d_index_calculation(
   mode = "leave_one_out",
   parallel = TRUE,
   ncores,
-  index_type = "full",
-  index_mode = "from",
-  ...,
-  param_u,
-  param_d,
-  param
+  ...
 )
 }
 \arguments{
@@ -41,45 +36,33 @@ and two columns with the corresponding upstream and downstream improved passabil
 
 \item{ncores}{define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}}
 
-\item{index_type}{indicates if the index should be calculated for the whole catchment (\code{index_type = "full"}),
-or for each reach (\code{index_type = "reach"})}
-
-\item{index_mode}{indicates if reach index should be calculated based on inbound links ("to") or outbound links ("from").
-Only active when \code{index_type = "reach"}.}
-
 \item{...}{other arguments passed to the function index_calculation}
-
-\item{param_u}{upstream dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See details.}
-
-\item{param_d}{downstream dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See details.}
-
-\item{param}{dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "symmetric"}. See details.}
 }
 \value{
 returns a data.frame containing the percent improvement of the index for
 each barrier present in the 'dams_metadata' variable.
-If \code{index_type = "full"}, the data.frame is organized by 'id_dam'.
-If \code{index_type = "reach"}, the data.frame is organized by 'id_dam' and 'name'.
+If \code{index_type = "full"} (see index_calculation arguments), the data.frame is organized by 'id_dam'.
+If \code{index_type = "reach"} (see index_calculation arguments), the data.frame is organized by 'id_dam' and 'name'.
 In both cases, both numerator and denominator used in the index calculations are reported in the columns 'num' and 'den'.
 The column 'd_index' contains the relative index improvement when each barrier is removed.
 }
 \description{
-Calculate index improvement for scenarios of barriers removal.
+Calculate index improvement for scenarios of barriers removal
 }
 \details{
-Setting \code{c_ij_flag = FALSE} removes from the calculations the effect of barriers, i.e. the c_{ij} contribution
+Setting \code{c_ij_flag = FALSE} (see index_calculation arguments) removes from the calculations the effect of barriers, i.e. the c_{ij} contribution
 is not used in the calculation of the index.
-Setting \code{B_ij_flag = FALSE} removes from the calculations the effect of movement/dispersal,
+Setting \code{B_ij_flag = FALSE} (see index_calculation arguments) removes from the calculations the effect of movement/dispersal,
 i.e. the B_{ij} contribution is not used in the calculation of the index.
 Note that it is not possible to set both \code{c_ij_flag = FALSE} and \code{B_ij_flag = FALSE}.
 
-The setting \code{dir_distance_type = "symmetric"} is to be used when the directionality of the river network is not relevant.
+The setting \code{dir_distance_type = "symmetric"} (see index_calculation arguments) is to be used when the directionality of the river network is not relevant.
 The distance between reaches midpoints is calculated for each couple of reaches.
-The setting \code{dir_distance_type = "asymmetric"} is to be used when the directionality is relevant.
+The setting \code{dir_distance_type = "asymmetric"} (see index_calculation arguments) is to be used when the directionality is relevant.
 The distance between reaches midpoints is calculated for each couple of reaches and splitted
 between 'upstream travelled' distance and 'downstream travelled' distance
 
 The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance and probability.
-When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
-When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
+When \code{disp_type ="exponential"} (see index_calculation arguments), those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
+When \code{disp_type ="threshold"} (see index_calculation arguments), those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 }

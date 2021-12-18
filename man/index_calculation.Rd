@@ -45,7 +45,7 @@ Only active when \code{index_type = "reach"}.}
 \item{B_ij_flag}{include in the calculation the dispersal/movement among reaches.}
 
 \item{dir_fragmentation_type}{how directionality in c_ij calculations is dealt with:
-\code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details.}
+\code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.}
 
 \item{pass_confluence}{a value in the range [0,1] that defines the passability of confluences (default is 1).}
 
@@ -57,19 +57,19 @@ Only active when \code{index_type = "reach"}.}
 Default is \code{"length"}.}
 
 \item{dir_distance_type}{how directionality in B_ij calculations is dealt with:
-\code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details.}
+\code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.}
 
 \item{disp_type}{the formula used to calculate the probabilities in the B_ij matrix.
 Use \code{"exponential"} for exponential decay, or \code{"threshold"} for setting a distance threshold.}
 
 \item{param_u}{upstream dispersal parameter. Must be a numeric value.
-Only used if \code{dir_distance_type = "asymmetric"}. See below for details.}
+Only used if \code{dir_distance_type = "asymmetric"}. See details below.}
 
 \item{param_d}{downstream dispersal parameter.
 Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See below for details.}
 
 \item{param}{dispersal parameter. Must be a numeric value.
-Only used if \code{dir_distance_type = "symmetric"}. See below for details.}
+Only used if \code{dir_distance_type = "symmetric"}. See details below.}
 }
 \value{
 If \code{index_type = "full"}, returns a numeric value with the index value (column 'index').
