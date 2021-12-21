@@ -53,13 +53,20 @@ t_index_calculation <- function(graph,
 
   # Error messages if something wrong happens
   if(missing(graph)) stop("'graph' must be defined")
-  if(missing(dams_metadata) | missing(weights_metadata)) stop("either 'dams_metadata' or 'weights_metadata' must be defined")
-  if( !(id_dam %in% colnames(dams_metadata)) ) stop("'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(year %in% colnames(dams_metadata)) ) stop("'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(pass_u %in% colnames(dams_metadata)) ) stop("'pass_u_updated' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(pass_d %in% colnames(dams_metadata)) ) stop("'pass_d_updated' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(weight %in% colnames(weights_metadata)) ) stop("'weight' must be present among the column names of the input data frame 'weights_metadata'")
-  if( !(nodes_id %in% colnames(weights_metadata)) ) stop("'nodes_id' must be present among the column names of the input data frame 'weights_metadata'")
+  if(missing(dams_metadata) | missing(weights_metadata)) stop(
+    "either 'dams_metadata' or 'weights_metadata' must be defined")
+  if( !(id_dam %in% colnames(dams_metadata)) ) stop(
+    "'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
+  if( !(year %in% colnames(dams_metadata)) ) stop(
+    "'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
+  if( !(pass_u %in% colnames(dams_metadata)) ) stop(
+    "'pass_u_updated' must be present among the column names of the input data frame 'dams_metadata'")
+  if( !(pass_d %in% colnames(dams_metadata)) ) stop(
+    "'pass_d_updated' must be present among the column names of the input data frame 'dams_metadata'")
+  if( !(weight %in% colnames(weights_metadata)) ) stop(
+    "'weight' must be present among the column names of the input data frame 'weights_metadata'")
+  if( !(nodes_id %in% colnames(weights_metadata)) ) stop(
+    "'nodes_id' must be present among the column names of the input data frame 'weights_metadata'")
 
   # Rename graph vertices, dams metadata, and weight metadata
   igraph::E(graph)$id_dam <- igraph::get.edge.attribute(graph, id_dam)

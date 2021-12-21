@@ -32,9 +32,12 @@ t_passability_sequencer <- function(passability_information, seq_ops) {
     sub(pattern ='_d',  replacement = "") %>%
     sub(pattern ='_u',  replacement = "")
 
-  if(sum(!(seq_ops %in% check_string)) > 1 ) stop("'seq_ops' must be mirrored in the 'passability_information' fields")
-  if(missing(passability_information)) stop("'passability_information' must be defined")
-  if(missing(seq_ops)) stop("'seq_ops' must be defined")
+  if(sum(!(seq_ops %in% check_string)) > 1 ) stop(
+    "'seq_ops' must be mirrored in the 'passability_information' fields")
+  if(missing(passability_information)) stop(
+    "'passability_information' must be defined")
+  if(missing(seq_ops)) stop(
+    "'seq_ops' must be defined")
 
 
   # Create vector with time steps for metadata creation

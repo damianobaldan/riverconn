@@ -16,8 +16,10 @@
 t_weights_sequencer <- function(weights_information, weight = "length", nodes_id = "name"){
 
   # Error messages
-  if(missing(weights_information)) stop("'weights_information' must be defined")
-  if(!(nodes_id %in% colnames(weights_information))) stop("the value of 'nodes_id' must be present as a column in 'weights_information'")
+  if(missing(weights_information)) stop(
+    "'weights_information' must be defined")
+  if(!(nodes_id %in% colnames(weights_information))) stop(
+    "the value of 'nodes_id' must be present as a column in 'weights_information'")
 
   # rename data frame
   weights_information <- weights_information %>% dplyr::rename_with( ~"name", contains(nodes_id))
