@@ -59,32 +59,36 @@
 #' @import parallel
 #' @importFrom rlang .data
 #'
+#' @keywords internal
+#'
 inner_d_index_calculation <- function(graph,
                                       dams_metadata,
-                                      id_dam = "id_dam",
-                                      pass_u_updated = "pass_u_updated",
-                                      pass_d_updated = "pass_d_updated",
+                                      id_dam ,
+                                      pass_u_updated ,
+                                      pass_d_updated ,
                                       mode = "leave_one_out", # "add_one", # sequence
-                                      parallel = TRUE,
+                                      parallel ,
                                       ncores,
-                                      weight = "length",
-                                      nodes_id = "name",
-                                      index_type = "full",
-                                      index_mode = "to",
-                                      c_ij_flag = TRUE,
-                                      B_ij_flag = TRUE,
-                                      dir_fragmentation_type = "symmetric",
-                                      pass_confluence = 1,
-                                      pass_u = "pass_u",
-                                      pass_d = "pass_d",
-                                      field_B = "length",
-                                      dir_distance_type = "symmetric",
-                                      disp_type = "exponential",
-                                      param_u = NA,
-                                      param_d = NA,
-                                      param = NA){
+                                      weight ,
+                                      nodes_id ,
+                                      index_type ,
+                                      index_mode ,
+                                      c_ij_flag ,
+                                      B_ij_flag ,
+                                      dir_fragmentation_type ,
+                                      pass_confluence ,
+                                      pass_u ,
+                                      pass_d ,
+                                      field_B ,
+                                      dir_distance_type ,
+                                      disp_type ,
+                                      param_u ,
+                                      param_d,
+                                      param ){
 
   # Error messages if something wrong happens
+  if( !(class(dams_metadata) ==  "data.frame")) stop(
+    "'dams_metadata' must be a data.frame")
   if( !(id_dam %in% colnames(dams_metadata)) ) stop(
     "'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
   if( !(pass_u_updated %in% colnames(dams_metadata)) ) stop(

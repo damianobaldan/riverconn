@@ -6,21 +6,24 @@
 \usage{
 d_index_calculation(
   graph,
+  ...,
   dams_metadata,
   id_dam = "id_dam",
   pass_u_updated = "pass_u_updated",
   pass_d_updated = "pass_d_updated",
   mode = "leave_one_out",
   parallel = TRUE,
-  ncores,
-  ...
+  ncores
 )
 }
 \arguments{
-\item{graph}{an object of class igraph. Can be both directed or undirected.}
+\item{graph}{an object of class 'igraph.' Can be both directed or undirected.}
+
+\item{...}{other arguments passed to the function index_calculation}
 
 \item{dams_metadata}{data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
-and two columns with the corresponding upstream and downstream improved passabilities (see pass_u_updated and pass_d_updated).}
+and two columns with the corresponding upstream and downstream improved passabilities
+(see 'pass_u_updated' and 'pass_d_updated' parameters).}
 
 \item{id_dam}{graph edges numeric attribute used to label dams. Default is \code{"id_dam"}.}
 
@@ -35,8 +38,6 @@ and two columns with the corresponding upstream and downstream improved passabil
 \item{parallel}{logical value to flag if parallel option is to be used.}
 
 \item{ncores}{define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}}
-
-\item{...}{other arguments passed to the function index_calculation}
 }
 \value{
 returns a data.frame containing the percent improvement of the index for

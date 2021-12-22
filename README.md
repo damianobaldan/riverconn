@@ -7,6 +7,7 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 # Changelog
 0.2.1 to 0.2.2  
 * minor changes to functions documentation and error messages
+* fixed bug on d_index_calculation (... argument and partial match issue)
 
 0.1.9 to 0.2.1  
 * changed architecture of d_index_calculation to simplify debug  

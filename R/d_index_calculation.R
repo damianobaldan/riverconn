@@ -1,9 +1,11 @@
 #' Calculate index improvement for scenarios of barriers removal
 #'
-#' @param graph an object of class igraph. Can be both directed or undirected.
+#' @param graph an object of class 'igraph.' Can be both directed or undirected.
+#' @param ... other arguments passed to the function index_calculation
 #' @param id_dam graph edges numeric attribute used to label dams. Default is \code{"id_dam"}.
 #' @param dams_metadata data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
-#' and two columns with the corresponding upstream and downstream improved passabilities (see pass_u_updated and pass_d_updated).
+#' and two columns with the corresponding upstream and downstream improved passabilities
+#' (see 'pass_u_updated' and 'pass_d_updated' parameters).
 #' @param pass_u_updated field in dam_metadata where updated value for upstream passability is stored
 #' (recommended values higher than the original passability).
 #' @param pass_d_updated field in dam_metadata where updated value for downstream passability is stored
@@ -11,7 +13,6 @@
 #' @param mode currentlym only \code{"leave_one_out"} is implemented.
 #' @param parallel logical value to flag if parallel option is to be used.
 #' @param ncores define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}
-#' @param ... other arguments passed to the function index_calculation
 #'
 #' @return returns a data.frame containing the percent improvement of the index for
 #' each barrier present in the 'dams_metadata' variable.
@@ -46,14 +47,55 @@
 #' @importFrom rlang .data
 #'
 d_index_calculation <- function(graph,
+                                ...,
                                 dams_metadata,
                                 id_dam = "id_dam",
                                 pass_u_updated = "pass_u_updated",
                                 pass_d_updated = "pass_d_updated",
                                 mode = "leave_one_out", # "add_one", # sequence
                                 parallel = TRUE,
-                                ncores,
-                                ...){
+                                ncores){
+
+
+  # Get elements from the ... list and if missing assign default values
+  weight <- if (is.null(list(...)$weight))
+    "length" else list(...)$weight
+  nodes_id <- if (is.null(list(...)$nodes_id))
+    "name" else list(...)$nodes_id
+
+  index_type <- if (is.null(list(...)$index_type))
+    "full" else list(...)$index_type
+  index_mode <- if (is.null(list(...)$index_mode))
+    "to" else list(...)$index_mode
+
+  c_ij_flag <- if (is.null(list(...)$c_ij_flag))
+    TRUE else list(...)$c_ij_flag
+  B_ij_flag <- if (is.null(list(...)$B_ij_flag))
+    TRUE else list(...)$B_ij_flag
+  dir_fragmentation_type <- if (is.null(list(...)$dir_fragmentation_type))
+    "symmetric" else list(...)$dir_fragmentation_type
+
+  pass_confluence <- if (is.null(list(...)$pass_confluence))
+    1 else list(...)$pass_confluence
+
+  pass_u <- if (is.null(list(...)$pass_u))
+    "pass_u" else list(...)$pass_u
+  pass_d <- if (is.null(list(...)$pass_d))
+    "pass_d" else list(...)$pass_d
+
+  field_B <- if (is.null(list(...)$field_B))
+    "length" else list(...)$field_B
+  dir_distance_type <- if (is.null(list(...)$dir_distance_type))
+    "symmetric" else list(...)$dir_distance_type
+  disp_type <- if (is.null(list(...)$disp_type))
+    "exponential" else list(...)$disp_type
+
+  param_u <- if (is.null(list(...)$param_u))
+    NA else list(...)$param_u
+  param_d <- if (is.null(list(...)$param_d))
+    NA else list(...)$param_d
+  param <- if (is.null(list(...)$param))
+    NA else list(...)$param
 
   # Call the function that calculates the index with the default values
   inner_d_index_calculation(graph = graph,
@@ -64,7 +106,22 @@ d_index_calculation <- function(graph,
                             mode = mode, # "add_one", # sequence
                             parallel = parallel,
                             ncores = ncores,
-                            ...)
+                            weight = weight,
+                            nodes_id = nodes_id,
+                            index_type = index_type,
+                            index_mode = index_mode,
+                            c_ij_flag = c_ij_flag,
+                            B_ij_flag = B_ij_flag,
+                            dir_fragmentation_type = dir_fragmentation_type,
+                            pass_confluence = pass_confluence,
+                            pass_u = pass_u,
+                            pass_d = pass_d,
+                            field_B = field_B,
+                            dir_distance_type = dir_distance_type,
+                            disp_type = disp_type,
+                            param_u = param_u,
+                            param_d = param_d,
+                            param = param)
 
 }
 

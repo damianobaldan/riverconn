@@ -62,6 +62,8 @@ index_calculation <- function(graph, weight = "length", nodes_id = "name", index
                               field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential", param_u, param_d, param) {
 
   # Error messages
+  if( !(class(graph) ==  "igraph")) stop(
+    "'graph' must be an 'igraph' object")
   if( !(index_type %in% c("full", "reach")) ) stop(
     "'index_type' must me either 'full' or 'reach'")
   if( index_type == "reach" & !(index_mode %in% c("from", "to")) ) stop(

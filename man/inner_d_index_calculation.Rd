@@ -7,28 +7,28 @@
 inner_d_index_calculation(
   graph,
   dams_metadata,
-  id_dam = "id_dam",
-  pass_u_updated = "pass_u_updated",
-  pass_d_updated = "pass_d_updated",
+  id_dam,
+  pass_u_updated,
+  pass_d_updated,
   mode = "leave_one_out",
-  parallel = TRUE,
+  parallel,
   ncores,
-  weight = "length",
-  nodes_id = "name",
-  index_type = "full",
-  index_mode = "to",
-  c_ij_flag = TRUE,
-  B_ij_flag = TRUE,
-  dir_fragmentation_type = "symmetric",
-  pass_confluence = 1,
-  pass_u = "pass_u",
-  pass_d = "pass_d",
-  field_B = "length",
-  dir_distance_type = "symmetric",
-  disp_type = "exponential",
-  param_u = NA,
-  param_d = NA,
-  param = NA
+  weight,
+  nodes_id,
+  index_type,
+  index_mode,
+  c_ij_flag,
+  B_ij_flag,
+  dir_fragmentation_type,
+  pass_confluence,
+  pass_u,
+  pass_d,
+  field_B,
+  dir_distance_type,
+  disp_type,
+  param_u,
+  param_d,
+  param
 )
 }
 \arguments{
@@ -111,3 +111,4 @@ The 'param_u', 'param_d', and 'param' values are interpreted differently based o
 When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 }
+\keyword{internal}
