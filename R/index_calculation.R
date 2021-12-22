@@ -56,10 +56,19 @@
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
 #'
-index_calculation <- function(graph, weight = "length", nodes_id = "name", index_type = "full", index_mode = "to",
-                              c_ij_flag = TRUE, B_ij_flag = TRUE,
-                              dir_fragmentation_type = "symmetric", pass_confluence = 1, pass_u = "pass_u", pass_d = "pass_d",
-                              field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential", param_u, param_d, param) {
+index_calculation <- function(graph,
+                              weight = "length",
+                              nodes_id = "name",
+                              index_type = "full",
+                              index_mode = "to",
+                              c_ij_flag = TRUE,
+                              B_ij_flag = TRUE,
+                              dir_fragmentation_type = "symmetric",
+                              pass_confluence = 1, pass_u = "pass_u", pass_d = "pass_d",
+                              field_B = "length",
+                              dir_distance_type = "symmetric",
+                              disp_type = "exponential",
+                              param_u, param_d, param) {
 
   # Error messages
   if( !(class(graph) ==  "igraph")) stop(

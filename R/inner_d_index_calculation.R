@@ -99,16 +99,26 @@ inner_d_index_calculation <- function(graph,
     "'id_dam' argument must be a valid vertex attribute in the input graph")
   if( missing(dams_metadata) ) stop(
     "'dams_metadata' dataframe must be specified")
+  if(id_dam == nodes_id ) stop(
+    "please specify two different attributes for 'id_dam'and 'nodes_id' in the graph")
+  if( !( pass_u %in% igraph::edge_attr_names(graph)) ) stop(
+    "'pass_u' argument must be a edge attribute in 'graph'")
+  if( !(pass_d %in% igraph::edge_attr_names(graph)) ) stop(
+    "'pass_d' argument must be a edge attribute in 'graph'")
 
   # Rename graph vertices and dams metadata based on id_dam
-  igraph::E(graph)$id_dam <- igraph::get.edge.attribute(graph, id_dam)
+  igraph::E(graph)$id_dam <- igraph::get.edge.attribute(graph, id_dam) %>% as.character()
   dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"id_dam", contains(id_dam))
   dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"pass_u_updated", contains(pass_u_updated))
   dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"pass_d_updated", contains(pass_d_updated))
 
+  # Change passability information
+  igraph::E(graph)$pass_u <- igraph::get.edge.attribute(graph, pass_u)
+  igraph::E(graph)$pass_d <- igraph::get.edge.attribute(graph, pass_d)
+
   # More error messages
-  if( c(dams_metadata$pass_u_updated < 0, dams_metadata$pass_u_updated > 1) %>% sum >0 ) stop(
-    "'pass_u_updated' must be between 0 and 1")
+  if( length(unique(dams_metadata$id_dam)) <  length(dams_metadata$id_dam) ) stop(
+    "'id_dam' in 'dams_metadata' must be unique")
   if( c(dams_metadata$pass_d_updated < 0, dams_metadata$pass_d_updated > 1) %>% sum >0 ) stop(
     "'pass_d_updated' must be between 0 and 1")
   if( parallel == TRUE & missing(ncores) ) stop(
@@ -125,36 +135,29 @@ inner_d_index_calculation <- function(graph,
                                         pass_u_updated = "pass_u_updated",
                                         pass_d_updated = "pass_d_updated",
                                         river_graph,
-                                        weight = "length", nodes_id = "name", index_type = "full", index_mode = "to",
+                                        weight = "length", nodes_id = "name",
+                                        index_type = "full", index_mode = "to",
                                         c_ij_flag = TRUE, B_ij_flag = TRUE,
-                                        dir_fragmentation_type = "symmetric", pass_confluence = 1, pass_u = "pass_u", pass_d = "pass_d",
-                                        field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential",
+                                        dir_fragmentation_type = "symmetric", pass_confluence = 1,
+                                        pass_u = "pass_u", pass_d = "pass_d",
+                                        field_B = "length", dir_distance_type = "symmetric",
+                                        disp_type = "exponential",
                                         param_u = NA, param_d = NA, param = NA){
 
     # Error messages
     if(!(dam_to_remove %in% dams_metadata$id_dam)) stop(
       "you are trying to remove a dam that is not listed in 'dams_metadata'")
-    if( !( pass_u %in% igraph::edge_attr_names(river_graph)) ) stop(
-      "'pass_u' argument must be a edge attribute in 'graph'")
-    if( !(pass_d %in% igraph::edge_attr_names(river_graph)) ) stop(
-      "'pass_d' argument must be a edge attribute in 'graph'")
 
-    # Change passability information
-    igraph::E(river_graph)$pass_u <- igraph::get.edge.attribute(river_graph, pass_u)
-    igraph::E(river_graph)$pass_d <- igraph::get.edge.attribute(river_graph, pass_d)
-
-    # Initialize the graph for the loop
-    river_graph_att_loop <- river_graph
-
-    # Change the passability of the corresponding edge to 1
-    igraph::E(river_graph_att_loop)$pass_u[igraph::E(river_graph_att_loop)$id_dam == dam_to_remove] <-
+    # Change the passability of the corresponding edge
+    # to the value defined in pass_u_updated and pass_d_updated
+    igraph::E(river_graph)$pass_u[igraph::E(river_graph)$id_dam == dam_to_remove] <-
       dams_metadata$pass_u_updated[dams_metadata$id_dam == dam_to_remove]
 
-    igraph::E(river_graph_att_loop)$pass_d[igraph::E(river_graph_att_loop)$id_dam == dam_to_remove] <-
+    igraph::E(river_graph)$pass_d[igraph::E(river_graph)$id_dam == dam_to_remove] <-
       dams_metadata$pass_d_updated[dams_metadata$id_dam == dam_to_remove]
 
     # Calculate index
-    index <- index_calculation(river_graph_att_loop,
+    index <- index_calculation(river_graph,
                                weight = weight,
                                nodes_id = nodes_id,
                                index_type = index_type,
@@ -198,37 +201,37 @@ inner_d_index_calculation <- function(graph,
     # Start parallel loop
     iii <- NULL
     out_index <- foreach(iii = 1:length(dams_metadata$id_dam),
-                         .packages=pcks) %dopar% {
-                          #.export = c("one_barrier_removal_index")) %dopar% { # keep this in case needed
+                         .packages=pcks,
+                         .export = c("one_barrier_removal_index")) %dopar% {
                            # Calculate and return index
-                           out_index <-  one_barrier_removal_index(dam_to_remove = dams_metadata$id_dam[iii],
-                                                                              dams_metadata = dams_metadata,
-                                                                              pass_u_updated = pass_u_updated,
-                                                                              pass_d_updated = pass_d_updated,
-                                                                              river_graph = graph,
-                                                                              weight = weight,
-                                                                              nodes_id = nodes_id,
-                                                                              index_type = index_type,
-                                                                              index_mode = index_mode,
-                                                                              c_ij_flag = c_ij_flag,
-                                                                              B_ij_flag = B_ij_flag,
-                                                                              dir_fragmentation_type = dir_fragmentation_type,
-                                                                              pass_confluence = pass_confluence,
-                                                                              pass_u = pass_u,
-                                                                              pass_d = pass_d,
-                                                                              field_B = field_B,
-                                                                              dir_distance_type = dir_distance_type,
-                                                                              disp_type = disp_type,
-                                                                              param_u = param_u,
-                                                                              param_d = param_d,
-                                                                              param = param)
-
+                           out_foreach <- one_barrier_removal_index(dam_to_remove = dams_metadata$id_dam[iii],
+                                                                    dams_metadata = dams_metadata,
+                                                                    pass_u_updated = pass_u_updated,
+                                                                    pass_d_updated = pass_d_updated,
+                                                                    river_graph = graph,
+                                                                    weight = weight,
+                                                                    nodes_id = nodes_id,
+                                                                    index_type = index_type,
+                                                                    index_mode = index_mode,
+                                                                    c_ij_flag = c_ij_flag,
+                                                                    B_ij_flag = B_ij_flag,
+                                                                    dir_fragmentation_type = dir_fragmentation_type,
+                                                                    pass_confluence = pass_confluence,
+                                                                    pass_u = "pass_u",
+                                                                    pass_d = "pass_d",
+                                                                    field_B = field_B,
+                                                                    dir_distance_type = dir_distance_type,
+                                                                    disp_type = disp_type,
+                                                                    param_u = param_u,
+                                                                    param_d = param_d,
+                                                                    param = param)
+                           return(out_foreach)
                          }
 
     # Close the parllel processes
     parallel::stopCluster(cl)
 
-    out_index <- do.call(rbind,out_index)
+    out_index <- do.call(rbind, out_index)
 
   }
 
@@ -238,7 +241,8 @@ inner_d_index_calculation <- function(graph,
 
     # Apply the function
     out_index <-  do.call(rbind,
-                          lapply(dams_metadata$id_dam, FUN =  one_barrier_removal_index,
+                          lapply(dams_metadata$id_dam,
+                                 FUN =  one_barrier_removal_index,
                                  dams_metadata = dams_metadata,
                                  pass_u_updated = pass_u_updated,
                                  pass_d_updated = pass_d_updated,
@@ -251,8 +255,8 @@ inner_d_index_calculation <- function(graph,
                                  B_ij_flag = B_ij_flag,
                                  dir_fragmentation_type = dir_fragmentation_type,
                                  pass_confluence = pass_confluence,
-                                 pass_u = pass_u,
-                                 pass_d = pass_d,
+                                 pass_u = "pass_u",
+                                 pass_d = "pass_d",
                                  field_B = field_B,
                                  dir_distance_type = dir_distance_type,
                                  disp_type = disp_type,
@@ -272,8 +276,8 @@ inner_d_index_calculation <- function(graph,
                                                 B_ij_flag = B_ij_flag,
                                                 dir_fragmentation_type = dir_fragmentation_type,
                                                 pass_confluence = pass_confluence,
-                                                pass_u = pass_u,
-                                                pass_d = pass_d,
+                                                pass_u = "pass_u",
+                                                pass_d = "pass_d",
                                                 field_B = field_B,
                                                 dir_distance_type = dir_distance_type,
                                                 disp_type = disp_type,
