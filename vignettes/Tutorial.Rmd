@@ -2,8 +2,7 @@
 title: "riverconn vignette"
 author: "Damiano Baldan"
 date: "`r Sys.Date()`"
-output: 
-rmarkdown::pdf_vignette 
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{riverconn vignette}
@@ -184,7 +183,7 @@ Here we add the dam information as edge attribute, including the field 'id_dam',
 
 ```{r g decorate, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 # Decorate edges 
-E(g)$id_dam <- c(1, NA, 2, 3, NA, 4, NA, 5, 6, NA,  NA, NA, NA, 7, NA)
+E(g)$id_dam <- c("1", "NA", "2", "3", "NA", "4", "NA", "5", "6", "NA",  "NA", "NA", "NA", "7", "NA")
 E(g)$type <- ifelse(is.na(E(g)$id_dam), "joint", "dam")
 E(g)
 
@@ -304,20 +303,20 @@ index_calculation(g, c_ij_flag = FALSE,
 The function `index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the 'dams_metadata' object. Parallel calculations can be activated.
 
 ```{r idams metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
-dams_metadata <- data.frame("id_dam" =  c(1, 2, 3, 4, 5, 6, 7),
+dams_metadata <- data.frame("id_dam" =  as.character(1:7),
                             "pass_u_updated" = c(1, 1, 1, 1, 1, 1, 1),
                             "pass_d_updated" = c(1, 1, 1, 1, 1, 1, 1))
 dams_metadata
 
 d_index_calculation(g,
-                    dams_metadata,
+                    dams_metadata = dams_metadata ,
                     c_ij_flag = TRUE,
                     B_ij_flag = TRUE,
-                     parallel = FALSE, ncores = 3,
-                     param_u = 10,  param_d = 10,
-                     index_type = "full",
-                     dir_distance_type = "asymmetric",
-                     disp_type = "threshold")
+                    parallel = FALSE, ncores = 3,
+                    param_u = 10,  param_d = 10,
+                    index_type = "full",
+                    dir_distance_type = "asymmetric",
+                    disp_type = "threshold")
 
 
 ```
@@ -327,11 +326,12 @@ Calculated index can be joined with the original graph and plotted to check spat
 ```{r plot join, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 
 d_index <- d_index_calculation (g,
-                     dams_metadata,
+                     dams_metadata = dams_metadata,
                      parallel = FALSE, ncores = 3,
                      param_u = 10,  param_d = 10,
                      index_type = "full",
                      B_ij_flag = FALSE)
+head(d_index)
 
 # Check edged and nodes attributes
 g_v_df <- igraph::as_data_frame(g, what = "vertices")
@@ -358,14 +358,76 @@ ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
 ```
 
 
-## Temporal developement calculation and visualization
+## Temporal connectivity developement calculation and visualization
 
-[TO BE UPDATED]
+When sufficient data are available, the function `index calculation` can be used to calculate the temporal development of the catchment connectivity based on changing habitat weights and dams passabilities. The function `t_index_calculation` does this job, since manually updating sequentially the passabilities and the habitat weights can be tedious. Two functions (`t_passability_sequencer` and `t_weights_sequencer`) are provided to properly format the passability and weights data to input to `t_index_calculation`.
 
+The function `t_passability_sequencer` creates a table in long format based on an input table in wide format and the information on the sequence of operations carried out.
+```{r passability metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+# Passability metadata in long format
+dams_metadata <- data.frame("id_dam" = as.character(1:7),
+                                   "year_c" = c(1950, 1960, 1965, 1980, 1990, 2020, 2010),
+                                   "pass_c_d" = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
+                                   "pass_c_u" = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
+                                   "year_fp" = c(1990, 1999, 1980, 2002, NA, NA, 2015),
+                                   "pass_fp_d" = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+                                   "pass_fp_u" = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)   )
+head(dams_metadata)
 
+# Sequence of operations: c = construction; fp = fishpass construction
+seq_ops <- c("c", "fp")
 
+# Format the data properly
+dams_metadata <- t_passability_sequencer(dams_metadata, seq_ops)
+head(dams_metadata)
 
+```
 
+The function `t_weight_sequencer` creates a table in long format based on an input table in wide format.
+```{r weights metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+# Weights metadata in long format
+weights_metadata <- data.frame(
+  "name" = c("1",  "2",  "5",  "3",  "4",  "6",  "7",  "10", "8",  
+             "9",  "11", "12", "13", "14", "15", "16"),
+  "length_1950" = c(1, 1, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 4, 5, 6, 9),
+  "length_1990" = c(2, 2, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 4, 5, 6, 9),
+  "length_2020" = c(2, 2, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 8, 5, 5, 6))
+head(weights_metadata)
+
+# Format the weights 
+weights_metadata <- t_weights_sequencer(
+  weights_metadata, weight = "length", nodes_id = "name")
+head(weights_metadata)
+
+```
+
+Finally, the temporal connectivity can be calculated with the function `t_index_calculation` and plotted with ggplot.
+```{r t connectivity, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+
+temporal_connectivity <- t_index_calculation(g,
+                         dams_metadata = dams_metadata,
+                         id_dam = "id_dam",
+                         year = "year",
+                         pass_u = "pass_u",
+                         pass_d = "pass_d",
+                         weights_metadata = weights_metadata,
+                         weight = "length",
+                         field_B = "length",
+                         nodes_id = "name",
+                         parallel = FALSE,
+                         index_mode = "full",
+                         dir_distance_type = "asymmetric",
+                         disp_type = "threshold",
+                         param_u = 0, param_d = 10)
+
+# Plot with ggplot
+temporal_connectivity %>% 
+  ggplot() +
+  theme_bw()+
+  geom_line(aes(x = year, y = index))
+  
+
+```
 
 
 ## Relevant literature

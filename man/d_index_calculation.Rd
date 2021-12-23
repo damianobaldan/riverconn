@@ -25,7 +25,7 @@ d_index_calculation(
 and two columns with the corresponding upstream and downstream improved passabilities
 (see 'pass_u_updated' and 'pass_d_updated' parameters).}
 
-\item{id_dam}{graph edges numeric attribute used to label dams. Default is \code{"id_dam"}.}
+\item{id_dam}{graph edges numeric attribute used to label dams. Default is \code{"id_dam"}. Must be of type charachter.}
 
 \item{pass_u_updated}{field in dam_metadata where updated value for upstream passability is stored
 (recommended values higher than the original passability).}

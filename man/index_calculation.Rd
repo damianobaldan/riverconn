@@ -31,7 +31,7 @@ index_calculation(
 Default is \code{"length"}.}
 
 \item{nodes_id}{graph vertex attribute used to univoquely label reaches (nodes). Should not be also an edge attribute.
-Default is \code{"name"}.
+Default is \code{"name"}. The graph attribute must be a charachter vector.
 Used to label the results when \code{index_type = "reach"}}
 
 \item{index_type}{indicates if the index should be calculated for the whole catchment (\code{index_type = "full"}),

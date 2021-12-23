@@ -52,7 +52,7 @@
 #' When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 #' When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 #'
-#' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
+#' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by pull
 #' @importFrom igraph E V
 #' @import doParallel
 #' @import foreach
