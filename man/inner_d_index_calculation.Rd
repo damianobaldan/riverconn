@@ -51,37 +51,37 @@ and two columns with the corresponding upstream and downstream improved passabil
 
 \item{ncores}{define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}}
 
-\item{weight}{check index_calculation function}
+\item{weight}{check index_calculation function.}
 
-\item{nodes_id}{check index_calculation function}
+\item{nodes_id}{check index_calculation function.}
 
-\item{index_type}{check index_calculation function}
+\item{index_type}{check index_calculation function.}
 
-\item{index_mode}{check index_calculation function}
+\item{index_mode}{check index_calculation function.}
 
-\item{c_ij_flag}{check index_calculation function}
+\item{c_ij_flag}{check index_calculation function.}
 
-\item{B_ij_flag}{check index_calculation function}
+\item{B_ij_flag}{check index_calculation function.}
 
-\item{dir_fragmentation_type}{check index_calculation function}
+\item{dir_fragmentation_type}{check index_calculation function.}
 
-\item{pass_confluence}{check index_calculation function}
+\item{pass_confluence}{check index_calculation function.}
 
-\item{pass_u}{check index_calculation function}
+\item{pass_u}{check index_calculation function.}
 
-\item{pass_d}{check index_calculation function}
+\item{pass_d}{check index_calculation function.}
 
-\item{field_B}{check index_calculation function}
+\item{field_B}{check index_calculation function.}
 
-\item{dir_distance_type}{check index_calculation function}
+\item{dir_distance_type}{check index_calculation function.}
 
-\item{disp_type}{check index_calculation function}
+\item{disp_type}{check index_calculation function.}
 
-\item{param_u}{check index_calculation function}
+\item{param_u}{check index_calculation function.}
 
-\item{param_d}{check index_calculation function}
+\item{param_d}{check index_calculation function.}
 
-\item{param}{check index_calculation function}
+\item{param}{check index_calculation function.}
 }
 \value{
 returns a data.frame containing the percent improvement of the index for

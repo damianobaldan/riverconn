@@ -5,6 +5,10 @@ git repository for R package riverconn
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.2.3 to 0.2.4  
+* fixed bug on t_index_calculation (... argument and partial match issue)
+* added error message on index_calculation when nodes_id is not charachter type
+
 0.2.2 to 0.2.3  
 * fixed bug on d_index_calculation (inputs pass_u and pass_d not recognized)
 

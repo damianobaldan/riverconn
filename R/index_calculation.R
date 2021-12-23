@@ -4,7 +4,7 @@
 #' @param weight graph vertex attribute used to assign weights to the reaches (nodes). Should not be also an edge attribute.
 #' Default is \code{"length"}.
 #' @param nodes_id graph vertex attribute used to univoquely label reaches (nodes). Should not be also an edge attribute.
-#' Default is \code{"name"}.
+#' Default is \code{"name"}. The graph attribute must be a charachter vector.
 #' Used to label the results when \code{index_type = "reach"}
 #' @param index_type indicates if the index should be calculated for the whole catchment (\code{index_type = "full"}),
 #' or for each reach (\code{index_type = "reach"})
@@ -95,6 +95,8 @@ index_calculation <- function(graph,
     "'weight' argument must be a edge attribute in 'graph'")
   if( field_B %in% igraph::edge_attr_names(graph) ) stop(
     "'field_B' argument must be a edge attribute in 'graph'")
+  if( class(igraph::get.vertex.attribute(graph, nodes_id)) != "character") stop(
+    "'nodes_id' attribute of 'graph' must be of type 'charachter'")
 
   if(c_ij_flag == TRUE){
     if( !( pass_u %in% igraph::edge_attr_names(graph)) ) stop(

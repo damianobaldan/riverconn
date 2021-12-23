@@ -10,22 +10,22 @@
 #' (recommended values higher than the original passability).
 #' @param mode currentlym only \code{"leave_one_out"} is implemented.
 #' @param parallel logical value to flag if parallel option is to be used.
-#' @param weight check index_calculation function
-#' @param nodes_id check index_calculation function
-#' @param index_type check index_calculation function
-#' @param index_mode check index_calculation function
-#' @param c_ij_flag check index_calculation function
-#' @param B_ij_flag check index_calculation function
-#' @param dir_fragmentation_type check index_calculation function
-#' @param pass_confluence check index_calculation function
-#' @param pass_u check index_calculation function
-#' @param pass_d check index_calculation function
-#' @param field_B check index_calculation function
-#' @param dir_distance_type check index_calculation function
-#' @param disp_type check index_calculation function
-#' @param param_u check index_calculation function
-#' @param param_d check index_calculation function
-#' @param param check index_calculation function
+#' @param weight check index_calculation function.
+#' @param nodes_id check index_calculation function.
+#' @param index_type check index_calculation function.
+#' @param index_mode check index_calculation function.
+#' @param c_ij_flag check index_calculation function.
+#' @param B_ij_flag check index_calculation function.
+#' @param dir_fragmentation_type check index_calculation function.
+#' @param pass_confluence check index_calculation function.
+#' @param pass_u check index_calculation function.
+#' @param pass_d check index_calculation function.
+#' @param field_B check index_calculation function.
+#' @param dir_distance_type check index_calculation function.
+#' @param disp_type check index_calculation function.
+#' @param param_u check index_calculation function.
+#' @param param_d check index_calculation function.
+#' @param param check index_calculation function.
 #' @param ncores define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}
 #'
 #' @return returns a data.frame containing the percent improvement of the index for
@@ -87,6 +87,8 @@ inner_d_index_calculation <- function(graph,
                                       param ){
 
   # Error messages if something wrong happens
+  if(missing(graph)) stop(
+    "'graph' must be defined")
   if( !(class(dams_metadata) ==  "data.frame")) stop(
     "'dams_metadata' must be a data.frame")
   if( !(id_dam %in% colnames(dams_metadata)) ) stop(
@@ -105,6 +107,10 @@ inner_d_index_calculation <- function(graph,
     "'pass_u' argument must be a edge attribute in 'graph'")
   if( !(pass_d %in% igraph::edge_attr_names(graph)) ) stop(
     "'pass_d' argument must be a edge attribute in 'graph'")
+  if( class(igraph::get.edge.attribute(graph, id_dam)) != "character") stop(
+    "'id_dam' attribute of 'graph' must be of type 'charachter'")
+  if( class(dams_metadata %>% dplyr::select(matches(id_dam)) %>% pull) != "character") stop(
+    "'id_dam' column of 'dams_metadata' must be of type 'charachter'")
 
   # Rename graph vertices and dams metadata based on id_dam
   igraph::E(graph)$id_dam <- igraph::get.edge.attribute(graph, id_dam) %>% as.character()
