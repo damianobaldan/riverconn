@@ -37,14 +37,32 @@ set_B_directionality <- function(graph, dir_distance_type = "symmetric", field_B
   # If directionality is "asymmetric" the graph is made undirectional
   if(dir_distance_type == "symmetric"){
 
-    # Make the graph undirected
-    graph_output <- igraph::as.undirected(graph_intermediate, mode = "each" )
+    # Bidirectional edge list
+    graph_df_bidir<- rbind(
+      # "downstream" graph: graph with directions going downstream, uses pass_d as attribute
+      igraph::as_data_frame(graph_intermediate, what = "edges") %>%
+        dplyr::mutate(flag_dir = "n"),
+      # "upstream" graph: graph with directions going upstream, uses pass_u as attribute
+      igraph::as_data_frame(graph_intermediate, what = "edges") %>%
+        dplyr::rename(from = .data$to, to = .data$from) %>%
+        mutate(flag_dir = "n")
+    )
+
+    # Vertices dataframe
+    graph_df_bidir_v <- igraph::as_data_frame(graph, what = "vertices") %>%
+      dplyr::relocate(.data$name)
+
+    # Create the bidirectional fraph
+    graph_output <- igraph::graph_from_data_frame(
+      d = graph_df_bidir,
+      vertices = graph_df_bidir_v )
 
   }
 
   # If directionality is "asymmetric" the graph is made undirectional
   if(dir_distance_type == "asymmetric"){
 
+    # Bidirectional edge list
     graph_df_bidir<- rbind(
       # "downstream" graph: graph with directions going downstream, uses pass_d as attribute
       igraph::as_data_frame(graph_intermediate, what = "edges") %>%

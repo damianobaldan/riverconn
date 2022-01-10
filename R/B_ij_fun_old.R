@@ -29,8 +29,6 @@
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
 #' @importFrom rlang .data
-#' @importFrom reshape2 melt
-#' @importFrom dodgr dodgr_dists
 #'
 B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential", param_u , param_d , param ) {
 
@@ -75,23 +73,39 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
                                 field_B = field_B)
 
   # Extract the vertices names
-  vertices_id <- names(igraph::V(graph))
+  vertices_id <- names(V(graph))
 
-  #
+  # Create data frame with all the combinations
+  Bij_mat <- tidyr::expand_grid(from = vertices_id, to = vertices_id)
+
+  # Function that extracts subgraph and calculate upstream and downstream distances
+  dist_calc <- function(i,j, graph){
+
+    subgraph <- igraph::subgraph.edges(
+      graph, igraph::shortest_paths(graph, from = i, to = j, mode = "out", output = "both")$epath[[1]])
+
+    d_att = igraph::get.edge.attribute(subgraph, "d_att")
+    flag_dir = igraph::get.edge.attribute(subgraph, "flag_dir")
+
+    output <- data.frame("from" = i, "to" = j,
+                         "u" = sum(d_att[flag_dir == "u"]),
+                         "d" = sum(d_att[flag_dir == "d"]),
+                         "n" = sum(d_att[flag_dir == "n"]) )
+
+    return(list(output))
+  }
+
+  # Calculate u/d/n distances for each couple of nodes
+  Bij_mat <-  do.call(rbind,
+                      mapply(
+                        FUN = dist_calc,
+                        Bij_mat$from, Bij_mat$to, list(graph))
+                      )
+
   # symmetric dispersal: I use only the sum of the distances
-  #
   if(dir_distance_type == "symmetric"){
 
-    # Create dodgr graph
-    graph_dodgr <- igraph::as_data_frame(graph, what = "edges") %>%
-      rename(dist = d_att) %>%
-      select(from, to, dist)
-
-    # Calculate all shortest paths
-    Bij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) %>%
-      reshape2::melt(.) %>%
-      dplyr::mutate(from = as.character(Var1), to = as.character(Var2), n = value) %>%
-      dplyr::select(from, to, n)
+    Bij_mat <- Bij_mat %>% dplyr::select(.data$from, .data$to, .data$n)
 
     # if exponential decay
     if(disp_type == "exponential"){
@@ -102,45 +116,10 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
       Bij_mat$B_ij = ifelse(Bij_mat$n < param, 1, 0) }
   }
 
-
-  #
   # asymmetric dispersal: I use both distances
-  #
   if(dir_distance_type == "asymmetric"){
 
-    # Create dodgr graph for upstream movement
-    graph_dodgr_u <- igraph::as_data_frame(graph, what = "edges") %>%
-      filter(flag_dir == "u") %>%
-      rename(dist = d_att) %>%
-      select(from, to, dist) %>%
-      rbind(.,
-            graph_dodgr_u %>%
-              rename(from = to, to = from) %>%
-              mutate(dist = 0))
-
-    # Calculate all shortest paths for upstream movement
-    Bij_mat_u <- dodgr::dodgr_dists(graph_dodgr_u, from = vertices_id, to = vertices_id) %>%
-      reshape2::melt(.) %>%
-      dplyr::mutate(from = as.character(Var1), to = as.character(Var2), u = value) %>%
-      dplyr::select(from, to, u)
-
-    # Create dodgr graph for downstream movement
-    graph_dodgr_d <- igraph::as_data_frame(graph, what = "edges") %>%
-      filter(flag_dir == "d") %>%
-      rename(dist = d_att) %>%
-      select(from, to, dist) %>%
-      rbind(.,
-            graph_dodgr_d %>%
-              rename(from = to, to = from) %>%
-              mutate(dist = 0))
-
-    # Calculate all shortest paths for downstream movement
-    Bij_mat_d <- dodgr::dodgr_dists(graph_dodgr_d, from = vertices_id, to = vertices_id) %>%
-      reshape2::melt(.) %>%
-      dplyr::mutate(from = as.character(Var1), to = as.character(Var2), d = value) %>%
-      dplyr::select(from, to, d)
-
-    Bij_mat <- Bij_mat_u %>% left_join(Bij_mat_d)
+    Bij_mat <- Bij_mat %>% dplyr::select(.data$from, .data$to, .data$u, .data$d)
 
     # if exponential decay
     if(disp_type == "exponential"){

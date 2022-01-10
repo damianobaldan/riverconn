@@ -19,18 +19,10 @@
 #'
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
-#' @importFrom reshape2 melt
-#' @importFrom dodgr dodgr_dists
 #'
-c_ij_fun <- function(graph,
-                     dir_fragmentation_type = "symmetric",
-                     pass_confluence = 1,
-                     pass_u = "pass_u",
-                     pass_d = "pass_d"){
+c_ij_fun <- function(graph, dir_fragmentation_type = "symmetric", pass_confluence = 1, pass_u = "pass_u", pass_d = "pass_d"){
 
-  # Error messages - none here for the moment
-  if( !("name" %in% igraph::vertex_attr_names(graph)) ) stop(
-    "'nodes_id' argument must be a valid vertex attribute in 'graph'")
+  # Error messages
 
   # Set graph directionality
   graph <- set_c_directionality(graph,
@@ -41,16 +33,20 @@ c_ij_fun <- function(graph,
   # Extract the vertices names
   vertices_id <- names(igraph::V(graph))
 
-  # Create dodgr graph
-  graph_dodgr <- igraph::as_data_frame(graph, what = "edges") %>%
-    select(from, to, pass_eq) %>%
-    mutate(dist = log10(pass_eq))
+  # Create data frame with all the combinations
+  cij_mat <- tidyr::expand_grid(from = vertices_id, to = vertices_id)
 
-  # Calculate all shortest paths
-  c_ij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) %>%
-    reshape2::melt(.) %>%
-    dplyr::mutate(from = as.character(Var1), to = as.character(Var2), c_ij = 10^(value)) %>%
-    dplyr::select(from, to, c_ij)
+  # Function that extracts subgraph and calculate product of the 'pass_eq' field
+  prod_prob <- function(i,j, graph){
+    subgraph <- igraph::subgraph.edges(
+      graph, igraph::shortest_paths(graph, from = i, to = j, mode = "out", output = "both")$epath[[1]])
+    return(igraph::E(subgraph)$pass_eq %>% prod)
+  }
+
+  # Calculate product probabilities
+  cij_mat$c_ij <-  mapply(
+    FUN = prod_prob,
+    cij_mat$from, cij_mat$to, list(graph))
 
   return(cij_mat)
 

@@ -48,14 +48,30 @@ set_c_directionality <- function(graph, dir_fragmentation_type = "symmetric", pa
     # Calculate the passability as product of upstream and downstream
     igraph::E(graph)$pass_eq <- igraph::E(graph)$pass_u * igraph::E(graph)$pass_d
 
-    # Make the graph undirected
-    graph_output <- igraph::as.undirected(graph, mode = "each" )
+    # Create bidirectional edge list
+    graph_df_bidir<- rbind(
+      # "downstream" graph: graph with directions going downstream, uses pass_d as attribute
+      igraph::as_data_frame(graph, what = "edges"),
+      # "upstream" graph: graph with directions going upstream, uses pass_u as attribute
+      igraph::as_data_frame(graph, what = "edges") %>%
+        dplyr::rename(from = .data$to, to = .data$from)
+    )
+
+    # Vertices dataframe
+    graph_df_bidir_v <- igraph::as_data_frame(graph, what = "vertices") %>%
+      dplyr::relocate(.data$name)
+
+    # Create the bidirectional graph
+    graph_output <- igraph::graph_from_data_frame(
+      d = graph_df_bidir,
+      vertices = graph_df_bidir_v )
 
   }
 
   # If directionality is "asymmetric" the graph is made undirectional
   if(dir_fragmentation_type == "asymmetric"){
 
+    # Create bidirectional edge list
     graph_df_bidir<- rbind(
       # "downstream" graph: graph with directions going downstream, uses pass_d as attribute
       igraph::as_data_frame(graph, what = "edges") %>%
@@ -72,7 +88,7 @@ set_c_directionality <- function(graph, dir_fragmentation_type = "symmetric", pa
     graph_df_bidir_v <- igraph::as_data_frame(graph, what = "vertices") %>%
       dplyr::relocate(.data$name)
 
-    # Create the bidirectional fraph
+    # Create the bidirectional graph
     graph_output <- igraph::graph_from_data_frame(
       d = graph_df_bidir,
       vertices = graph_df_bidir_v )
