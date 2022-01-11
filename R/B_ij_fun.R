@@ -84,14 +84,14 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
 
     # Create dodgr graph
     graph_dodgr <- igraph::as_data_frame(graph, what = "edges") %>%
-      rename(dist = d_att) %>%
-      select(from, to, dist)
+      rename(dist = .data$d_att) %>%
+      select(.data$from, .data$to, .data$dist)
 
     # Calculate all shortest paths
-    Bij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) %>%
-      reshape2::melt(.) %>%
-      dplyr::mutate(from = as.character(Var1), to = as.character(Var2), n = value) %>%
-      dplyr::select(from, to, n)
+    Bij_mat <- reshape2::melt(
+      dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) ) %>%
+      dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), n = .data$value) %>%
+      dplyr::select(.data$from, .data$to, .data$n)
 
     # if exponential decay
     if(disp_type == "exponential"){
@@ -110,37 +110,37 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
 
     # Create dodgr graph for upstream movement
     graph_dodgr_u <- igraph::as_data_frame(graph, what = "edges") %>%
-      filter(flag_dir == "u") %>%
-      rename(dist = d_att) %>%
-      select(from, to, dist)
+      filter(.data$flag_dir == "u") %>%
+      rename(dist = .data$d_att) %>%
+      select(.data$from, .data$to, .data$dist)
 
     graph_dodgr_u <- rbind(graph_dodgr_u,
                            graph_dodgr_u %>%
-                             rename(from = to, to = from) %>%
+                             rename(from = .data$to, to = .data$from) %>%
                              mutate(dist = 0))
 
     # Calculate all shortest paths for upstream movement
-    Bij_mat_u <- dodgr::dodgr_dists(graph_dodgr_u, from = vertices_id, to = vertices_id) %>%
-      reshape2::melt(.) %>%
-      dplyr::mutate(from = as.character(Var1), to = as.character(Var2), u = value) %>%
-      dplyr::select(from, to, u)
+    Bij_mat_u <-reshape2::melt(
+      dodgr::dodgr_dists(graph_dodgr_u, from = vertices_id, to = vertices_id) ) %>%
+      dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), u = .data$value) %>%
+      dplyr::select(.data$from, .data$to, .data$u)
 
     # Create dodgr graph for downstream movement
     graph_dodgr_d <- igraph::as_data_frame(graph, what = "edges") %>%
-      filter(flag_dir == "d") %>%
-      rename(dist = d_att) %>%
-      select(from, to, dist)
+      filter(.data$flag_dir == "d") %>%
+      rename(dist = .data$d_att) %>%
+      select(.data$from, .data$to, .data$dist)
 
     graph_dodgr_d <- rbind(graph_dodgr_d,
                            graph_dodgr_d %>%
-                             rename(from = to, to = from) %>%
+                             rename(from = .data$to, to = .data$from) %>%
                              mutate(dist = 0))
 
     # Calculate all shortest paths for downstream movement
-    Bij_mat_d <- dodgr::dodgr_dists(graph_dodgr_d, from = vertices_id, to = vertices_id) %>%
-      reshape2::melt(.) %>%
-      dplyr::mutate(from = as.character(Var1), to = as.character(Var2), d = value) %>%
-      dplyr::select(from, to, d)
+    Bij_mat_d <- reshape2::melt(
+      dodgr::dodgr_dists(graph_dodgr_d, from = vertices_id, to = vertices_id) ) %>%
+      dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), d = .data$value) %>%
+      dplyr::select(.data$from, .data$to, .data$d)
 
     Bij_mat <- Bij_mat_u %>% left_join(Bij_mat_d)
 

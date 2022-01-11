@@ -2,7 +2,9 @@
 
 export("%>%")
 export(B_ij_fun)
+export(B_ij_fun_old)
 export(c_ij_fun)
+export(c_ij_fun_old)
 export(d_index_calculation)
 export(index_calculation)
 export(set_graph_directionality)

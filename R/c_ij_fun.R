@@ -43,14 +43,14 @@ c_ij_fun <- function(graph,
 
   # Create dodgr graph
   graph_dodgr <- igraph::as_data_frame(graph, what = "edges") %>%
-    select(from, to, pass_eq) %>%
-    mutate(dist = log10(pass_eq))
+    select(.data$from, .data$to, .data$pass_eq) %>%
+    mutate(dist = log10(.data$pass_eq))
 
   # Calculate all shortest paths
-  cij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) %>%
-    reshape2::melt(.) %>%
-    dplyr::mutate(from = as.character(Var1), to = as.character(Var2), c_ij = 10^(value)) %>%
-    dplyr::select(from, to, c_ij)
+  cij_mat <-  reshape2::melt(
+    dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) ) %>%
+    dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), c_ij = 10^(.data$value)) %>%
+    dplyr::select(.data$from, .data$to, .data$c_ij)
 
   return(cij_mat)
 
