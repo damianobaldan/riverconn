@@ -47,7 +47,7 @@ c_ij_fun <- function(graph,
     mutate(dist = log10(pass_eq))
 
   # Calculate all shortest paths
-  c_ij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) %>%
+  cij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) %>%
     reshape2::melt(.) %>%
     dplyr::mutate(from = as.character(Var1), to = as.character(Var2), c_ij = 10^(value)) %>%
     dplyr::select(from, to, c_ij)

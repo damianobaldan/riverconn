@@ -112,11 +112,12 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
     graph_dodgr_u <- igraph::as_data_frame(graph, what = "edges") %>%
       filter(flag_dir == "u") %>%
       rename(dist = d_att) %>%
-      select(from, to, dist) %>%
-      rbind(.,
-            graph_dodgr_u %>%
-              rename(from = to, to = from) %>%
-              mutate(dist = 0))
+      select(from, to, dist)
+
+    graph_dodgr_u <- rbind(graph_dodgr_u,
+                           graph_dodgr_u %>%
+                             rename(from = to, to = from) %>%
+                             mutate(dist = 0))
 
     # Calculate all shortest paths for upstream movement
     Bij_mat_u <- dodgr::dodgr_dists(graph_dodgr_u, from = vertices_id, to = vertices_id) %>%
@@ -128,11 +129,12 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
     graph_dodgr_d <- igraph::as_data_frame(graph, what = "edges") %>%
       filter(flag_dir == "d") %>%
       rename(dist = d_att) %>%
-      select(from, to, dist) %>%
-      rbind(.,
-            graph_dodgr_d %>%
-              rename(from = to, to = from) %>%
-              mutate(dist = 0))
+      select(from, to, dist)
+
+    graph_dodgr_d <- rbind(graph_dodgr_d,
+                           graph_dodgr_d %>%
+                             rename(from = to, to = from) %>%
+                             mutate(dist = 0))
 
     # Calculate all shortest paths for downstream movement
     Bij_mat_d <- dodgr::dodgr_dists(graph_dodgr_d, from = vertices_id, to = vertices_id) %>%

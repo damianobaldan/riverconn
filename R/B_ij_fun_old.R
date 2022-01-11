@@ -30,7 +30,7 @@
 #' @importFrom igraph E V
 #' @importFrom rlang .data
 #'
-B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential", param_u , param_d , param ) {
+B_ij_fun_old <- function(graph, field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential", param_u , param_d , param ) {
 
   # Error messages
   if( !(field_B %in% igraph::vertex_attr_names(graph)) ) stop(

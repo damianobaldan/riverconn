@@ -20,7 +20,7 @@
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
 #'
-c_ij_fun <- function(graph, dir_fragmentation_type = "symmetric", pass_confluence = 1, pass_u = "pass_u", pass_d = "pass_d"){
+c_ij_fun_old <- function(graph, dir_fragmentation_type = "symmetric", pass_confluence = 1, pass_u = "pass_u", pass_d = "pass_d"){
 
   # Error messages
 

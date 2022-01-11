@@ -5,8 +5,11 @@ git repository for R package riverconn
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.2.6 to 0.2.7  
+* changed architecture of B_ij_fun to improve speed (now relying on dodgr package to speed up shortest paths calculations on graphs)
+
 0.2.5 to 0.2.6  
-* changed architecture of c_ij_fun to improve speed (now relying on dodgr package to speed up paths calculations on graphs)
+* changed architecture of c_ij_fun to improve speed (now relying on dodgr package to speed up shortest paths calculations on graphs)
 * B_ij_fun is still the slow version
 
 0.2.4 to 0.2.5  
