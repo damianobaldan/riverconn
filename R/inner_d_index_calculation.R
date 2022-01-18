@@ -1,7 +1,7 @@
 #' Calculate index improvement for scenarios of barriers removal - function not for export
 #'
 #' @param graph an object of class igraph. Can be both directed or undirected.
-#' @param id_dam graph edges numeric attribute used to label dams. Default is \code{"id_dam"}.
+#' @param id_dam graph edges attribute used to label dams. Default is \code{"id_dam"}.
 #' @param dams_metadata data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
 #' and two columns with the corresponding upstream and downstream improved passabilities (see pass_u_updated and pass_d_updated).
 #' @param pass_u_updated field in dam_metadata where updated value for upstream passability is stored

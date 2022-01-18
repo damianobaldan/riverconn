@@ -5,6 +5,9 @@ git repository for R package riverconn
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.2.8 to 0.2.9  
+* minor changes in d_index_calculation documentation
+
 0.2.7 to 0.2.8  
 * minor changes in B_ij_fun and c_ij_fun
 
