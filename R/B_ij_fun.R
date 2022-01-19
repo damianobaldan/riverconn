@@ -142,7 +142,7 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
       dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), d = .data$value) %>%
       dplyr::select(.data$from, .data$to, .data$d)
 
-    Bij_mat <- Bij_mat_u %>% left_join(Bij_mat_d)
+    Bij_mat <- Bij_mat_u %>% left_join(Bij_mat_d, by = c("from", "to"))
 
     # if exponential decay
     if(disp_type == "exponential"){

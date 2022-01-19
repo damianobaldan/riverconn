@@ -6,7 +6,7 @@
 #' @param dams_metadata data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
 #' and two columns with the corresponding upstream and downstream improved passabilities (see pass_u and pass_d), and a column with the year
 #' passability was changed. This data frame can be obtained from easily-formatted data with the function \code{t_passability_sequencer}.
-#' @param id_dam graph edges numeric attribute used to label dams. Default is \code{"id_dam"}. It should be present in the 'dams metadata' input as well.
+#' @param id_dam graph edges attribute used to label dams. Default is \code{"id_dam"}. It should be present in the 'dams metadata' input as well.
 #' @param year field of the 'dams metadata' where temporal information on the changes in passabiity is stored.
 #' @param pass_u field of the 'dams metadata' where temporal-dependent upstream passabiity is stored.
 #' @param pass_d field of the 'dams metadata' where temporal-dependent downstream passabiity is stored.
