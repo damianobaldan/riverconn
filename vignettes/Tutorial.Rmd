@@ -21,9 +21,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### Riverscape graphs
 
-This package implements algorithms to compute commonly used indices to assess landscape fragmentation. All those indices assume a conceptualization of the landscape as a graph $L = (E,V)$, where vertices (nodes) $V$ represent single reaches, and edges (links) $E$ represent either confluences or longitudinal barriers. 
+This package implements algorithms to compute commonly used indices to assess landscape fragmentation. All those indices assume a conceptualization of the landscape as a graph $L = (E,V)$, where vertices (nodes) $V$ represent single reaches, and edges (links) $E$ represent either confluences or interrputpions of the river longitudinal connectivity. Many items can disrupt longitudinal connectivity in rivers: point pollution sources (e.g. wastewater treatment plants outlets), riparian land use changes (e.g. embankments, levees), or longitudinal barriers (dams, weirs, culverts, bridges). In this tutorial, we use the terms barriers or dams, but the methods presented are general and multiple typologies of longitudinal disruptions can be accomodated.
 
-For example, the graphs below represents a river with ten reaches. The graph on the right is directed, i.e. edges are defined for ordered pair of vertices. The graph on the left is undirected, as the order of vertices for the definition of edges is unimportant. Both graph have a 'tree-like' structure, since no loops exist (acyclic graphs): this structure can be used to describe a river system. In both examples, both barriers and confluences are present. The edges between nodes 1 and 2 and 3 and 2 are confluences. The edge between node 2 and 4 is a barrier. 
+The graphs below represents a river with ten reaches. The graph on the right is directed, i.e. edges are defined for ordered pair of vertices. The graph on the left is undirected, as the order of vertices for the definition of edges is not important. Both graph have a 'tree-like' structure, since no loops exist (acyclic graphs): this structure can be used to describe a river system. In both examples, both barriers and confluences are present. For instances, the edges between nodes 1 and 2 and 3 and 2 are confluences. The edge between node 2 and 4 is a barrier. 
+
 
 ```{r graph example, message = FALSE, collapse = TRUE, width = 60, warning = FALSE, echo = FALSE}
 library(igraph)
@@ -39,7 +40,7 @@ plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.
 Landscape-level connectivity can be expressed in terms of coincidence probability (Pascual-Hortal and Saura, 2006), i.e. the probability that two random points in a river network are connected. Once the coincidence probability $I_{ij}$ is defined for each couple of $i,j$ nodes in the graph, generalized connectivity indices for catchment and reach scales can be calculated.
 
 
-##### Catchment Connectvity index.
+#### Catchment Connectvity index.
 
 Given this conceptualization, a catchment-scale connectivity index (CCI) can be calculated as:
 
@@ -58,17 +59,17 @@ Nodes weights can be arbitrarily chosen. Common features used are the reach leng
 $$
 \ HSI_i = \frac{l_i,suitable}{l_i} \mbox{  ;         } HSI_i = \frac{A_i,suitable}{A_i}
 $$
-Here $l_i,suitable$ and $A_i,suitable$ are the fractions of length/area of reach $i$ that are suitable, and are usually refferred to as weighted suitable length or weighted suitable area.
+Here $l_i,suitable$ and $A_i,suitable$ are the fractions of length/area of reach $i$ that are suitable, and are usually referred to as weighted suitable length ($WUL$) or weighted suitable area ($WUA$).
 
-### Coincidence probability definition
-The coincidence probability depends on several factors: the presence of barriers between nodes $i$ and $j$ , the presence of suitable habitats in nodes $i$ and $j$, the distance between $i$ and $j$, and the quality of the habitat alongside the connection. The value of $I_{ij}$ is thus determined by several contributions. The harmonic mean of such contributions is used to follow a 'one-bad-all-bad' approach:
+#### Coincidence probability definition
+The coincidence probability depends on several factors: the presence of barriers between nodes $i$ and $j$ , the presence of suitable habitats in nodes $i$ and $j$, the distance between $i$ and $j$, and the quality of the habitat alongside the connection. The value of $I_{ij}$ is thus determined by several contributions. The product of such contributions is used to follow a 'one-bad-all-bad' approach:
 
 $$
 \ I_{ij} = c_{ij}B_{ij}
 $$
-where $c_{ij}$ is a 'barrier coincidence probability' depending on the presence of barriers between nodes $i$ and $j$, $f_{ij}$ is a 'landscape coincidence probability' depending on the landscape friction in the movement between nodes $i$ and $j$, and  $B_{ij}$ is a 'dispersal coincidence probability' depends on the distance between nodes $i$ and $j$.
+where $c_{ij}$ is a 'barrier coincidence probability' depending on the presence of barriers between nodes $i$ and $j$, and  $B_{ij}$ is a 'dispersal coincidence probability' depending on the distance between nodes $i$ and $j$.
 
-##### Barrier coincidence probability. 
+##### Barrier coincidence probability 
 The barriers factor depends on the presence of barriers between nodes $i$ and $j$, and can be expressed as a function of the types of barriers present in the path expressed as a sequence of passability values. The passability $p_m$ for the $m$-th barrier is defined as the probability that the reaches immediately upstream and downstream the barrier $m$ are connected.
 
 If the flow directionality is not relevant (i.e. the river graph is undirected),
@@ -110,7 +111,7 @@ Both definitions can be easily adapted to asymmetric dispersal by defining $PD_{
 The distance $d_{ij}$ can be either the geometric distance, or any other measure of effective distance (e.g. $d_{ij} / (1-HSI)$ provides an estimate of effective distance that depends on the habitat suitability index between reaches $i$ and $j$)
 
 
-### Prioritization of barriers 
+#### Prioritization of barriers 
 All the defined connectivity index can be used to prioritize barriers removal with a 'leave-one-out' approach. For each barrier, the index $dCCI$ can be defined as:
 $$
 \ dCCI_{m} = 100 \frac{CCI - CCI_{m, removed}}{GCI} 
@@ -120,7 +121,7 @@ where $GCI$ is the generalized connectivity index calculated for the original la
 An alternative version of the index for prioritizing barriers can be calculated as the decrease in landscape connectivity after a single barrier is implemented, with a 'add-one' approach.
 
 ### Time-dependent connectivity
-when barriers metadata on the year of construction and the year of implementation of mitigation measures are available, a time trajectory of GCI can be computed (e.g. segurado et al., 2013).
+when barriers metadata on the year of construction and the year of implementation of mitigation measures are available, a time trajectory of GCI can be computed (Segurado et al., 2013).
 
 
 ## Preliminary steps
@@ -139,8 +140,6 @@ library(doParallel)
 ## Input data formatting
 
 This package relies heavily on the functionalities of the `igraph` package. The [`igraph`](https://cran.r-project.org/web/packages/igraph/index.html) package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy [construction](https://igraph.org/r/doc/aaa-igraph-package.html) of `igraph` objects based on edges and vertices lists or adjacency matrices. The book ['Statistical Analysis of Network Data with R' by Kolaczyk and Csardi (2014)](https://link.springer.com/book/10.1007%2F978-3-030-44129-6) offers a comprehensive tutorial on the possibilities offered by the 'igraph' package.
-
-Describe here why igraph is important.
 
 ### Input class 'igraph' object
 
@@ -162,7 +161,7 @@ V(g)
 
 ```
 
-The graph can be converted to data frame with the function `as_data_frame`, specifying if edges or vertices are to be exported. Accordingly, the function `graph_from_data_frame` can be used to create an igraph object from a data frame.
+The graph can be converted to data frame with the function `as_data_frame`, specifying if edges or vertices are to be exported. The function `graph_from_data_frame` can be used to create an igraph object from a data frame.
 ```{r g as sf, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 igraph::as_data_frame(g, what = "edges")
 
@@ -176,10 +175,10 @@ igraph::as_adjacency_matrix(g)
 ```
 
 
-### Decorating the class 'igraph' object
-Once the structure of the network is defined, the graph can be decorated with edges and vertices attributes. Attributes can be either added directly to the graph or joined to the edges and vertices data frame. edges and vertices attributes are saved as vectors, so common, data.frame-like operations are possible.
+### Decorating the `igraph` object
+Once the structure of the network is defined, the graph can be "decorated" with edges and vertices attributes (i.e. attributes can be assigned to vertices and edges). Attributes can be either added directly to the graph or joined to the edges and vertices data frame. edges and vertices attributes are saved as vectors, so common, data.frame-like operations are possible.
 
-Here we add the dam information as edge attribute, including the field 'id_dam', and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.
+Here we add the barriers information as edge attribute, including the field 'id_dam', and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.
 
 ```{r g decorate, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 # Decorate edges 
@@ -196,7 +195,7 @@ V(g)
 ```
 
 
-### Visualizing the 'igraph' object
+### Visualizing the `igraph` object
 The `ggnetwork` library can be used to plot a igraph object with `tidyverse`-friendly functions. The function `ggnetwork` is used to fortify `igraph` objects with a specified layout. Here the tree layout is used, but for real river networks the coordinates of the reaches centroids can be used.
 ```{r plot igraph, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 gg0 <- ggnetwork(g, layout =  layout_as_tree(g %>% as.undirected, root = 16), scale = FALSE)
@@ -239,7 +238,7 @@ plot(g2, layout = layout_as_tree(as.undirected(g2), root = 5, flip.y = FALSE), m
 
 The function `index_calcualtion` is used to calculate all the nuances of the CCI and RCI
 
-Before calculation, the information on the dams passability are needed.
+Before calculation, the information on the barriers passability are needed. Those information is saved as edge attribute in the graph.
 ```{r pass def, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 # Check edged and nodes attributes
 g_v_df <- igraph::as_data_frame(g, what = "vertices")
@@ -254,7 +253,7 @@ g <- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
 g 
 ```
 
-Index with default settings.
+Index with default settings (see functions documentation for a description of the input parameters).
 ```{r index 1, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 index_calculation(g, param = 0.9)
 
@@ -273,9 +272,6 @@ index_calculation(g, c_ij_flag = FALSE,
                   dir_distance_type = "asymmetric", 
                   disp_type = "threshold", param_u = 0, param_d = 5)
 index_calculation(g, c_ij_flag = FALSE,
-                  dir_distance_type = "asymmetric", 
-                  disp_type = "threshold", param_u = 5, param_d = 10)
-index_calculation(g, c_ij_flag = FALSE,
                   dir_distance_type = "symmetric", 
                   disp_type = "threshold", param = 10)
 
@@ -287,20 +283,12 @@ index_calculation(g, c_ij_flag = FALSE,
                   index_type = "reach", index_mode = "to",
                   dir_distance_type = "asymmetric", 
                   disp_type = "threshold", param_u = 0, param_d = 5)
-index_calculation(g, c_ij_flag = FALSE,
-                  dir_distance_type = "asymmetric",
-                  index_type = "reach", index_mode = "to",
-                  disp_type = "threshold", param_u = 5, param_d = 10)
-index_calculation(g, c_ij_flag = FALSE,
-                  index_type = "reach", index_mode = "to",
-                  dir_distance_type = "symmetric", 
-                  disp_type = "threshold", param = 10)
 
 ```
 
 ## Prioritization calculation and visualization
 
-The function `index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the 'dams_metadata' object. Parallel calculations can be activated.
+The function `d_index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which barriers are to be removed and how the passability changes are provided in the 'dams_metadata' data.frame. Parallel calculations can be activated if the network is too large (thousands of vertices and edges).
 
 ```{r idams metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 dams_metadata <- data.frame("id_dam" =  as.character(1:7),
@@ -324,7 +312,6 @@ d_index_calculation(g,
 
 Calculated index can be joined with the original graph and plotted to check spatial patterns.
 ```{r plot join, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
-
 d_index <- d_index_calculation (g,
                      dams_metadata = dams_metadata,
                      parallel = FALSE, ncores = 3,
@@ -360,7 +347,7 @@ ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
 
 ## Temporal connectivity developement calculation and visualization
 
-When sufficient data are available, the function `index calculation` can be used to calculate the temporal development of the catchment connectivity based on changing habitat weights and dams passabilities. The function `t_index_calculation` does this job, since manually updating sequentially the passabilities and the habitat weights can be tedious. Two functions (`t_passability_sequencer` and `t_weights_sequencer`) are provided to properly format the passability and weights data to input to `t_index_calculation`.
+When sufficient data are available, the function `index_calculation` can be used to calculate the temporal development of the catchment connectivity based on changing habitat weights and dams passabilities. The function `t_index_calculation` does this job, since sequential manual update of the passabilities and habitat weights can be tedious. Two functions (`t_passability_sequencer` and `t_weights_sequencer`) are provided to properly format the passability and weights data to input to `t_index_calculation`.
 
 The function `t_passability_sequencer` creates a table in long format based on an input table in wide format and the information on the sequence of operations carried out.
 ```{r passability metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}

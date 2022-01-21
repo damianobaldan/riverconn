@@ -5,6 +5,9 @@ git repository for R package riverconn
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.1 to 0.3.2  
+* vignette updated
+
 0.2.9 to 0.3.1  
 * minor changes in d_index_calculation function to avoid dplyr::join printing messages to screen
 
