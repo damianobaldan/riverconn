@@ -178,12 +178,12 @@ igraph::as_adjacency_matrix(g)
 ### Decorating the `igraph` object
 Once the structure of the network is defined, the graph can be "decorated" with edges and vertices attributes (i.e. attributes can be assigned to vertices and edges). Attributes can be either added directly to the graph or joined to the edges and vertices data frame. edges and vertices attributes are saved as vectors, so common, data.frame-like operations are possible.
 
-Here we add the barriers information as edge attribute, including the field 'id_dam', and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.
+Here we add the barriers information as edge attribute, including the field 'id_barrier', and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.
 
 ```{r g decorate, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 # Decorate edges 
-E(g)$id_dam <- c("1", "NA", "2", "3", "NA", "4", "NA", "5", "6", "NA",  "NA", "NA", "NA", "7", "NA")
-E(g)$type <- ifelse(is.na(E(g)$id_dam), "joint", "dam")
+E(g)$id_barrier <- c("1", "NA", "2", "3", "NA", "4", "NA", "5", "6", "NA",  "NA", "NA", "NA", "7", "NA")
+E(g)$type <- ifelse(is.na(E(g)$id_barrier), "joint", "barrier")
 E(g)
 
 # Decorate vertices
@@ -244,8 +244,8 @@ Before calculation, the information on the barriers passability are needed. Thos
 g_v_df <- igraph::as_data_frame(g, what = "vertices")
 g_v_df
 g_e_df <- igraph::as_data_frame(g, what = "edges") %>%
-  mutate(pass_u = ifelse(!is.na(id_dam),0.1,NA),
-         pass_d = ifelse(!is.na(id_dam),0.7,NA))
+  mutate(pass_u = ifelse(!is.na(id_barrier),0.1,NA),
+         pass_d = ifelse(!is.na(id_barrier),0.7,NA))
 g_e_df
 
 # Recreate graph
@@ -288,16 +288,16 @@ index_calculation(g, c_ij_flag = FALSE,
 
 ## Prioritization calculation and visualization
 
-The function `d_index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which barriers are to be removed and how the passability changes are provided in the 'dams_metadata' data.frame. Parallel calculations can be activated if the network is too large (thousands of vertices and edges).
+The function `d_index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which barriers are to be removed and how the passability changes are provided in the 'barriers_metadata' data.frame. Parallel calculations can be activated if the network is too large (thousands of vertices and edges).
 
-```{r idams metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
-dams_metadata <- data.frame("id_dam" =  as.character(1:7),
+```{r ibarriers metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+barriers_metadata <- data.frame("id_barrier" =  as.character(1:7),
                             "pass_u_updated" = c(1, 1, 1, 1, 1, 1, 1),
                             "pass_d_updated" = c(1, 1, 1, 1, 1, 1, 1))
-dams_metadata
+barriers_metadata
 
 d_index_calculation(g,
-                    dams_metadata = dams_metadata ,
+                    barriers_metadata = barriers_metadata ,
                     c_ij_flag = TRUE,
                     B_ij_flag = TRUE,
                     parallel = FALSE, ncores = 3,
@@ -313,7 +313,7 @@ d_index_calculation(g,
 Calculated index can be joined with the original graph and plotted to check spatial patterns.
 ```{r plot join, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 d_index <- d_index_calculation (g,
-                     dams_metadata = dams_metadata,
+                     barriers_metadata = barriers_metadata,
                      parallel = FALSE, ncores = 3,
                      param_u = 10,  param_d = 10,
                      index_type = "full",
@@ -324,7 +324,7 @@ head(d_index)
 g_v_df <- igraph::as_data_frame(g, what = "vertices")
 g_v_df
 g_e_df <- igraph::as_data_frame(g, what = "edges") %>%
-  left_join(d_index, by = "id_dam")
+  left_join(d_index, by = "id_barrier")
 g_e_df
 
 # Recreate graph
@@ -347,26 +347,26 @@ ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
 
 ## Temporal connectivity developement calculation and visualization
 
-When sufficient data are available, the function `index_calculation` can be used to calculate the temporal development of the catchment connectivity based on changing habitat weights and dams passabilities. The function `t_index_calculation` does this job, since sequential manual update of the passabilities and habitat weights can be tedious. Two functions (`t_passability_sequencer` and `t_weights_sequencer`) are provided to properly format the passability and weights data to input to `t_index_calculation`.
+When sufficient data are available, the function `index_calculation` can be used to calculate the temporal development of the catchment connectivity based on changing habitat weights and barriers passabilities. The function `t_index_calculation` does this job, since sequential manual update of the passabilities and habitat weights can be tedious. Two functions (`t_passability_sequencer` and `t_weights_sequencer`) are provided to properly format the passability and weights data to input to `t_index_calculation`.
 
 The function `t_passability_sequencer` creates a table in long format based on an input table in wide format and the information on the sequence of operations carried out.
 ```{r passability metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 # Passability metadata in long format
-dams_metadata <- data.frame("id_dam" = as.character(1:7),
+barriers_metadata <- data.frame("id_barrier" = as.character(1:7),
                                    "year_c" = c(1950, 1960, 1965, 1980, 1990, 2020, 2010),
                                    "pass_c_d" = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
                                    "pass_c_u" = c(0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1),
                                    "year_fp" = c(1990, 1999, 1980, 2002, NA, NA, 2015),
                                    "pass_fp_d" = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
                                    "pass_fp_u" = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5)   )
-head(dams_metadata)
+head(barriers_metadata)
 
 # Sequence of operations: c = construction; fp = fishpass construction
 seq_ops <- c("c", "fp")
 
 # Format the data properly
-dams_metadata <- t_passability_sequencer(dams_metadata, seq_ops)
-head(dams_metadata)
+barriers_metadata <- t_passability_sequencer(barriers_metadata, seq_ops)
+head(barriers_metadata)
 
 ```
 
@@ -392,8 +392,8 @@ Finally, the temporal connectivity can be calculated with the function `t_index_
 ```{r t connectivity, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 
 temporal_connectivity <- t_index_calculation(g,
-                         dams_metadata = dams_metadata,
-                         id_dam = "id_dam",
+                         barriers_metadata = barriers_metadata,
+                         id_barrier = "id_barrier",
                          year = "year",
                          pass_u = "pass_u",
                          pass_d = "pass_d",

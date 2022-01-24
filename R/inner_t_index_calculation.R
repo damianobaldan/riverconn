@@ -1,13 +1,13 @@
 #' Calculates time-dependent index when nodes weights or barriers passability are changing - not for exporting
 #'
 #' @param graph an object of class igraph. Can be both directed or undirected.
-#' @param dams_metadata data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
+#' @param barriers_metadata data.frame that must contain a column having the same name as the 'id_barrier' attribute of the graph,
 #'  and two columns with the corresponding upstream and downstream improved passabilities (see pass_u and pass_d), and a column with the year
 #'  passability was changed. This data frame can be obtained from easily-formatted data with the function \code{t_passability_sequencer}.
-#' @param id_dam graph edges numeric attribute used to label dams. Default is \code{"id_dam"}. It should be present in the 'dams metadata' input as well.
-#' @param year field of the 'dams metadata' where temporal information on the changes in passabiity is stored.
-#' @param pass_u field of the 'dams metadata' where temporal-dependent upstream passabiity is stored.
-#' @param pass_d field of the 'dams metadata' where temporal-dependent downstream passabiity is stored.
+#' @param id_barrier graph edges numeric attribute used to label barriers. Default is \code{"id_barrier"}. It should be present in the 'barriers metadata' input as well.
+#' @param year field of the 'barriers metadata' where temporal information on the changes in passabiity is stored.
+#' @param pass_u field of the 'barriers metadata' where temporal-dependent upstream passabiity is stored.
+#' @param pass_d field of the 'barriers metadata' where temporal-dependent downstream passabiity is stored.
 #' @param weights_metadata data.frame that must contain a column having the same name as the 'nodes_id' attribute of the graph,
 #'  a column with he corresponding weight information (see 'weight' parameter), and a column with the year
 #'  weight was changed. This data frame can be obtained from easily-formatted data with the function \code{t_weight_sequencer}.
@@ -43,8 +43,8 @@
 #' @keywords internal
 #'
 inner_t_index_calculation <- function(graph,
-                                      dams_metadata,
-                                      id_dam ,
+                                      barriers_metadata,
+                                      id_barrier ,
                                       year ,
                                       pass_u ,
                                       pass_d ,
@@ -69,27 +69,27 @@ inner_t_index_calculation <- function(graph,
   # Error messages if something wrong happens
   if(missing(graph)) stop(
     "'graph' must be defined")
-  if(missing(dams_metadata) | missing(weights_metadata)) stop(
-    "either 'dams_metadata' or 'weights_metadata' must be defined")
-  if( !(id_dam %in% colnames(dams_metadata)) ) stop(
-    "'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(year %in% colnames(dams_metadata)) ) stop(
-    "'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(pass_u %in% colnames(dams_metadata)) ) stop(
-    "'pass_u_updated' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(pass_d %in% colnames(dams_metadata)) ) stop(
-    "'pass_d_updated' must be present among the column names of the input data frame 'dams_metadata'")
+  if(missing(barriers_metadata) | missing(weights_metadata)) stop(
+    "either 'barriers_metadata' or 'weights_metadata' must be defined")
+  if( !(id_barrier %in% colnames(barriers_metadata)) ) stop(
+    "'id_barrier' must be present among the column names of the input data frame 'barriers_metadata'")
+  if( !(year %in% colnames(barriers_metadata)) ) stop(
+    "'id_barrier' must be present among the column names of the input data frame 'barriers_metadata'")
+  if( !(pass_u %in% colnames(barriers_metadata)) ) stop(
+    "'pass_u_updated' must be present among the column names of the input data frame 'barriers_metadata'")
+  if( !(pass_d %in% colnames(barriers_metadata)) ) stop(
+    "'pass_d_updated' must be present among the column names of the input data frame 'barriers_metadata'")
   if( !(weight %in% colnames(weights_metadata)) ) stop(
     "'weight' must be present among the column names of the input data frame 'weights_metadata'")
   if( !(nodes_id %in% colnames(weights_metadata)) ) stop(
     "'nodes_id' must be present among the column names of the input data frame 'weights_metadata'")
 
-  # Rename graph vertices, dams metadata, and weight metadata
-  igraph::E(graph)$id_dam <- igraph::get.edge.attribute(graph, id_dam)
-  dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"id_dam", contains(id_dam))
-  dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"year", contains(year))
-  dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"pass_u", contains(pass_u))
-  dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"pass_d", contains(pass_d))
+  # Rename graph vertices, barriers metadata, and weight metadata
+  igraph::E(graph)$id_barrier <- igraph::get.edge.attribute(graph, id_barrier)
+  barriers_metadata <- barriers_metadata %>% dplyr::rename_with( ~"id_barrier", contains(id_barrier))
+  barriers_metadata <- barriers_metadata %>% dplyr::rename_with( ~"year", contains(year))
+  barriers_metadata <- barriers_metadata %>% dplyr::rename_with( ~"pass_u", contains(pass_u))
+  barriers_metadata <- barriers_metadata %>% dplyr::rename_with( ~"pass_d", contains(pass_d))
   weights_metadata <- weights_metadata %>% dplyr::rename_with( ~"weight", contains(weight))
   weights_metadata <- weights_metadata %>% dplyr::rename_with( ~"name", contains(nodes_id))
 
@@ -99,23 +99,23 @@ inner_t_index_calculation <- function(graph,
   igraph::V(graph)$field_B <- igraph::vertex_attr(graph, field_B)
 
   # More error messages
-  if( !(id_dam %in% igraph::edge_attr_names(graph)) ) stop(
-    "'id_dam' argument must be a valid vertex attribute in the input graph")
-  if( missing(dams_metadata) ) stop(
-    "'dams_metadata' dataframe must be specified")
-  if( c(dams_metadata$pass_u < 0, dams_metadata$pass_u > 1) %>% sum >0 ) stop(
+  if( !(id_barrier %in% igraph::edge_attr_names(graph)) ) stop(
+    "'id_barrier' argument must be a valid vertex attribute in the input graph")
+  if( missing(barriers_metadata) ) stop(
+    "'barriers_metadata' dataframe must be specified")
+  if( c(barriers_metadata$pass_u < 0, barriers_metadata$pass_u > 1) %>% sum >0 ) stop(
     "'pass_u' must be between 0 and 1")
-  if( c(dams_metadata$pass_d < 0, dams_metadata$pass_d > 1) %>% sum >0 ) stop(
+  if( c(barriers_metadata$pass_d < 0, barriers_metadata$pass_d > 1) %>% sum >0 ) stop(
     "'pass_d' must be between 0 and 1")
   if( parallel == TRUE & missing(ncores) ) stop(
     "'ncores' must be specified when 'parallel = TRUE' ")
 
-  ##### Create new dams/weight sequences to account for both information #####
+  ##### Create new barriers/weight sequences to account for both information #####
 
   # new time sequence
-  if(!missing(dams_metadata)) {time_seq_long = dams_metadata$year
+  if(!missing(barriers_metadata)) {time_seq_long = barriers_metadata$year
   } else if(!missing(weights_metadata)) {time_seq_long = weights_metadata$year
-  } else {time_seq_long = c(dams_metadata$year, weights_metadata$year)}
+  } else {time_seq_long = c(barriers_metadata$year, weights_metadata$year)}
 
   years_seq <- data.frame("years" = time_seq_long %>% unique() %>% as.numeric() ) %>%
     dplyr::mutate(years_plus = .data$years + 1, years_minus = .data$years - 1) %>%
@@ -127,22 +127,22 @@ inner_t_index_calculation <- function(graph,
     #dplyr::filter(!(row_number() == 1) ) %>%
     dplyr::pull(.data$years)
 
-  # function to "interpolate" dams passability
-  dams_interpolate <- function(dams_metadata, year_selection, id_dam_selection){
+  # function to "interpolate" barriers passability
+  barriers_interpolate <- function(barriers_metadata, year_selection, id_barrier_selection){
 
-    dams_metadata <- rbind(dams_metadata,
-                           dams_metadata %>%
+    barriers_metadata <- rbind(barriers_metadata,
+                           barriers_metadata %>%
                              dplyr::filter(year == min(year)) %>%
                              dplyr::mutate(year = 0))
 
-    last_line <- dams_metadata %>%
-      dplyr::filter(id_dam == id_dam_selection) %>%
+    last_line <- barriers_metadata %>%
+      dplyr::filter(id_barrier == id_barrier_selection) %>%
       dplyr::filter(year <= year_selection) %>%
       dplyr::arrange(year) %>%
       dplyr::filter(dplyr::row_number() == dplyr::n())
 
     out <- data.frame(
-      "id_dam" = id_dam_selection,
+      "id_barrier" = id_barrier_selection,
       "year" = year_selection,
       "pass_u" = last_line %>% dplyr::select(contains("_u")) %>% dplyr::pull(),
       "pass_d" = last_line %>% dplyr::select(contains("_d")) %>% dplyr::pull()
@@ -173,13 +173,13 @@ inner_t_index_calculation <- function(graph,
 
     return(out) }
 
-  # Interpolate dams metadata
-  if(!missing(dams_metadata)) {
-    time_metadata <- tidyr::expand_grid(time_steps = years_seq, id_dam = unique(dams_metadata$id_dam))
-    dams_metadata_interpolate <- do.call(rbind,
-                                         mapply(FUN = dams_interpolate, list(dams_metadata),
+  # Interpolate barriers metadata
+  if(!missing(barriers_metadata)) {
+    time_metadata <- tidyr::expand_grid(time_steps = years_seq, id_barrier = unique(barriers_metadata$id_barrier))
+    barriers_metadata_interpolate <- do.call(rbind,
+                                         mapply(FUN = barriers_interpolate, list(barriers_metadata),
                                                 year_selection = time_metadata$time_steps,
-                                                id_dam_selection = time_metadata$id_dam) )    }
+                                                id_barrier_selection = time_metadata$id_barrier) )    }
 
   # Interpolate weights metadata
   if(!missing(weights_metadata)){
@@ -191,12 +191,12 @@ inner_t_index_calculation <- function(graph,
 
   ##### 1. Function to slice the df and calculate DCI -> for the loop #####
   t_slice_index <- function(river_graph,
-                            dams_metadata,
+                            barriers_metadata,
                             weights_metadata,
-                            dams_metadata_interpolate,
+                            barriers_metadata_interpolate,
                             weights_metadata_interpolate,
                             t,
-                            id_dam,
+                            id_barrier,
                             pass_u ,
                             pass_d ,
                             weight ,
@@ -215,13 +215,13 @@ inner_t_index_calculation <- function(graph,
                             param ) {
 
     # Create and update graph edges and vertices
-    if(!missing(dams_metadata)){
+    if(!missing(barriers_metadata)){
 
-      dams_metadata_sliced <- dams_metadata_interpolate %>% dplyr::filter(year == t)
+      barriers_metadata_sliced <- barriers_metadata_interpolate %>% dplyr::filter(year == t)
 
       river_graph_df_e <- igraph::as_data_frame(river_graph, what = "edges") %>%
-        dplyr::select(.data$from, .data$to, .data$id_dam, .data$type) %>%
-        dplyr::left_join(dams_metadata_sliced, by = "id_dam") %>%
+        dplyr::select(.data$from, .data$to, .data$id_barrier, .data$type) %>%
+        dplyr::left_join(barriers_metadata_sliced, by = "id_barrier") %>%
         dplyr::mutate(pass_u = ifelse(is.na(pass_u), 1, pass_u),
                       pass_d = ifelse(is.na(pass_d), 1, pass_d))
 
@@ -288,18 +288,18 @@ inner_t_index_calculation <- function(graph,
 
     # Start parallel loop
     iii <- NULL
-    out_index <- foreach(iii = 1:length(unique(dams_metadata$year)),
+    out_index <- foreach(iii = 1:length(unique(barriers_metadata$year)),
                          .packages=pcks,
                          .export = c("index_calculation", "t_slice_index")) %dopar% {
 
                            # Calculate and return index
                            out_index <- t_slice_index(river_graph = graph,
-                                                      dams_metadata = dams_metadata,
+                                                      barriers_metadata = barriers_metadata,
                                                       weights_metadata = weights_metadata,
-                                                      dams_metadata_interpolate = dams_metadata_interpolate,
+                                                      barriers_metadata_interpolate = barriers_metadata_interpolate,
                                                       weights_metadata_interpolate = weights_metadata_interpolate,
                                                       t = years_seq[iii],
-                                                      id_dam = id_dam,
+                                                      id_barrier = id_barrier,
                                                       pass_u = pass_u,
                                                       pass_d = pass_d,
                                                       weight = "weight",
@@ -335,11 +335,11 @@ inner_t_index_calculation <- function(graph,
                           lapply(years_seq,
                                  FUN = t_slice_index,
                                  river_graph = graph,
-                                 dams_metadata = dams_metadata,
+                                 barriers_metadata = barriers_metadata,
                                  weights_metadata = weights_metadata,
-                                 dams_metadata_interpolate = dams_metadata_interpolate,
+                                 barriers_metadata_interpolate = barriers_metadata_interpolate,
                                  weights_metadata_interpolate = weights_metadata_interpolate,
-                                 id_dam = id_dam,
+                                 id_barrier = id_barrier,
                                  pass_u = pass_u,
                                  pass_d = pass_d,
                                  weight = "weight",

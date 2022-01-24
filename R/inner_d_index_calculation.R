@@ -1,12 +1,12 @@
 #' Calculate index improvement for scenarios of barriers removal - function not for export
 #'
 #' @param graph an object of class igraph. Can be both directed or undirected.
-#' @param id_dam graph edges attribute used to label dams. Default is \code{"id_dam"}.
-#' @param dams_metadata data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
+#' @param id_barrier graph edges attribute used to label barriers. Default is \code{"id_barrier"}.
+#' @param barriers_metadata data.frame that must contain a column having the same name as the 'id_barrier' attribute of the graph,
 #' and two columns with the corresponding upstream and downstream improved passabilities (see pass_u_updated and pass_d_updated).
-#' @param pass_u_updated field in dam_metadata where updated value for upstream passability is stored
+#' @param pass_u_updated field in barrier_metadata where updated value for upstream passability is stored
 #' (recommended values higher than the original passability).
-#' @param pass_d_updated field in dam_metadata where updated value for downstream passability is stored
+#' @param pass_d_updated field in barrier_metadata where updated value for downstream passability is stored
 #' (recommended values higher than the original passability).
 #' @param mode currentlym only \code{"leave_one_out"} is implemented.
 #' @param parallel logical value to flag if parallel option is to be used.
@@ -29,9 +29,9 @@
 #' @param ncores define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}
 #'
 #' @return returns a data.frame containing the percent improvement of the index for
-#' each barrier present in the 'dams_metadata' variable.
-#' If \code{index_type = "full"}, the data.frame is organized by 'id_dam'.
-#' If \code{index_type = "reach"}, the data.frame is organized by 'id_dam' and 'name'.
+#' each barrier present in the 'barriers_metadata' variable.
+#' If \code{index_type = "full"}, the data.frame is organized by 'id_barrier'.
+#' If \code{index_type = "reach"}, the data.frame is organized by 'id_barrier' and 'name'.
 #' In both cases, both numerator and denominator used in the index calculations are reported in the columns 'num' and 'den'.
 #' The column 'd_index' contains the relative index improvement when each barrier is removed.
 #'
@@ -62,8 +62,8 @@
 #' @keywords internal
 #'
 inner_d_index_calculation <- function(graph,
-                                      dams_metadata,
-                                      id_dam ,
+                                      barriers_metadata,
+                                      id_barrier ,
                                       pass_u_updated ,
                                       pass_d_updated ,
                                       mode = "leave_one_out", # "add_one", # sequence
@@ -89,43 +89,43 @@ inner_d_index_calculation <- function(graph,
   # Error messages if something wrong happens
   if(missing(graph)) stop(
     "'graph' must be defined")
-  if( !(class(dams_metadata) ==  "data.frame")) stop(
-    "'dams_metadata' must be a data.frame")
-  if( !(id_dam %in% colnames(dams_metadata)) ) stop(
-    "'id_dam' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(pass_u_updated %in% colnames(dams_metadata)) ) stop(
-    "'pass_u_updated' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(pass_d_updated %in% colnames(dams_metadata)) ) stop(
-    "'pass_d_updated' must be present among the column names of the input data frame 'dams_metadata'")
-  if( !(id_dam %in% igraph::edge_attr_names(graph)) ) stop(
-    "'id_dam' argument must be a valid vertex attribute in the input graph")
-  if( missing(dams_metadata) ) stop(
-    "'dams_metadata' dataframe must be specified")
-  if(id_dam == nodes_id ) stop(
-    "please specify two different attributes for 'id_dam'and 'nodes_id' in the graph")
+  if( !(class(barriers_metadata) ==  "data.frame")) stop(
+    "'barriers_metadata' must be a data.frame")
+  if( !(id_barrier %in% colnames(barriers_metadata)) ) stop(
+    "'id_barrier' must be present among the column names of the input data frame 'barriers_metadata'")
+  if( !(pass_u_updated %in% colnames(barriers_metadata)) ) stop(
+    "'pass_u_updated' must be present among the column names of the input data frame 'barriers_metadata'")
+  if( !(pass_d_updated %in% colnames(barriers_metadata)) ) stop(
+    "'pass_d_updated' must be present among the column names of the input data frame 'barriers_metadata'")
+  if( !(id_barrier %in% igraph::edge_attr_names(graph)) ) stop(
+    "'id_barrier' argument must be a valid vertex attribute in the input graph")
+  if( missing(barriers_metadata) ) stop(
+    "'barriers_metadata' dataframe must be specified")
+  if(id_barrier == nodes_id ) stop(
+    "please specify two different attributes for 'id_barrier'and 'nodes_id' in the graph")
   if( !( pass_u %in% igraph::edge_attr_names(graph)) ) stop(
     "'pass_u' argument must be a edge attribute in 'graph'")
   if( !(pass_d %in% igraph::edge_attr_names(graph)) ) stop(
     "'pass_d' argument must be a edge attribute in 'graph'")
-  if( class(igraph::get.edge.attribute(graph, id_dam)) != "character") stop(
-    "'id_dam' attribute of 'graph' must be of type 'charachter'")
-  if( class(dams_metadata %>% dplyr::select(matches(id_dam)) %>% pull) != "character") stop(
-    "'id_dam' column of 'dams_metadata' must be of type 'charachter'")
+  if( class(igraph::get.edge.attribute(graph, id_barrier)) != "character") stop(
+    "'id_barrier' attribute of 'graph' must be of type 'charachter'")
+  if( class(barriers_metadata %>% dplyr::select(matches(id_barrier)) %>% pull) != "character") stop(
+    "'id_barrier' column of 'barriers_metadata' must be of type 'charachter'")
 
-  # Rename graph vertices and dams metadata based on id_dam
-  igraph::E(graph)$id_dam <- igraph::get.edge.attribute(graph, id_dam) %>% as.character()
-  dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"id_dam", contains(id_dam))
-  dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"pass_u_updated", contains(pass_u_updated))
-  dams_metadata <- dams_metadata %>% dplyr::rename_with( ~"pass_d_updated", contains(pass_d_updated))
+  # Rename graph vertices and barriers metadata based on id_barrier
+  igraph::E(graph)$id_barrier <- igraph::get.edge.attribute(graph, id_barrier) %>% as.character()
+  barriers_metadata <- barriers_metadata %>% dplyr::rename_with( ~"id_barrier", contains(id_barrier))
+  barriers_metadata <- barriers_metadata %>% dplyr::rename_with( ~"pass_u_updated", contains(pass_u_updated))
+  barriers_metadata <- barriers_metadata %>% dplyr::rename_with( ~"pass_d_updated", contains(pass_d_updated))
 
   # Change passability information
   igraph::E(graph)$pass_u <- igraph::get.edge.attribute(graph, pass_u)
   igraph::E(graph)$pass_d <- igraph::get.edge.attribute(graph, pass_d)
 
   # More error messages
-  if( length(unique(dams_metadata$id_dam)) <  length(dams_metadata$id_dam) ) stop(
-    "'id_dam' in 'dams_metadata' must be unique")
-  if( c(dams_metadata$pass_d_updated < 0, dams_metadata$pass_d_updated > 1) %>% sum >0 ) stop(
+  if( length(unique(barriers_metadata$id_barrier)) <  length(barriers_metadata$id_barrier) ) stop(
+    "'id_barrier' in 'barriers_metadata' must be unique")
+  if( c(barriers_metadata$pass_d_updated < 0, barriers_metadata$pass_d_updated > 1) %>% sum >0 ) stop(
     "'pass_d_updated' must be between 0 and 1")
   if( parallel == TRUE & missing(ncores) ) stop(
     "'ncores' must be specified when 'parallel = TRUE' ")
@@ -136,8 +136,8 @@ inner_d_index_calculation <- function(graph,
   if(missing(param)) {param  <- NA}
 
   ##### function to calculate improvements #####
-  one_barrier_removal_index <- function(dam_to_remove,
-                                        dams_metadata,
+  one_barrier_removal_index <- function(barrier_to_remove,
+                                        barriers_metadata,
                                         pass_u_updated = "pass_u_updated",
                                         pass_d_updated = "pass_d_updated",
                                         river_graph,
@@ -151,16 +151,16 @@ inner_d_index_calculation <- function(graph,
                                         param_u = NA, param_d = NA, param = NA){
 
     # Error messages
-    if(!(dam_to_remove %in% dams_metadata$id_dam)) stop(
-      "you are trying to remove a dam that is not listed in 'dams_metadata'")
+    if(!(barrier_to_remove %in% barriers_metadata$id_barrier)) stop(
+      "you are trying to remove a barrier that is not listed in 'barriers_metadata'")
 
     # Change the passability of the corresponding edge
     # to the value defined in pass_u_updated and pass_d_updated
-    igraph::E(river_graph)$pass_u[igraph::E(river_graph)$id_dam == dam_to_remove] <-
-      dams_metadata$pass_u_updated[dams_metadata$id_dam == dam_to_remove]
+    igraph::E(river_graph)$pass_u[igraph::E(river_graph)$id_barrier == barrier_to_remove] <-
+      barriers_metadata$pass_u_updated[barriers_metadata$id_barrier == barrier_to_remove]
 
-    igraph::E(river_graph)$pass_d[igraph::E(river_graph)$id_dam == dam_to_remove] <-
-      dams_metadata$pass_d_updated[dams_metadata$id_dam == dam_to_remove]
+    igraph::E(river_graph)$pass_d[igraph::E(river_graph)$id_barrier == barrier_to_remove] <-
+      barriers_metadata$pass_d_updated[barriers_metadata$id_barrier == barrier_to_remove]
 
     # Calculate index
     index <- index_calculation(river_graph,
@@ -183,12 +183,12 @@ inner_d_index_calculation <- function(graph,
 
     # Output is different for catchment and reach indices
     if (index_type == "full") {
-      index <- data.frame("id_dam" = dam_to_remove) %>%
+      index <- data.frame("id_barrier" = barrier_to_remove) %>%
         dplyr::mutate(num = index$num, den = index$den, index = index$index) }
 
     if (index_type == "reach") {
       index <- index %>%
-        dplyr::mutate(id_dam = dam_to_remove)
+        dplyr::mutate(id_barrier = barrier_to_remove)
     }
 
     return(index)
@@ -206,12 +206,12 @@ inner_d_index_calculation <- function(graph,
 
     # Start parallel loop
     iii <- NULL
-    out_index <- foreach(iii = 1:length(dams_metadata$id_dam),
+    out_index <- foreach(iii = 1:length(barriers_metadata$id_barrier),
                          .packages=pcks,
                          .export = c("one_barrier_removal_index")) %dopar% {
                            # Calculate and return index
-                           out_foreach <- one_barrier_removal_index(dam_to_remove = dams_metadata$id_dam[iii],
-                                                                    dams_metadata = dams_metadata,
+                           out_foreach <- one_barrier_removal_index(barrier_to_remove = barriers_metadata$id_barrier[iii],
+                                                                    barriers_metadata = barriers_metadata,
                                                                     pass_u_updated = pass_u_updated,
                                                                     pass_d_updated = pass_d_updated,
                                                                     river_graph = graph,
@@ -247,9 +247,9 @@ inner_d_index_calculation <- function(graph,
 
     # Apply the function
     out_index <-  do.call(rbind,
-                          lapply(dams_metadata$id_dam,
+                          lapply(barriers_metadata$id_barrier,
                                  FUN =  one_barrier_removal_index,
-                                 dams_metadata = dams_metadata,
+                                 barriers_metadata = barriers_metadata,
                                  pass_u_updated = pass_u_updated,
                                  pass_d_updated = pass_d_updated,
                                  river_graph = graph,
@@ -297,13 +297,13 @@ inner_d_index_calculation <- function(graph,
     out_index <- out_index %>%
       dplyr::left_join(out_index_bl, by = nodes_id) %>%
       dplyr::mutate(d_index = (.data$index - .data$index_bl) / .data$index_bl * 100) %>%
-      dplyr::rename_with(~id_dam, contains("id_dam"))    }
+      dplyr::rename_with(~id_barrier, contains("id_barrier"))    }
 
   if (index_type == "full") {
     out_index <- out_index  %>%
       dplyr::mutate("index_bl" = out_index_bl$index_bl) %>%
       dplyr::mutate(d_index = (.data$index - .data$index_bl) / .data$index_bl * 100) %>%
-      dplyr::rename_with(~id_dam, contains("id_dam"))     }
+      dplyr::rename_with(~id_barrier, contains("id_barrier"))     }
 
   return(out_index)
 

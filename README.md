@@ -5,6 +5,9 @@ git repository for R package riverconn
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.2 to 0.3.3  
+* term dam replaced with barrier through all the documentation and vignette
+
 0.3.1 to 0.3.2  
 * vignette updated
 

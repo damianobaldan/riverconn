@@ -3,13 +3,13 @@
 #' @param graph an object of class igraph. Can be both directed or undirected.
 #' @param ... other arguments passed to the function index_calculation
 #' @param graph an object of class igraph. Can be both directed or undirected.
-#' @param dams_metadata data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
+#' @param barriers_metadata data.frame that must contain a column having the same name as the 'id_barrier' attribute of the graph,
 #' and two columns with the corresponding upstream and downstream improved passabilities (see pass_u and pass_d), and a column with the year
 #' passability was changed. This data frame can be obtained from easily-formatted data with the function \code{t_passability_sequencer}.
-#' @param id_dam graph edges attribute used to label dams. Default is \code{"id_dam"}. It should be present in the 'dams metadata' input as well.
-#' @param year field of the 'dams metadata' where temporal information on the changes in passabiity is stored.
-#' @param pass_u field of the 'dams metadata' where temporal-dependent upstream passabiity is stored.
-#' @param pass_d field of the 'dams metadata' where temporal-dependent downstream passabiity is stored.
+#' @param id_barrier graph edges attribute used to label barriers. Default is \code{"id_barrier"}. It should be present in the 'barriers metadata' input as well.
+#' @param year field of the 'barriers metadata' where temporal information on the changes in passabiity is stored.
+#' @param pass_u field of the 'barriers metadata' where temporal-dependent upstream passabiity is stored.
+#' @param pass_d field of the 'barriers metadata' where temporal-dependent downstream passabiity is stored.
 #' @param weights_metadata data.frame that must contain a column having the same name as the 'nodes_id' attribute of the graph,
 #' a column with he corresponding weight information (see 'weight' parameter), and a column with the year
 #' weight was changed. This data frame can be obtained from easily-formatted data with the function \code{t_weight_sequencer}.
@@ -32,8 +32,8 @@
 #'
 t_index_calculation <- function(graph = graph,
                                 ...,
-                                dams_metadata,
-                                id_dam = "id_dam",
+                                barriers_metadata,
+                                id_barrier = "id_barrier",
                                 year = "year",
                                 pass_u = "pass_u",
                                 pass_d = "pass_d",
@@ -76,8 +76,8 @@ t_index_calculation <- function(graph = graph,
 
   # Call the function that calculates the index with the default values
   inner_t_index_calculation(graph = graph,
-                            dams_metadata = dams_metadata,
-                            id_dam = id_dam,
+                            barriers_metadata = barriers_metadata,
+                            id_barrier = id_barrier,
                             year = year,
                             pass_u = pass_u,
                             pass_d = pass_d,

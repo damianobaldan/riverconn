@@ -1,6 +1,6 @@
-#' Create the time-dependent metadata for dams
+#' Create the time-dependent metadata for barriers
 #'
-#' @param passability_information a data frame in wide format. Must contain an 'id_dam' column. Each change
+#' @param passability_information a data frame in wide format. Must contain an 'id_barrier' column. Each change
 #' in passability is listed in a group of 3 columns: 'year_op', 'pass_op_u', and 'pass_op_d', listing the year the operation (op) took place, and
 #' the related upstream and downstream passabilities. In case the passability did not change, a NA value should be used. See details.
 #' @param seq_ops A charachter vector with the temporal sequence of operations. It should contain all the operation strings
@@ -25,7 +25,7 @@ t_passability_sequencer <- function(passability_information, seq_ops) {
 
   # Error messages
   check_string <- passability_information %>%
-    dplyr::select(-.data$id_dam) %>%
+    dplyr::select(-.data$id_barrier) %>%
     colnames()  %>%
     sub(pattern = 'year_', replacement = "") %>%
     sub(pattern ='pass_', replacement =  "") %>%
@@ -53,22 +53,22 @@ t_passability_sequencer <- function(passability_information, seq_ops) {
     dplyr::arrange(.data$years) %>%
     dplyr::pull(.data$years)
 
-  # Create vector with dams id for metadata creation
-  id_dam <- passability_information$id_dam
+  # Create vector with barriers id for metadata creation
+  id_barrier <- passability_information$id_barrier
 
   # Create metadata
-  time_metadata <- tidyr::expand_grid(time_steps = time_steps, id_dam = id_dam)
+  time_metadata <- tidyr::expand_grid(time_steps = time_steps, id_barrier = id_barrier)
 
   # Function that selects the right passability based on the year
-  temporal_table <- function(passability_information, time_metadata, seq_ops, year, dam) {
+  temporal_table <- function(passability_information, time_metadata, seq_ops, year, barrier) {
 
-    # Add the pre-dam passability (set to 1 both pass_u and pass_d)
+    # Add the pre-barrier passability (set to 1 both pass_u and pass_d)
     seq_ops_loop <- c("no", seq_ops)
 
     # get the index (string_match) of the closest year
     string_match <- passability_information %>%
       dplyr::mutate(year_no = 0, pass_no_u = 1, pass_no_d = 1) %>%
-      dplyr::filter(id_dam == dam) %>%
+      dplyr::filter(id_barrier == barrier) %>%
       dplyr::select(contains("year")) %>%
       tidyr::pivot_longer(cols = contains(seq_ops_loop)) %>%
       dplyr::filter(.data$value <= year) %>%
@@ -77,17 +77,17 @@ t_passability_sequencer <- function(passability_information, seq_ops) {
     string_match <- sub('year_', "", x = string_match)
 
     # extract the passability information for the year
-    time_dam_passability <- passability_information %>%
+    time_barrier_passability <- passability_information %>%
       dplyr::mutate(year_no = 0, pass_no_u = 1, pass_no_d = 1) %>%
-      dplyr::filter(id_dam == dam) %>%
+      dplyr::filter(id_barrier == barrier) %>%
       dplyr::select(contains(string_match))
 
     # return the data frame
     out <- data.frame(
-      "id_dam" = dam,
+      "id_barrier" = barrier,
       "year" = year,
-      "pass_u" = time_dam_passability %>% dplyr::select(contains("_u")) %>% dplyr::pull(),
-      "pass_d" = time_dam_passability %>% dplyr::select(contains("_d")) %>% dplyr::pull()
+      "pass_u" = time_barrier_passability %>% dplyr::select(contains("_u")) %>% dplyr::pull(),
+      "pass_d" = time_barrier_passability %>% dplyr::select(contains("_d")) %>% dplyr::pull()
     ) %>% list()
 
     return(out)
@@ -96,7 +96,7 @@ t_passability_sequencer <- function(passability_information, seq_ops) {
 
   # mapply function
   out <- mapply(FUN = temporal_table, list(passability_information), list(time_metadata), list(seq_ops),
-                year = time_metadata$time_steps, dam = time_metadata$id_dam)
+                year = time_metadata$time_steps, barrier = time_metadata$id_barrier)
 
   return(do.call(rbind,out))
 
