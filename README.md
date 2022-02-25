@@ -1,5 +1,6 @@
 # riverconn
-Git repository for R package riverconn  
+Git repository for R package rivercon.  
+
 Package documentation is available in the vignete and here: https://damianobaldan.github.io/riverconn_tutorial/
 
 # Installation
