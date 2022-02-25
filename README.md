@@ -1,10 +1,14 @@
 # riverconn
-git repository for R package riverconn
+Git repository for R package riverconn
+Package documentation is available in the vignete and here: https://damianobaldan.github.io/riverconn_tutorial/
 
 # Installation
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.3 to 0.3.4  
+* vignette updated and link to online guide included in the documentation
+
 0.3.2 to 0.3.3  
 * term dam replaced with barrier through all the documentation and vignette
 

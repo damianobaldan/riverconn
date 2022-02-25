@@ -16,6 +16,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
+## Content of this vignette
+
+This vignette is meant to: (a) give a short theoretical background of equations and methods implemented in riverconn, and (b) provide an example of application of the main riverconn functionalities on a simple network (15 nodes, to keep low the computational load). For a real-world example (Ebro river, NW Spain, ca. 600 nodes), check [this](https://damianobaldan.github.io/riverconn_tutorial/) tutorial.
 
 ## Indices to assess riverscape connectivity
 
