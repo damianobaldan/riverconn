@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Indices to assess riverscape connectivity</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h2>Indices to assess riverscape connectivity</h2>
+
+<h3>Riverscape graphs</h3>
+
+<p>This package implements algorithms to compute commonly used indices to assess landscape fragmentation. All those indices assume a conceptualization of the landscape as a graph \(L = (E,V)\), where vertices (nodes) \(V\) represent single reaches, and edges (links) \(E\) represent either confluences or longitudinal barriers. </p>
+
+<p>For example, the graphs below represents a river with ten reaches. The graph on the left is directed, i.e. edges are defined for ordered pair of vertices. The graph on the right is undirected, as the order of vertices for the definition of edges is unimportant. Both graph have a &#39;tree-like&#39; structure, since no loops exist (acyclic graphs): this structure can be used to describe a river system. In both examples, both barriers and confluences are present. The edges between nodes 1 and 2 and 3 and 2 are confluences. The edge between node 2 and 4 is a barrier. </p>
+
+<p><img src="data:image/png;base64,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RoXscfr5ydP32HXnKmQP1NEXfX/CO85vKJ89kHgpieKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qH8D2T93RQjpYnNAAAAAElFTkSuQmCC" alt="plot of chunk graph example"/></p>
+
+<h3>Generalized riverscape connectivity index</h3>
+
+<p>Landscape-level connectivity can be expressed in terms of coincidence probability (Pascual-Hortal and Saura, 2006), i.e. the probability that two random points in a river network are connected. Once the coincidence probability \(I_{ij}\) is defined for each couple of \(i,j\) nodes in the graph, generalized connectivity indices for catchment and reach scales can be calculated.</p>
+
+<h5>Catchment Connectvity index.</h5>
+
+<p>Given this conceptualization, a catchment-scale connectivity index (CCI) can be calculated as:</p>
+
+<p>\[
+\ CCI = \sum_{i = 1}^{n} \sum_{j = 1}^{n} I_{ij} \frac{w_i w_j}{W^2}
+\]
+Where \(w_i\) and \(w_j\) are some node-level attributes (weights), and \(W\) is the sum of sum of the nodes weights for the whole landscape.</p>
+
+<h4>Reach Connectivity Index for rivers.</h4>
+
+<p>A reach-scale connectivity index (RCI) can be calculated by limiting the summation to all the connections to the single node \(i\).
+\[
+\ RCI_i = \sum_{j = 1}^{n} I_{ij} \frac{w_j}{W}
+\]</p>
+
+<h4>Reach Connectivity Index for rivers.</h4>
+
+<p>Nodes weights can be arbitrarily chosen. Common features used are the reach length (\(l_i\)), area(\(A_i\)), or volume(\(V_i\)). Alternatively, the habitat suitability index (HSI) can be used, defined as the ratio of length/area that is suitable for a specific organism.
+\[
+\ HSI_i = \frac{l_i,suitable}{l_i} \mbox{  ;         } HSI_i = \frac{A_i,suitable}{A_i}
+\]
+Here \(l_i,suitable\) and \(A_i,suitable\) are the fractions of length/area of reach \(i\) that are suitable, and are usually refferred to as weighted suitable length or weighted suitable area.</p>
+
+<h3>Coincidence probability definition</h3>
+
+<p>The coincidence probability depends on several factors: the presence of barriers between nodes \(i\) and \(j\) , the presence of suitable habitats in nodes \(i\) and \(j\), the distance between \(i\) and \(j\), and the quality of the habitat alongside the connection. The value of \(I_{ij}\) is thus determined by several contributions. The harmonic mean of such contributions is used to follow a &#39;one-bad-all-bad&#39; approach:</p>
+
+<p>\[
+\ I_{ij} = c_{ij}B_{ij}
+\]
+where \(c_{ij}\) is a &#39;barrier coincidence probability&#39; depending on the presence of barriers between nodes \(i\) and \(j\), \(f_{ij}\) is a &#39;landscape coincidence probability&#39; depending on the landscape friction in the movement between nodes \(i\) and \(j\), and  \(B_{ij}\) is a &#39;dispersal coincidence probability&#39; depends on the distance between nodes \(i\) and \(j\).</p>
+
+<h5>Barrier coincidence probability.</h5>
+
+<p>The barriers factor depends on the presence of barriers between nodes \(i\) and \(j\), and can be expressed as a function of the types of barriers present in the path expressed as a sequence of passability values. The passability \(p_m\) for the \(m\)-th barrier is defined as the probability that the reaches immediately upstream and downstream the barrier \(m\) are connected.</p>
+
+<p>If the flow directionality is not relevant (i.e. the river graph is undirected),</p>
+
+<p>\[
+\ c_{ij} = \prod_{m = 1}^{k} p_m^u p_m^d
+\]
+Where the product extends over the \(k\) nodes that are part of the path connecting reaches \(i\) and \(j\), \(p_m^u\) is the upsstream passability of the \(m\)-th barrier and \(p_m^u\) is the upstream passability of the \(m\)-th barrier. This definition based solely on products yields a symmetric coincidence probability (i.e. \(c_{ij} = c_{ji}\)).</p>
+
+<p>A directional version of \(c_{ij}\) can be defined as:
+\[
+\ c_{ij} = \prod_{m = 1}^{k} p_m^{eq}
+\]
+\[
+p_m^{eq} = \begin{cases}
+p_m^u & \mbox{if barrier m is encountered moving upstream in the path from i to j } \
+p_m^d & \mbox{if barrier m is encountered moving downstream in the path from i to j }
+\end{cases}
+\]
+If \(i\) and \(j\) are located in different sub-catchments, the path from i to j will be moving downstream in some sections and upstream in some other secions: this \(p_m^{eq}\) definition ensures the retained passability value is consistent with the directionality of the path from \(i\) to \(j\) (i.e. \(c_{ij} \ne c_{ji}\))</p>
+
+<h5>Dispersal coincidence probability.</h5>
+
+<p>The dispersal coincidence probability can be calculated as a function of the distance between reaches. An exponential dispersal kernel can be used:</p>
+
+<p>\[
+\ B_{ij} = PD^{d_{ij}}
+\]
+where \(PD\) is in the \((0,1)\) interval (smaller values mean more restricted movement), and \(d_{ij}\) is the distance between reaches \(i\) and \(j\). Alternatively, a threshold based probability can be used: 
+\[
+\ B_{ij} = \begin{cases}
+0 & \mbox{when } d_{ij}>d_{tr}  \
+1 & \mbox{when } d_{ij}<=d_{tr}  
+\end{cases}
+\]
+Both definitions can be easily adapted to asymmetric dispersal by defining \(PD_{d}\), \(PD_{u}\), \(d_{tr,u}\), and \(d_{tr,d}\), and calculating \(B_{ij} = B_{ij}^u B_{ij}^d\) where \(B_{ij}^u\) and \(B_{ij}^d\) are the index \(B_{ij}\) contribution calculated for the &#39;downstream moving&#39; and &#39;upstream moving&#39; sections in the path from  reach \(i\) to \(j\).</p>
+
+<p>The distance \(d_{ij}\) can be either the geometric distance, or any other measure of effective distance (e.g. \(d_{ij} / (1-HSI)\) provides an estimate of effective distance that depends on the habitat suitability index between reaches \(i\) and \(j\))</p>
+
+<h3>Prioritization of barriers</h3>
+
+<p>All the defined connectivity index can be used to prioritize barriers removal with a &#39;leave-one-out&#39; approach. For each barrier, the index \(dCCI\) can be defined as:
+\[
+\ dCCI_{m} = 100 \frac{CCI - CCI_{m, removed}}{GCI} 
+\]
+where \(GCI\) is the generalized connectivity index calculated for the original landscape with all the barriers implemented, and GCI<em>{m, removed} is the index recalculated when barrier \(m\) is removed or its passability is changed ($dRCI</em>{i}$ can be defined similarly) .</p>
+
+<p>An alternative version of the index for prioritizing barriers can be calculated as the decrease in landscape connectivity after a single barrier is implemented, with a &#39;add-one&#39; approach.</p>
+
+<h3>Time-dependent connectivity</h3>
+
+<p>when barriers metadata on the year of construction and the year of implementation of mitigation measures are available, a time trajectory of GCI can be computed (e.g. segurado et al., 2013).</p>
+
+<h2>Preliminary steps</h2>
+
+<pre><code class="r">library(igraph)
+library(dplyr)
+library(tidyr)
+library(ggnetwork)
+library(viridis)
+library(riverconn)
+library(doParallel)
+</code></pre>
+
+<h2>Input data formatting</h2>
+
+<p>This package relies heavily on the functionalities of the <code>igraph</code> package. The <a href="https://cran.r-project.org/web/packages/igraph/index.html"><code>igraph</code></a> package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy <a href="https://igraph.org/r/doc/aaa-igraph-package.html">construction</a> of <code>igraph</code> objects based on edges and vertices lists or adjacency matrices. The book <a href="https://link.springer.com/book/10.1007%2F978-3-030-44129-6">&#39;Statistical Analysis of Network Data with R&#39; by Kolaczyk and Csardi (2014)</a> offers a comprehensive tutorial on the possibilities offered by the &#39;igraph&#39; package.</p>
+
+<p>Describe here why igraph is important.</p>
+
+<h3>Input class &#39;igraph&#39; object</h3>
+
+<p>All the functions implemented in this package use as main input an object of class <code>igraph</code>. There are different ways an object of class <code>igraph</code> can be created. A symbolic sequence of edges can be used with the function <code>graph_from_literal</code> for small, toy graphs.  </p>
+
+<pre><code class="r">g &lt;- graph_from_literal(1-+2, 2-+5, 3-+4, 4-+5, 6-+7, 7-+10, 8-+9, 9-+10, 
+                        5-+11, 11-+12, 10-+13, 13-+12, 12-+14, 14-+15, 15-+16)
+g
+## IGRAPH e404abc DN-- 16 15 -- 
+## + attr: name (v/c)
+## + edges from e404abc (vertex names):
+##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
+## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
+</code></pre>
+
+<p>Note that when a graph is defined this way, edged and vertices attributes are not defined.</p>
+
+<pre><code class="r"># Edges
+E(g)
+## + 15/15 edges from e404abc (vertex names):
+##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
+## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
+
+# vertices
+V(g)
+## + 16/16 vertices, named, from e404abc:
+##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16
+</code></pre>
+
+<p>The graph can be converted to data frame with the function <code>as_data_frame</code>, specifying if edges or vertices are to be exported. Accordingly, the function <code>graph_from_data_frame</code> can be used to create an igraph object from a data frame.</p>
+
+<pre><code class="r">igraph::as_data_frame(g, what = &quot;edges&quot;)
+##    from to
+## 1     1  2
+## 2     2  5
+## 3     5 11
+## 4     3  4
+## 5     4  5
+## 6     6  7
+## 7     7 10
+## 8    10 13
+## 9     8  9
+## 10    9 10
+## 11   11 12
+## 12   12 14
+## 13   13 12
+## 14   14 15
+## 15   15 16
+
+igraph::as_data_frame(g, what = &quot;vertices&quot;)
+##    name
+## 1     1
+## 2     2
+## 5     5
+## 3     3
+## 4     4
+## 6     6
+## 7     7
+## 10   10
+## 8     8
+## 9     9
+## 11   11
+## 12   12
+## 13   13
+## 14   14
+## 15   15
+## 16   16
+</code></pre>
+
+<p>Finally, an igraph object can be exported to and generated from adjacency matrices using the functions <code>as_adjacency_matrix</code> and <code>graph_from_adjacency_matrix</code>, specifying if edges or vertices are to be exported.</p>
+
+<pre><code class="r">igraph::as_adjacency_matrix(g)
+## 16 x 16 sparse Matrix of class &quot;dgCMatrix&quot;
+##                                   
+## 1  . 1 . . . . . . . . . . . . . .
+## 2  . . 1 . . . . . . . . . . . . .
+## 5  . . . . . . . . . . 1 . . . . .
+## 3  . . . . 1 . . . . . . . . . . .
+## 4  . . 1 . . . . . . . . . . . . .
+## 6  . . . . . . 1 . . . . . . . . .
+## 7  . . . . . . . 1 . . . . . . . .
+## 10 . . . . . . . . . . . . 1 . . .
+## 8  . . . . . . . . . 1 . . . . . .
+## 9  . . . . . . . 1 . . . . . . . .
+## 11 . . . . . . . . . . . 1 . . . .
+## 12 . . . . . . . . . . . . . 1 . .
+## 13 . . . . . . . . . . . 1 . . . .
+## 14 . . . . . . . . . . . . . . 1 .
+## 15 . . . . . . . . . . . . . . . 1
+## 16 . . . . . . . . . . . . . . . .
+</code></pre>
+
+<h3>Decorating the class &#39;igraph&#39; object</h3>
+
+<p>Once the structure of the network is defined, the graph can be decorated with edges and vertices attributes. Attributes can be either added directly to the graph or joined to the edges and vertices data frame. edges and vertices attributes are saved as vectors, so common, data.frame-like operations are possible.</p>
+
+<p>Here we add the dam information as edge attribute, including the field &#39;id_dam&#39;, and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.</p>
+
+<pre><code class="r"># Decorate edges 
+E(g)$id_dam &lt;- c(1, NA, 2, 3, NA, 4, NA, 5, 6, NA,  NA, NA, NA, 7, NA)
+E(g)$type &lt;- ifelse(is.na(E(g)$id_dam), &quot;joint&quot;, &quot;dam&quot;)
+E(g)
+## + 15/15 edges from e404abc (vertex names):
+##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
+## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
+
+# Decorate vertices
+V(g)$length &lt;- c(1, 1, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 4, 5, 6, 9)
+V(g)$HSI &lt;- c(0.2, 0.1, 0.3, 0.4, 0.5, 0.5, 0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8)
+V(g)$Id &lt;- V(g)$name
+V(g)
+## + 16/16 vertices, named, from e404abc:
+##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16
+</code></pre>
+
+<h3>Visualizing the &#39;igraph&#39; object</h3>
+
+<p>The <code>ggnetwork</code> library can be used to plot a igraph object with <code>tidyverse</code>-friendly functions. The function <code>ggnetwork</code> is used to fortify <code>igraph</code> objects with a specified layout. Here the tree layout is used, but for real river networks the coordinates of the reaches centroids can be used.</p>
+
+<pre><code class="r">gg0 &lt;- ggnetwork(g, layout =  layout_as_tree(g %&gt;% as.undirected, root = 16), scale = FALSE)
+
+ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_nodes(alpha = 0.3) +
+  geom_edges(alpha = 0.5, 
+             arrow = arrow(length = unit(10, &quot;pt&quot;), type = &quot;closed&quot;), 
+             aes(color = type)) + 
+  scale_color_viridis(discrete = TRUE)+
+  geom_nodetext(aes(label = name), fontface = &quot;bold&quot;) +
+  theme_blank()
+</code></pre>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAAB/lBMVEUAAAAAABQAABgAABwAACEAACsAADIAADoAADsAAEQAAGYACBUADjIADkcAHBwAHEcAHV8ANTMANjsAOjoAOpAASIAAYWgAZrYTE1EVAAAcAAAcABwcHAAlSJEoAAAoZYArAAArZUUtLn4uCAAxAAAyAAAyMloyWn45AAA5ABQ5hU45iX46AAA6ADo6AGY6OgA6Ojo6OpA6ZmY6ZpA6ZrY6kLY6kNtBAABBDgBBXKlHHABHbH5IgLNMgFFSIF5SQX5aMgBaMhxafn5bIGlbMyZhP2liJRxlKABlX0FlmrNlqVtmAABmADpmAGZmOpBmZgBmZjpmZmZmZrZmkNtmrn5mrpJmtttmtv9pMx1sRxxsWjJsWkdsfmxyLjJyQH5yQVpyQWxzMwBzgKl7QTR7TUp7WoN+WjJ+Wkd+bEd+fn6ASACAs7OKgKmPNQCPYSGP0ZKQOgCQOjqQOmaQZjqQkDqQtv+Q27aQ2/+aUgCaZSiazWyeUgChXEShgJGhgKmzgEizmmWzs4Czs5qzs7O1XwC17Vu185K2ZgC2Zjq2kJC2//++s1G/cw3YkivYsD3YzV3YzWzahRTaqSXbkDrbkGbbrjvbtmbbtpDb85Lb/7bb/9vb///9qSX9zDP96kD97Vv+rjv+0VP+837+85L/tmb/tpD/25D//7b//9v////lndCxAAAACXBIWXMAAAsSAAALEgHS3X78AAAQCUlEQVR4nO3di3scVRnH8YPBRuNdq9GqiGhNxUVBYoRaxQugNIJYDCsqK4pg1xsFxYiXpRglMXjD1UQNdCqzbHb+S2dmt5dcZq/z7vue8/t9+zyll6c5553PzuymDTsuYZA57Q0wnQgPGuFBIzxohAeN8KARHjTCg0Z40AgPGuFBIzxohAeN8KARHjTCg0Z40AgPGuFBIzxohAeN8KARHjTCgxYqfLtSTZKtilvc0d6J0QKF3664av1spdqafVp7K0YLE75dcW5h7Zkjm9obsVug8Ge2Mvg3f4KX+qLChE+SVnqp/83saruypL0TowUMH7/4us3d5XntnRgtYPjo5Y+u5i/u2SGFC78SR/864Ra1N2K1UOGTJIrTb9qbsFuw8HGcwsex9jbMFix8lMPzlC8qVPi4d8bzlC8oVPioB89TvqBA4WOe8QMKFD6P6H0iPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGihwrcr1foL68453mny8AKF3664hbW/neSNZQsLE757//jnjvN0LyxQ+DNbrlo/m/LfyvvHH16Y8PndpJOHef/44gKGb9QaSeccn+YPL2D42t0zPOMLCxf+9sYjdzreP76oUOGTRiO91Ne0d2G3YOFrGTzlCwsVvpGf8WnaG7FaqPC1HjxP+YIChW/wjB9QoPB5RO8T4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UELFb5dqSbZjSaP8t6yhxco/HbFVet3JU1H+ILChO/eRvyxsxXCFxUo/JmtFP73Jz/FS31RYcLnNxWu//nofwlfVMDwr/zUpVH+8AKGj6KIr+oLCxd+JY7iVwhfVKjwSRKl8JH2JuwWLHwcp/BxrL0NswULH+XwPOWLChU+7p3xPOULChU+6sHzlC8oUPiYZ/yAAoXPI3qfCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA9aqPDtSrX+woZzi9obsVqg8NsVt7D2F1dN/bW3YrQw4bv3j1+rpz9Y0t6L0UKDj/Je/so/3Eq9nlz4gzvd/RU+3+8rNPi4W/SSy67xG+5t/+79ivbGrBUafPdOg1F8MYNvurc/H+V3n+N9B/cXHHzOHufw7crcZtT7ufa2zBUe/IX8DG+l8E2XdmP2swvau7JXYPDpqb3vKT3mc/yhBQXf5d13Ze/dTJz0ewsI/hLt/pdyUe83SH91wcBfxbrvk/Yrj4MA6dsf3xzvDwYC35f0qt8Ljh4bfhTOsOh3l93c19JPXG/5z72/cLOr3V8Y6qEQAPyolEHRp2d8aylpLe0uH91ppeTrS0lzfpg/6D38OIwB0afwu/ftbKzuLleTzpOru19dTXbvHeaU9xx+XMJg6FP4zpO/vG8nE0/Wq+mV3uWX/IF5DT8JXyD02Yu75teXkgw+O+OHOtuzPIaflC4I+gy+fVN6fV+eT1pHd7Ln+Ow/g/MWvgy2AOg75+Y2O09tpmf8/Zde1Q91pfcVviyyAOjTs34xyS/1I+UlfJlc/tM38zMdAL5sKv/px8k7eAkmRHrP4KWI8Oi9gpfkQaP3CF6aBoveG/hpsCDRewI/LRIcei/gp8nhJ31j5D/hAfy0KXykr9VGpTcPr8HgH32t0RiR3ji8FoFv9Cn8QfqNfn+Laxpe8/D7RZ/D76f3FV770GuvP2S5+JdqvS7Lr7u5+1fT79180v7ksltad3v/md4svIXDbmEPw3XgjG/NZ/9g117Mviwn+7q85WqyvufNQYzCWznkVvYxqAPP8c1qfqlvZl+Bl/E/tekDvKXDbWkvxR14VZ+e8em53lzKz3hP4K0damv7OayDn8evu9mbV9sVN3t/1Q94i4fZ4p725v3f3Fk9xFb3NX6m4C0fXst7GydD8NYPrfX9jZYZeB8Oqw97HDYj8L4cUl/2OTgT8D4dTp/22i8D8L4dSt/2e3jq8D4eRnt7Hn1DyvD2DuFwWdv36O/SrApv7fCNkq29Z2/mN9qGFOFtHbrRs7T/7js1X7Why++QcOWtEv5k49/jLR22cbMzQ9R7t/Y+G9q9zwK8nUM2WQbmyMUvRNHeGzJkJ3r+5TfpD9o3V9zRnXW3592wVOANHK7SsjHLgTM+9W7N52+HlMLfspO9PY76GW/jUJWXhXkOe47PvgintZTBL2ZfjaMNb+EwlZ3+TAde1e854w3A6x8imbTnOvB5/J7n+C788p4vs50qvPbhkUx3tgOLD3zDuynCh8yeZWm+lhv0hrZTg7d0WKTyacYpwft0SCbJnzmnAu/P4Zg8X2adArwvh6Ks/JhXCr57G+f0ez8OQ7nFcT7+hpt9QHsrhQnBb1dctV5Pv1+R+fjG2z6Rjv/DSrU53BsKayQD372N9/nrnYO8fXs2/mf/vlZPmsPdH0YjIfgzWyn8Xz+yBQqfj79Wb80+qL2VwqSe41vpte5z2fdCH9943fF7r3RMJgjfqDWQ4bP/b3l3eUl7J0UJwtdqNWT42t0zq4bnl4O/PX3I/9bu4LJl4z9yJ+Cnc0n2Jg3pN7GPbj7r44vB5+/J0hj9f9gPJPPji8Hn78pi+jEvmvnxpeAbvYe84ce8ZPbHl4Kv9SY3/JiXzP74QvAN+w95yTwYX/KfZe1OPZVsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPLwe/7kDvJZ3VrlTrdzUd4E2Fk87Jdz5Wl/rg1tuuuIW1H7x3tYV2//i03eOn1upSH9x42f3jF9aeObIJeDfpfPhbd6Q+uu2y+8dX65+fS+Hh7iadXLz2iXblxjiW+vi2a7mVeH3uj/87AQUfx1EUxVHcOfeu9D8RGn42/kvudNyce/7lE6fT8U3OXzp8Zp714jWr7crH4vwnUVT2KmbrjX/RnU6f7FYuXvOE1fnLP+O77tErP3NuMYm68iYf8zJ1533JrSTJPyvXfKP7U4PzC1zqs1kvXeCiKz9E6ZDxLc4v8Ryfn+bdq1t+8lucW7D949ucX+RV/YXLj3KrFzrR9o5v013mVX1y5fKev6a3ObpUe8ePjI4vAJ/Nefl1bPfxbnJ0ofaOH136JWuVDx8f9jOLo8vky/ilwxfMaHB0kbwZv2z4wgntjS6RP+OXDN9nPnOjC+TR+OXC953O2ujl59P4pcIPmM3Y6KXn1fhlwg+czNboZefX+CXCDzGXqdFLzrPxy4MfaipLo5ebb+OXBj/kTIZGLzXvxi8LfuiJ7IxeZv6NXxL8CPOYGb3EPBy/HPiRprEyenn5OH4p8CPOYmT00vJy/DLgR57Exuhl5ef4JcCPMYeJ0UvK0/Enhx9rCgujl5Ov408MP+YMBkYvJW/HnxR+7An0Ry8jf8efEH6C/auPXkIejz8Z/ES71x598nwefyL4Cffuu7zX408CP/HO/Zb3e/wJ4EvYt8/yno8/Pnwpu/ZX3vfxx4Yvac++yns//rjwpe3YT3n/xx8TvsT9+igfwPjjwZe6W//kQxh/LPiS9+qbfBDjjwNf+k79kg9j/DHgBfbpk3wg448OL7JLf+RDGX9keKE9+iIfzPijwovt0A/5cMYfEV5wfz7IBzT+aPCiu7MvH9L4I8EL7826fFDjjwIvvjPb8mGNPwL8FPZlWT6w8YeHn8qu7MqHNv7Q8FPak1X54MYfFn5qO7IpH974Q8JPkcOifIDjDwc/VQx78iGOPxT8lCmsyQc5/jDwU4ewJR/m+EPAKzBYkg90/MHwKgh25EMdfyC8EoEV+WDH7wO/kd04Tg0gTjrnjirem7bp0pb0xt8Qvgd5MXzLLZytrEiu3b/4IacJnyT1h2afUFu8ee1nHhe9B3mfM76+dv56xXvinv2we4smfP38dR/UW339yK+fOy559PvC/8rp3f68c/IDX9aF/9Frv6i3enPmnvPHlOCTL2hea5tHv/Mh1Uv97vF3K67e2XBvEL35fB/4pnvj9wVX7l/nXPbiSlO+5W5o6K2eJI3vflryelsM364cuaMmuPLAHrntTZpnfFN1/FcrNzw8o/PiLv985v2CSw+o8bvb3voTveWT773+jobeKd+5083cLrl8n0t9rZF+E1x6QMrLa68vvXwxfKORLq33mFdeXnt98eWL4Wv50mqPeeXltdcXX74QvtF7zCk95pWX115ffvlC+FpvaaXHvPLy2uvLL18E39B9yCsvr73+FJbv+8+yqn+Bob689vqyyxPe7PqEB12f8KDrEx50fcKDrk940PUJD7o+4UHXJzzo+oQHXZ/woOsTHnR9woOuT3jQ9QkPuj7hQdcnPOj6hAddn/Cg6xMedH3Cg65PeND1CQ+6PuFB1yc86PqEB12f8KDrEx50fcKDrk940PUJD7o+4UHXJzzo+oQHXZ/woOsTHnR9woOuT3jQ9QkPuj7hQdcnPOj6hAddn/Cg6xMedH3Cg65PeND1CQ+6PuFB1yc86Pp68Gffo3dP4ez29a95QHH5ZOuYW9S702Vnw7lFyQX6wH/7OrcguXT/Xj126pui99gcUPvYqUdnnlZbvjVz6lHRe3n3ubfsMacJn9TXnjmyqbd888iP1+p6y7dm7nlW6d6y7TPfUrx9fNrjMw8qrt58x/s0L/XpM52TvIt43+f4li580q4orr8+u9oWvYF7/1qzqy3R8S3D7y7rHfikObe5uzyvtvx6trzk+Gbhm+lDXnP99k2rmlecJuwZ3/m5m9X9dK4i+/lU/zQ/nWMhR3jQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQ/g/bCQVaX1ZvlAAAAABJRU5ErkJggg==" alt="plot of chunk plot igraph"/></p>
+
+<p>This function can be used to display all the graph attributes.</p>
+
+<pre><code class="r">ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_edges(alpha = 0.5, 
+             arrow = arrow(length = unit(10, &quot;pt&quot;), type = &quot;open&quot;)) +
+  geom_nodes(aes(size = length, color = HSI)) +
+  scale_color_viridis()+
+  theme_blank()
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk plot igraph 2"/></p>
+
+<h3>Assigning network directionality</h3>
+
+<p>The <code>riverconn</code> package implements the function <code>set_graph_directionality</code> that allows to assign the directionality of the graph once an outlet is defined.</p>
+
+<pre><code class="r">par(mfrow=c(1,3))
+g1 &lt;- set_graph_directionality(g, field_name = &quot;Id&quot;, outlet_name = &quot;16&quot;)
+g2 &lt;- set_graph_directionality(g, field_name = &quot;Id&quot;, outlet_name = &quot;5&quot;)
+plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE))
+plot(g1, layout = layout_as_tree(as.undirected(g1), root = 16, flip.y = FALSE))
+plot(g2, layout = layout_as_tree(as.undirected(g2), root = 5, flip.y = FALSE))
+</code></pre>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAABHVBMVEUAAAAAACAAADgAAE4AAGMAAHcmRJU0JE40JHc0Pzg0WiA6Op86ZrM6kO1ERJVEX6REealcJGNcJHdcPzhcP2NcWiBcWjhccgBfeZ9feaRmZrNmZtpmkO1mtu1mtv95RJV5X5V5X5+BP2OBcgCBiQCQttqQtu2Qtv+Q2/+RX5WReZ+RkZuRqamkP2OkP3ekWjikWk6kWmOkciCkcjikiQCkiSCknwCpeZWpkZupqaSpqam2Zp+2ZrO2kLO2kNq22+222/+2///FWk7FWmPFWnfFcjjFck7FcmPFiQDFiSDFiTjFiU7FnwDbkLPbkMfbtsfbttrb///mck7mcmPmiSDmiU7mnwDmnyDmnzj/trP/tsf/28f//9r//+3////wsN+yAAAACXBIWXMAAAsSAAALEgHS3X78AAAPO0lEQVR4nO2dDXvcRhVGZXtNSymEfoRAMQGabSGA7aRp0kZ8FGhdktRpi53I3pbu//8ZSPKu12tLczWrmVk57znPU2itmbl3dbTa0YykyaYgSbbuBGA9IF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF4UxIuCeFEQLwriRUG8KIgXBfGiIF6UV1B8PsfY3Lzd2Gy1Hi7PeIFr9MRPw2xG/KydzGrJLhGIct+Usdp30Gyzw6yrutV6uDyjBa4JJCM7eVK4m8oOPjZKBCOvs2kXX6fiODCy4sVDV/VnDx2te2AEihe4IoyLrPj8VuH0mj19+v6jROaNbKxUsuLex67qR+OXd4J8EiNQvMB1a2FaKY4t8UXxwONDxszGSiU7vvmRq/rxj++FOYSNQPEC162FaaWD+K/eHg9FvDuVbG98/Iaj+sn91w7DiHcHihe4bi1QM+WuNn7jSxupLiGMbKxUtsen7zi2b41f3gzzSYxA8QJPw/XqRxtGS99sbKa7dHRnY6XyqXv7dxtbgT7J9377JFzgacDreLu3Gao/2gHrarfv5lAfxbOlcIERv9pmxC9A/AogPjDWDrI29zouPPBsKaD3V1S8aTZu9e54toT4nrEExFtzOq+meGNCyJov6lm9O54t+RTPjbmoV1J8VjiHEY3N1WD+oat6NVeycm4egfoFzuuP2brThzQtG+qblBUHDyu1jR86r7y/cA19Zl8+uH/TUf3f4yNrmLJjnrNAXYv7Bd54Uop/sdHaWtd2jKSML1GYEl2T+fLh3q22idfyDFicvuWenSuOxo7qu49O3wk0O1cH6lzcL/DoVlHc+7h9yqFrO+6cZt8xVwn318w8Qr2yqWZpWn7fSnMn+7uG+P2iRXz1y3n8i/94TK2489w/32uOH8LZJs/Apfjjmx/FFn/2HXOVML5m5hHqlU65Q7PmHm31183D3UfOXE/vuKpnxefjQLvt9Hx+3TE2c77FL/AkK/bGo5+2xu7ckIvZd8xVwviamUeoF5t1f7ZhX1Z/fPy70bb7xLLlqp7nW8F69XVL+azltkKzTfmseFcmt7Pt7H+/btsc7Dd+3zgJWV8z6wj14fmbP/tV80Xs7Nr2t/9yN9B2DRz2fsdFq1NHq2db/GNOdvJPb3z7z7bNoY7d6jvm2v7479bXzDhCvTgfvci7/T1s9VXzdeWyYqvtGwOJf/7mex9a/ZO/ub9mk53ppzvtR6gfzYY6i+tZ3RtHsz0CphA/i+S9YaViHbm6y7x2Ykv1YOldjdXWmxzyN34eyuvPK5frzPIu895/Pat7xWn22+8c46oV+HaoltGuPrX7kS+Rurp/lOWjoEdsq2Lo++CaLoF6VA5AT2/xtS/HunB27xU0tfgrnn1Sj7Rv+z17FPbJJTtaRdY2kODVkjPvCHe+5q3/4VUzHHl28nT1MdbHWVE820g3tZjns4g9Q1atnLTnHeOW57zxX/0qhiQ7efBg9ScRRreKoztHKZ8qDhOxbKX83JHH6i+RX/kXz3phyV6+fnP1ib9yB+6NTzeDZpQiYtlK+bnTiq8MVpPrniJjPUhdnvO+WH0GvdyBu49Siw8QsZr0Kr5ILH52+4dfnWDz8Q0tv7yzcsuTalJsaydkPkkiTqr9ufWHts2RxGdF2Z/y01jNx588jZLP3c0ej29NdrLNja8DDSV3i3gjRMQy79HmP/7btjmWeP/+lNEZ6UXPHnKyi7mwARMO2S6a9e9PGZ2RXiD+CrEuU7KyP+XXdv2btH07SjaIv0K069PM95Heye2yV/99a2ekF33FB0qje8BA4h0bY4l//sHvW/sVzUx2pnc/aO+M9ENSfMrZuY5Rw1VJ0jLiQ0UNV6Ub/YaGkr2hL3BEZysS4vsNDcUbWIob0d2Kgvh6aOjJqp+0qn0Q5n7/pBHPHlBJPWQ7HZL4atT685VfuVXWfvr0/cSzcwEiVp/69C158au/a62e7Ig0ohgzYjUSur8rLb4aGjrOlrrKxn31F/41r2p/tf3HOKk1MovYp2tf1i1bOTgctd7SLiH+dpaNbk8vXiU5d+pysXpgaXI7TmqNnEdcHnrzOFjzupWN0egnkZ+da2rY/4ok1mXTZOfsn+m5U+f9bPONs/8ra37zWayBpUYuRux4rDaUqz9x+0MskcT/UN3w5dd2VaXYiL6DFzeythdY7WG1SOSLg9VZKDcLLRFJ/AodaaMXGhDnfcfpbqbuzvxe6/Ynlea3Y3dvM6J4z4600QsNicvtAL1XdDlYvRoclPiDw6TiHY+qDVV822s6BiP+7ArKK5VPspP7724HeT7eYPFwTD5d3qXLW9Jhh21OOV/a5BUylvid8gpqx6OHVF4vl1Uy41HqMOQXqV9rc/ZCuOW/JyW3V0i6ZH5efNWcY59auyWznlPrfH+dvRBuvad44610S8dkvih++e/dif6b2iWdNf6ilrurnhN5mO7xuEay4uRJ1ym5IDkn6ExZ2a27J1X2Kr98uJd6yv0S9jpeS/TPOU0v2rVt7R3oek7keO3ireWcluifc5rP6+itJonvpL69N+UjUo3YyzldpH/OqQ70ttGSROFdVHMimynH4hvJR14vsft535yTneEaHA9Ce/1CuLs/eu/DNWeRf3LDo/TkRn73zV45J/xp6/OujLis8TLuYhIxi1/BT3zPV4/nF0oMYV/PQbxVuO+rx/N8VmIIe3oB4o2yRfHCvUZCVjwzXl8+G3nwiJqCAXj3TiKpeGvZa3ul60GMliyxptH5hkSiFr+Ml3hz2Wt7petBjJYsgXib7fHxG+4KG/dfcy+vM4zRkovkaV9k10rEFaka6/sU/mu2aTj7OtsyX04+gNGSJR7XN/v9Zc1ZZAc+S0ytcE/j5Xg+hb/f+ZPxZpbvfvNn9xPu1cPQ/UYegpPuZj8H9uIuS/R7OKgO6FfcPiGGKJGWhDf7tWMv7rJEv4eD6oB+xV9R8alu9mvHc0UqxAdgkuxmPxfZweF8kUP3wx7V/86fCusTz6/4Kyk+2c1+Lp6PRlW3eHYbXUuh2U2C5/c09gDx04EM2c5xDSoEHG9A/HRg4h3mQw40IX46MPHt44hBhxgRPx3WFHG73rBjy0nn4zuWSM+AxLfeJr/i/fNt+I0Pmwvd22vbp3+HlMFgJmkWNGQUPEev2TlzoXt7bfv075CyyI2nl9bGmej6BNndeefzqeeNGMZC9/ba9unfIWViPL20RvLF410da3Q/n3qK37fm46217dO/Q8ok4goJvfFc8CErz6Ydi/v9xlcL3bvfiWysbZ9/kvwdUiYxV0joi+eCD2Un7H33jTCLol55nK1c71LvXNu+eglX8ndImcRcIaEvXRd8mBkpv1UPYnzjF3Ec0wjuSunfIWUSc4WE3tQLPtg/8fMC2VdvO8+4FxpeMaH24WTP8usn5goJ/akXfLD23mx7dREwitCrvxKt8a/diw6E6hGqXw7rJLTg+WztBucF3dnG6p/uZ9NeP22Nrw/qVmxQDPh0tKB95G6lwZ2efZqGLMwSw+M65Oh4QdJKg3r9O7OXQuaujQPlWohvHVtebcg5xFXM8qBy24Yhcz3ydHtfg/ilr0ze8LfBc00yDTlpF2zcYh43X/7P68F1SbbWe3HXrj5jF3DAqk4hM8f2BsgQbxFoZOb5fEf3OKsG/cR59TTSs41rpv3sfemfrTuNTpzv2qx4cdjrgb+wh/roVnF05+iafH3mVBOG9wZ1i4CD80H507c6zsa0EFz83vh0UA/D2pRJH9/86JqIn5Gd7O8OTPzuo2sofm987H7Id2hkB4eDEj+p5uO3ej3hkZ4y6b3x5q/XnYYXP4zefd14VYFBYPE72ebG18aj1EOjTHpr49trlnT3abi2+oHygGsG4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBeFMSLgnhREC8K4kVBvCiIFwXxoiBelP8D7Q7kpTD2dsYAAAAASUVORK5CYII=" alt="plot of chunk direction"/></p>
+
+<h2>Indices calculation</h2>
+
+<p>The function <code>index_calcualtion</code> is used to calculate all the nuances of the CCI and RCI</p>
+
+<p>Before calculation, the information on the dams passability are needed.</p>
+
+<pre><code class="r"># Check edged and nodes attributes
+g_v_df &lt;- igraph::as_data_frame(g, what = &quot;vertices&quot;)
+g_v_df
+##    name length HSI Id
+## 1     1      1 0.2  1
+## 2     2      1 0.1  2
+## 5     5      2 0.3  5
+## 3     3      3 0.4  3
+## 4     4      4 0.5  4
+## 6     6      1 0.5  6
+## 7     7      5 0.5  7
+## 10   10      1 0.6 10
+## 8     8      7 0.7  8
+## 9     9      7 0.8  9
+## 11   11      3 0.8 11
+## 12   12      2 0.8 12
+## 13   13      4 0.8 13
+## 14   14      5 0.8 14
+## 15   15      6 0.8 15
+## 16   16      9 0.8 16
+g_e_df &lt;- igraph::as_data_frame(g, what = &quot;edges&quot;) %&gt;%
+  mutate(pass_u = ifelse(!is.na(id_dam),0.1,NA),
+         pass_d = ifelse(!is.na(id_dam),0.7,NA))
+g_e_df
+##    from to id_dam  type pass_u pass_d
+## 1     1  2      1   dam    0.1    0.7
+## 2     2  5     NA joint     NA     NA
+## 3     5 11      2   dam    0.1    0.7
+## 4     3  4      3   dam    0.1    0.7
+## 5     4  5     NA joint     NA     NA
+## 6     6  7      4   dam    0.1    0.7
+## 7     7 10     NA joint     NA     NA
+## 8    10 13      5   dam    0.1    0.7
+## 9     8  9      6   dam    0.1    0.7
+## 10    9 10     NA joint     NA     NA
+## 11   11 12     NA joint     NA     NA
+## 12   12 14     NA joint     NA     NA
+## 13   13 12     NA joint     NA     NA
+## 14   14 15      7   dam    0.1    0.7
+## 15   15 16     NA joint     NA     NA
+
+# Recreate graph
+g &lt;- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
+g 
+## IGRAPH e509c95 DN-- 16 15 -- 
+## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/n),
+## | type (e/c), pass_u (e/n), pass_d (e/n)
+## + edges from e509c95 (vertex names):
+##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
+## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
+</code></pre>
+
+<p>Index with default settings.</p>
+
+<pre><code class="r">index_calculation(g, param = 0.9)
+##        num  den     index
+## 1 562.6092 3721 0.1511984
+</code></pre>
+
+<p>Index with default settings, only \(c_{ij}\) or \(B_{ij}\) contributions</p>
+
+<pre><code class="r">index_calculation(g, B_ij_flag = FALSE)
+##        num  den     index
+## 1 791.8553 3721 0.2128071
+index_calculation(g, param = 0.9, c_ij_flag = FALSE)
+##        num  den    index
+## 1 1210.583 3721 0.325338
+</code></pre>
+
+<p>Index with default settings, only \(B_{ij}\) contributions with threshold on the distance</p>
+
+<pre><code class="r">index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = &quot;asymmetric&quot;, 
+                  disp_type = &quot;threshold&quot;, param_u = 0, param_d = 5)
+##   num  den     index
+## 1 413 3721 0.1109917
+index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = &quot;asymmetric&quot;, 
+                  disp_type = &quot;threshold&quot;, param_u = 5, param_d = 10)
+##    num  den     index
+## 1 1045 3721 0.2808385
+index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = &quot;symmetric&quot;, 
+                  disp_type = &quot;threshold&quot;, param = 10)
+##    num  den     index
+## 1 1277 3721 0.3431873
+</code></pre>
+
+<p>Index for reach, inbound connections used, only \(B_{ij}\) contributions with threshold on the distance</p>
+
+<pre><code class="r">index_calculation(g, c_ij_flag = FALSE,
+                  index_type = &quot;reach&quot;, index_mode = &quot;to&quot;,
+                  dir_distance_type = &quot;asymmetric&quot;, 
+                  disp_type = &quot;threshold&quot;, param_u = 0, param_d = 5)
+## # A tibble: 16 x 4
+##    name    num   den  index
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 1         1    61 0.0164
+##  2 10       13    61 0.213 
+##  3 11        7    61 0.115 
+##  4 12       11    61 0.180 
+##  5 13        5    61 0.0820
+##  6 14        7    61 0.115 
+##  7 15        6    61 0.0984
+##  8 16        9    61 0.148 
+##  9 2         2    61 0.0328
+## 10 3         3    61 0.0492
+## 11 4         7    61 0.115 
+## 12 5         8    61 0.131 
+## 13 6         1    61 0.0164
+## 14 7         6    61 0.0984
+## 15 8         7    61 0.115 
+## 16 9         7    61 0.115
+index_calculation(g, c_ij_flag = FALSE,
+                  dir_distance_type = &quot;asymmetric&quot;,
+                  index_type = &quot;reach&quot;, index_mode = &quot;to&quot;,
+                  disp_type = &quot;threshold&quot;, param_u = 5, param_d = 10)
+## # A tibble: 16 x 4
+##    name    num   den  index
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 1        14    61 0.230 
+##  2 10       18    61 0.295 
+##  3 11       33    61 0.541 
+##  4 12       35    61 0.574 
+##  5 13       31    61 0.508 
+##  6 14       18    61 0.295 
+##  7 15       13    61 0.213 
+##  8 16       15    61 0.246 
+##  9 2        14    61 0.230 
+## 10 3         7    61 0.115 
+## 11 4        11    61 0.180 
+## 12 5        33    61 0.541 
+## 13 6         6    61 0.0984
+## 14 7        14    61 0.230 
+## 15 8         7    61 0.115 
+## 16 9        21    61 0.344
+index_calculation(g, c_ij_flag = FALSE,
+                  index_type = &quot;reach&quot;, index_mode = &quot;to&quot;,
+                  dir_distance_type = &quot;symmetric&quot;, 
+                  disp_type = &quot;threshold&quot;, param = 10)
+## # A tibble: 16 x 4
+##    name    num   den index
+##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 1        16    61 0.262
+##  2 10       28    61 0.459
+##  3 11       26    61 0.426
+##  4 12       41    61 0.672
+##  5 13       31    61 0.508
+##  6 14       23    61 0.377
+##  7 15       22    61 0.361
+##  8 16       15    61 0.246
+##  9 2        20    61 0.328
+## 10 3        14    61 0.230
+## 11 4        16    61 0.262
+## 12 5        25    61 0.410
+## 13 6        11    61 0.180
+## 14 7        20    61 0.328
+## 15 8        14    61 0.230
+## 16 9        26    61 0.426
+</code></pre>
+
+<h2>Prioritization calculation and visualization</h2>
+
+<p>The function <code>index_calcualtion</code> allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the &#39;dams_metadata&#39; object. Parallel calculations can be activated.</p>
+
+<pre><code class="r">dams_metadata &lt;- data.frame(&quot;id_dam&quot; =  c(1, 2, 3, 4, 5, 6, 7),
+                            &quot;pass_u_updated&quot; = c(1, 1, 1, 1, 1, 1, 1),
+                            &quot;pass_d_updated&quot; = c(1, 1, 1, 1, 1, 1, 1))
+dams_metadata
+##   id_dam pass_u_updated pass_d_updated
+## 1      1              1              1
+## 2      2              1              1
+## 3      3              1              1
+## 4      4              1              1
+## 5      5              1              1
+## 6      6              1              1
+## 7      7              1              1
+
+d_index_calculation (g,
+                     dams_metadata,
+                     parallel = FALSE, ncores = 3,
+                     param_u = 10,  param_d = 10, param = 0.5,
+                     index_type = &quot;full&quot;,
+                     dir_distance_type = &quot;asymmetric&quot;,
+                     disp_type = &quot;threshold&quot;)
+##   id_dam      num  den     index  index_bl   d_index
+## 1      1 761.3266 3721 0.2046027 0.2006519  1.968976
+## 2      2 906.0160 3721 0.2434872 0.2006519 21.348084
+## 3      3 787.2481 3721 0.2115690 0.2006519  5.440798
+## 4      4 771.3265 3721 0.2072901 0.2006519  3.308324
+## 5      5 986.0332 3721 0.2649915 0.2006519 32.065261
+## 6      6 837.7657 3721 0.2251453 0.2006519 12.206919
+## 7      7 824.7457 3721 0.2216463 0.2006519 10.463074
+</code></pre>
+
+<p>Calculated index can be joined with the original graph and plotted to check spatial patterns.</p>
+
+<pre><code class="r">
+d_index &lt;- d_index_calculation (g,
+                     dams_metadata,
+                     parallel = FALSE, ncores = 3,
+                     param_u = 10,  param_d = 10,
+                     index_type = &quot;full&quot;,
+                     B_ij_flag = FALSE)
+
+# Check edged and nodes attributes
+g_v_df &lt;- igraph::as_data_frame(g, what = &quot;vertices&quot;)
+g_v_df
+##    name length HSI Id
+## 1     1      1 0.2  1
+## 2     2      1 0.1  2
+## 5     5      2 0.3  5
+## 3     3      3 0.4  3
+## 4     4      4 0.5  4
+## 6     6      1 0.5  6
+## 7     7      5 0.5  7
+## 10   10      1 0.6 10
+## 8     8      7 0.7  8
+## 9     9      7 0.8  9
+## 11   11      3 0.8 11
+## 12   12      2 0.8 12
+## 13   13      4 0.8 13
+## 14   14      5 0.8 14
+## 15   15      6 0.8 15
+## 16   16      9 0.8 16
+g_e_df &lt;- igraph::as_data_frame(g, what = &quot;edges&quot;) %&gt;%
+  left_join(d_index, by = &quot;id_dam&quot;)
+g_e_df
+##    from to id_dam  type pass_u pass_d       num  den     index  index_bl
+## 1     1  2      1   dam    0.1    0.7  807.3490 3721 0.2169710 0.2128071
+## 2     2  5     NA joint     NA     NA        NA   NA        NA        NA
+## 3     5 11      2   dam    0.1    0.7 1008.4973 3721 0.2710286 0.2128071
+## 4     3  4      3   dam    0.1    0.7  837.5552 3721 0.2250887 0.2128071
+## 5     4  5     NA joint     NA     NA        NA   NA        NA        NA
+## 6     6  7      4   dam    0.1    0.7  818.9726 3721 0.2200947 0.2128071
+## 7     7 10     NA joint     NA     NA        NA   NA        NA        NA
+## 8    10 13      5   dam    0.1    0.7 1184.2933 3721 0.3182729 0.2128071
+## 9     8  9      6   dam    0.1    0.7  976.2077 3721 0.2623509 0.2128071
+## 10    9 10     NA joint     NA     NA        NA   NA        NA        NA
+## 11   11 12     NA joint     NA     NA        NA   NA        NA        NA
+## 12   12 14     NA joint     NA     NA        NA   NA        NA        NA
+## 13   13 12     NA joint     NA     NA        NA   NA        NA        NA
+## 14   14 15      7   dam    0.1    0.7 1223.1558 3721 0.3287170 0.2128071
+## 15   15 16     NA joint     NA     NA        NA   NA        NA        NA
+##      d_index
+## 1   1.956632
+## 2         NA
+## 3  27.358782
+## 4   5.771242
+## 5         NA
+## 6   3.424522
+## 7         NA
+## 8  49.559308
+## 9  23.281074
+## 10        NA
+## 11        NA
+## 12        NA
+## 13        NA
+## 14 54.467087
+## 15        NA
+
+# Recreate graph
+g &lt;- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
+g 
+## IGRAPH eb09e32 DN-- 16 15 -- 
+## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/n),
+## | type (e/c), pass_u (e/n), pass_d (e/n), num (e/n), den (e/n), index
+## | (e/n), index_bl (e/n), d_index (e/n)
+## + edges from eb09e32 (vertex names):
+##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
+## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
+
+# Fortify and plot graph
+gg0 &lt;- ggnetwork(g, layout =  layout_as_tree(g %&gt;% as.undirected, root = 16), scale = FALSE)
+ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_edges(alpha = 0.5, size = 3,
+             arrow = arrow(length = unit(10, &quot;pt&quot;), type = &quot;open&quot;), 
+             aes(color = d_index)) +
+  geom_nodes() +
+  scale_color_viridis()+
+  theme_blank()
+</code></pre>
+
+<p><img src="data:image/png;base64,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" alt="plot of chunk plot join"/></p>
+
+<h2>Temporal developement calculation and visualization</h2>
+
+<p>TO FILL</p>
+
+<h2>References</h2>
+
+<p>TO FILL</p>
+
+</body>
+
+</html>
