@@ -3,6 +3,8 @@ Git repository for R package rivercon.
 
 Package documentation is available in the vignette and here: https://damianobaldan.github.io/riverconn_tutorial/
 
+The latest version of the package is available from GitHub: https://github.com/damianobaldan/riverconn
+
 # Installation
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
