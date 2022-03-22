@@ -7,18 +7,18 @@
 #' and two columns with the corresponding upstream and downstream improved passabilities (see pass_u and pass_d), and a column with the year
 #' passability was changed. This data frame can be obtained from easily-formatted data with the function \code{t_passability_sequencer}.
 #' @param id_barrier graph edges attribute used to label barriers. Default is \code{"id_barrier"}. It should be present in the 'barriers metadata' input as well.
-#' @param year field of the 'barriers metadata' where temporal information on the changes in passabiity is stored.
-#' @param pass_u field of the 'barriers metadata' where temporal-dependent upstream passabiity is stored.
-#' @param pass_d field of the 'barriers metadata' where temporal-dependent downstream passabiity is stored.
+#' @param year field of the 'barriers metadata' where temporal information on the changes in passability is stored.
+#' @param pass_u field of the 'barriers metadata' where temporal-dependent upstream passability is stored.
+#' @param pass_d field of the 'barriers metadata' where temporal-dependent downstream passability is stored.
 #' @param weights_metadata data.frame that must contain a column having the same name as the 'nodes_id' attribute of the graph,
 #' a column with he corresponding weight information (see 'weight' parameter), and a column with the year
 #' weight was changed. This data frame can be obtained from easily-formatted data with the function \code{t_weight_sequencer}.
 #' @param weight param weight graph vertex attribute used to assign weights to the reaches (nodes). Default is \code{"length"}.
-#' @param nodes_id graph vertex attribute used to univoquely label reaches (nodes). Default is \code{"name"}.
+#' @param nodes_id graph vertex attribute used to uniquely label reaches (nodes). Default is \code{"name"}.
 #' @param parallel logical value to flag if parallel option is to be used.
 #' @param ncores define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}
 #'
-#' @return a data.frame with a 'year' field and related connectity index.
+#' @return a data.frame with a 'year' field and related connectivity index.
 #' If \code{index_type = "reach"}, the data.frame is organized by 'year' and 'name'.
 #'
 #' @export

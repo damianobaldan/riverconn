@@ -4,7 +4,7 @@
 #' @param weight graph vertex attribute used to assign weights to the reaches (nodes/vertices). Should not be also an edge attribute.
 #' Default is \code{"length"}.
 #' @param nodes_id graph vertex attribute used to univoquely label reaches (nodes/vertices). Should not be also an edge attribute.
-#' Default is \code{"name"}. The graph attribute must be a charachter vector.
+#' Default is \code{"name"}. The graph attribute must be a character vector.
 #' Used to label the results when \code{index_type = "reach"}
 #' @param index_type indicates if the index should be calculated for the whole catchment (\code{index_type = "full"}),
 #' or for each reach (\code{index_type = "reach"})
