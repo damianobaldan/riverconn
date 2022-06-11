@@ -6,8 +6,8 @@
 \usage{
 inner_d_index_calculation(
   graph,
-  dams_metadata,
-  id_dam,
+  barriers_metadata,
+  id_barrier,
   pass_u_updated,
   pass_d_updated,
   mode = "leave_one_out",
@@ -34,15 +34,15 @@ inner_d_index_calculation(
 \arguments{
 \item{graph}{an object of class igraph. Can be both directed or undirected.}
 
-\item{dams_metadata}{data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
+\item{barriers_metadata}{data.frame that must contain a column having the same name as the 'id_barrier' attribute of the graph,
 and two columns with the corresponding upstream and downstream improved passabilities (see pass_u_updated and pass_d_updated).}
 
-\item{id_dam}{graph edges numeric attribute used to label dams. Default is \code{"id_dam"}.}
+\item{id_barrier}{graph edges attribute used to label barriers. Default is \code{"id_barrier"}.}
 
-\item{pass_u_updated}{field in dam_metadata where updated value for upstream passability is stored
+\item{pass_u_updated}{field in barrier_metadata where updated value for upstream passability is stored
 (recommended values higher than the original passability).}
 
-\item{pass_d_updated}{field in dam_metadata where updated value for downstream passability is stored
+\item{pass_d_updated}{field in barrier_metadata where updated value for downstream passability is stored
 (recommended values higher than the original passability).}
 
 \item{mode}{currentlym only \code{"leave_one_out"} is implemented.}
@@ -85,9 +85,9 @@ and two columns with the corresponding upstream and downstream improved passabil
 }
 \value{
 returns a data.frame containing the percent improvement of the index for
-each barrier present in the 'dams_metadata' variable.
-If \code{index_type = "full"}, the data.frame is organized by 'id_dam'.
-If \code{index_type = "reach"}, the data.frame is organized by 'id_dam' and 'name'.
+each barrier present in the 'barriers_metadata' variable.
+If \code{index_type = "full"}, the data.frame is organized by 'id_barrier'.
+If \code{index_type = "reach"}, the data.frame is organized by 'id_barrier' and 'name'.
 In both cases, both numerator and denominator used in the index calculations are reported in the columns 'num' and 'den'.
 The column 'd_index' contains the relative index improvement when each barrier is removed.
 }

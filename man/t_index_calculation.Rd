@@ -7,8 +7,8 @@
 t_index_calculation(
   graph = graph,
   ...,
-  dams_metadata,
-  id_dam = "id_dam",
+  barriers_metadata,
+  id_barrier = "id_barrier",
   year = "year",
   pass_u = "pass_u",
   pass_d = "pass_d",
@@ -24,17 +24,17 @@ t_index_calculation(
 
 \item{...}{other arguments passed to the function index_calculation}
 
-\item{dams_metadata}{data.frame that must contain a column having the same name as the 'id_dam' attribute of the graph,
+\item{barriers_metadata}{data.frame that must contain a column having the same name as the 'id_barrier' attribute of the graph,
 and two columns with the corresponding upstream and downstream improved passabilities (see pass_u and pass_d), and a column with the year
 passability was changed. This data frame can be obtained from easily-formatted data with the function \code{t_passability_sequencer}.}
 
-\item{id_dam}{graph edges numeric attribute used to label dams. Default is \code{"id_dam"}. It should be present in the 'dams metadata' input as well.}
+\item{id_barrier}{graph edges attribute used to label barriers. Default is \code{"id_barrier"}. It should be present in the 'barriers metadata' input as well.}
 
-\item{year}{field of the 'dams metadata' where temporal information on the changes in passabiity is stored.}
+\item{year}{field of the 'barriers metadata' where temporal information on the changes in passability is stored.}
 
-\item{pass_u}{field of the 'dams metadata' where temporal-dependent upstream passabiity is stored.}
+\item{pass_u}{field of the 'barriers metadata' where temporal-dependent upstream passability is stored.}
 
-\item{pass_d}{field of the 'dams metadata' where temporal-dependent downstream passabiity is stored.}
+\item{pass_d}{field of the 'barriers metadata' where temporal-dependent downstream passability is stored.}
 
 \item{weights_metadata}{data.frame that must contain a column having the same name as the 'nodes_id' attribute of the graph,
 a column with he corresponding weight information (see 'weight' parameter), and a column with the year
@@ -42,14 +42,14 @@ weight was changed. This data frame can be obtained from easily-formatted data w
 
 \item{weight}{param weight graph vertex attribute used to assign weights to the reaches (nodes). Default is \code{"length"}.}
 
-\item{nodes_id}{graph vertex attribute used to univoquely label reaches (nodes). Default is \code{"name"}.}
+\item{nodes_id}{graph vertex attribute used to uniquely label reaches (nodes). Default is \code{"name"}.}
 
 \item{parallel}{logical value to flag if parallel option is to be used.}
 
 \item{ncores}{define how many cores are used in parallel processing. Active only when \code{parallel = TRUE}}
 }
 \value{
-a data.frame with a 'year' field and related connectity index.
+a data.frame with a 'year' field and related connectivity index.
 If \code{index_type = "reach"}, the data.frame is organized by 'year' and 'name'.
 }
 \description{

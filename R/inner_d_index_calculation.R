@@ -292,7 +292,7 @@ inner_d_index_calculation <- function(graph,
                                                 param = param) %>%
     rename(num_bl = .data$num, den_bl = .data$den, index_bl = .data$index)
 
-  # Different outputs for reach and full
+  # Different outputs for reach full and sum
   if (index_type == "reach") {
     out_index <- out_index %>%
       dplyr::left_join(out_index_bl, by = nodes_id) %>%
@@ -300,6 +300,12 @@ inner_d_index_calculation <- function(graph,
       dplyr::rename_with(~id_barrier, contains("id_barrier"))    }
 
   if (index_type == "full") {
+    out_index <- out_index  %>%
+      dplyr::mutate("index_bl" = out_index_bl$index_bl) %>%
+      dplyr::mutate(d_index = (.data$index - .data$index_bl) / .data$index_bl * 100) %>%
+      dplyr::rename_with(~id_barrier, contains("id_barrier"))     }
+
+  if (index_type == "sum") {
     out_index <- out_index  %>%
       dplyr::mutate("index_bl" = out_index_bl$index_bl) %>%
       dplyr::mutate(d_index = (.data$index - .data$index_bl) / .data$index_bl * 100) %>%

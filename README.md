@@ -9,6 +9,9 @@ The latest version of the package is available from GitHub: https://github.com/d
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.5 to 0.3.6 
+* added type = "sum" in index_calculation to calculate barriers attributes sum regardless of the network structure (this facilitates the calculation of area fragmentation indices)
+
 0.3.4 to 0.3.5 
 * typos corrected in the documentation
 

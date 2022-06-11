@@ -1,7 +1,7 @@
 Package: riverconn
 Type: Package
 Title: Calculates common fragmentation indices for riverscapes
-Version: 0.3.4
+Version: 0.3.6
 Authors@R:c(
     person("Damiano", "Baldan", email = "damiano.baldan91@gmail.com", role = c("aut", "cre"),
          comment = c(ORCID = "0000-0001-9237-4883")),

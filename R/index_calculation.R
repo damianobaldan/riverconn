@@ -7,7 +7,7 @@
 #' Default is \code{"name"}. The graph attribute must be a character vector.
 #' Used to label the results when \code{index_type = "reach"}
 #' @param index_type indicates if the index should be calculated for the whole catchment (\code{index_type = "full"}),
-#' or for each reach (\code{index_type = "reach"})
+#'  for each reach (\code{index_type = "reach"}), or for each barrier (\code{index_type = "sum"})
 #' @param index_mode indicates if reach index should be calculated based on inbound links ("to") or outbound links ("from").
 #' Only active when \code{index_type = "reach"}.
 #' @param c_ij_flag include in the calculation the barriers.
@@ -31,7 +31,7 @@
 #' Only used if \code{dir_distance_type = "symmetric"}. See details below.
 #'
 #' @return If \code{index_type = "full"}, returns a numeric value with the index value (column 'index').
-#' if \code{index_type = "reach"}, returns a data frame with the index value (column 'index') for each reach
+#' if \code{index_type = c("reach", "sum")}, returns a data frame with the index value (column 'index') for each reach
 #' (the field specified in 'nodes_id' is used for reach identification in the data frame).
 #' In both cases, both numerator and denominator used in the index calculations are reported in the columns 'num' and 'den'.
 #' @export
@@ -73,8 +73,8 @@ index_calculation <- function(graph,
   # Error messages
   if( !(class(graph) ==  "igraph")) stop(
     "'graph' must be an 'igraph' object")
-  if( !(index_type %in% c("full", "reach")) ) stop(
-    "'index_type' must me either 'full' or 'reach'")
+  if( !(index_type %in% c("full", "reach", "sum")) ) stop(
+    "'index_type' must me either 'full', 'reach', or 'sum'")
   if( index_type == "reach" & !(index_mode %in% c("from", "to")) ) stop(
     "'index_mode' must me either 'from' or 'to'")
   if( index_type == "reach" & missing(index_mode) ) stop(
@@ -134,7 +134,7 @@ index_calculation <- function(graph,
                          param = param)
   }
 
-  # 3. Aggregate results
+  # 3. Aggregate c_ij and B_ij
   if(c_ij_flag == TRUE & B_ij_flag == TRUE) {
     agg_mat <- c_ij_mat %>%
       dplyr::left_join(B_ij_mat, by = c("from", "to")) %>%
@@ -189,6 +189,41 @@ index_calculation <- function(graph,
       dplyr::summarize(num = sum(.data$prod)) %>%
       dplyr::mutate(den = sum( g_v_df$weight_node ), index = .data$num/.data$den ) %>%
       dplyr::rename_with(~nodes_id, contains("name") )
+  }
+
+  # If the summation index is to be calculated
+  if (index_type == "sum") {
+
+    # Rename the passabilities based on user names
+    # Set the names of the vertices. By default keep the name argument.
+    igraph::E(graph)$pass_u <- igraph::get.edge.attribute(graph, pass_u)
+    igraph::E(graph)$pass_d <- igraph::get.edge.attribute(graph, pass_d)
+
+    # Fill up the passabilities of the confluences -before it's NANs-
+    igraph::E(graph)$pass_u <- ifelse(is.na(igraph::E(graph)$pass_u), pass_confluence, igraph::E(graph)$pass_u)
+    igraph::E(graph)$pass_d <- ifelse(is.na(igraph::E(graph)$pass_d), pass_confluence, igraph::E(graph)$pass_d)
+
+    # Calculate passability based on symmetric or asymmetric
+    if(dir_fragmentation_type == "symmetric") {
+      igraph::E(graph)$pass <- igraph::E(graph)$pass_d * igraph::E(graph)$pass_u  }
+    if(dir_fragmentation_type == "asymmetric" & index_mode == "to") {
+      igraph::E(graph)$pass <- igraph::E(graph)$pass_d }
+    if(dir_fragmentation_type == "asymmetric" & index_mode == "from") {
+      igraph::E(graph)$pass <- igraph::E(graph)$pass_u }
+
+    # Calculate index
+    g_v_df <- dplyr::rename_with(
+      igraph::as_data_frame(graph, what = "vertices"),
+      ~"weight_node", contains(weight))
+
+    g_e_df <- igraph::as_data_frame(graph, what = "edges") %>%
+      dplyr::mutate(pass = 1 - .data$pass ) %>%
+      dplyr::select(.data$to, .data$pass) %>%
+      dplyr::rename(name = .data$to) %>%
+      dplyr::left_join(g_v_df)
+
+    index = sum(g_e_df$pass*g_e_df$UP_CELLS) / sum(g_e_df$UP_CELLS)
+
   }
 
   # Return value or df with output

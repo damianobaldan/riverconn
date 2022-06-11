@@ -27,11 +27,11 @@ index_calculation(
 \arguments{
 \item{graph}{an object of class igraph. Can be both directed or undirected.}
 
-\item{weight}{graph vertex attribute used to assign weights to the reaches (nodes). Should not be also an edge attribute.
+\item{weight}{graph vertex attribute used to assign weights to the reaches (nodes/vertices). Should not be also an edge attribute.
 Default is \code{"length"}.}
 
-\item{nodes_id}{graph vertex attribute used to univoquely label reaches (nodes). Should not be also an edge attribute.
-Default is \code{"name"}. The graph attribute must be a charachter vector.
+\item{nodes_id}{graph vertex attribute used to univoquely label reaches (nodes/vertices). Should not be also an edge attribute.
+Default is \code{"name"}. The graph attribute must be a character vector.
 Used to label the results when \code{index_type = "reach"}}
 
 \item{index_type}{indicates if the index should be calculated for the whole catchment (\code{index_type = "full"}),

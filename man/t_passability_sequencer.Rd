@@ -2,12 +2,12 @@
 % Please edit documentation in R/t_passability_sequencer.R
 \name{t_passability_sequencer}
 \alias{t_passability_sequencer}
-\title{Create the time-dependent metadata for dams}
+\title{Create the time-dependent metadata for barriers}
 \usage{
 t_passability_sequencer(passability_information, seq_ops)
 }
 \arguments{
-\item{passability_information}{a data frame in wide format. Must contain an 'id_dam' column. Each change
+\item{passability_information}{a data frame in wide format. Must contain an 'id_barrier' column. Each change
 in passability is listed in a group of 3 columns: 'year_op', 'pass_op_u', and 'pass_op_d', listing the year the operation (op) took place, and
 the related upstream and downstream passabilities. In case the passability did not change, a NA value should be used. See details.}
 
@@ -18,7 +18,7 @@ in the 'passability_information' data frame.}
 a dataframe in a long format that can be used as input to the tDCI function.
 }
 \description{
-Create the time-dependent metadata for dams
+Create the time-dependent metadata for barriers
 }
 \details{
 This function is meant to help processing data the way they can be obtained from a database, or the way they are stored in a spreadsheet.
