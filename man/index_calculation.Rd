@@ -35,7 +35,7 @@ Default is \code{"name"}. The graph attribute must be a character vector.
 Used to label the results when \code{index_type = "reach"}}
 
 \item{index_type}{indicates if the index should be calculated for the whole catchment (\code{index_type = "full"}),
-or for each reach (\code{index_type = "reach"})}
+for each reach (\code{index_type = "reach"}), or for each barrier (\code{index_type = "sum"})}
 
 \item{index_mode}{indicates if reach index should be calculated based on inbound links ("to") or outbound links ("from").
 Only active when \code{index_type = "reach"}.}
@@ -73,7 +73,7 @@ Only used if \code{dir_distance_type = "symmetric"}. See details below.}
 }
 \value{
 If \code{index_type = "full"}, returns a numeric value with the index value (column 'index').
-if \code{index_type = "reach"}, returns a data frame with the index value (column 'index') for each reach
+if \code{index_type = c("reach", "sum")}, returns a data frame with the index value (column 'index') for each reach
 (the field specified in 'nodes_id' is used for reach identification in the data frame).
 In both cases, both numerator and denominator used in the index calculations are reported in the columns 'num' and 'den'.
 }
