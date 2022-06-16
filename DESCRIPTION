@@ -1,7 +1,7 @@
 Package: riverconn
 Type: Package
-Title: Calculates common fragmentation indices for riverscapes
-Version: 0.3.7
+Title: Common Fragmentation and Connectivity  Indices for Riverscapes
+Version: 0.3.8
 Authors@R:c(
     person("Damiano", "Baldan", email = "damiano.baldan91@gmail.com", role = c("aut", "cre"),
          comment = c(ORCID = "0000-0001-9237-4883")),
@@ -11,7 +11,7 @@ Maintainer: Damiano Baldan <damiano.baldan91@gmail.com>
 Description: This package implements functions to calculate indices for assessing riverscape fragmentation, 
     including the Dendritic Connectivity Index, the Population Connectivity Index, the River Fragmentation Index, 
     the Probability of Connectivity, and the Integral Index of connectivity (for a review, see Jumani et al., 2020 
-    <https://doi.org/10.1088/1748-9326/abcb37>). Functions to calculate indices improvement when fragmentation due 
+    <doi:10.1088/1748-9326/abcb37>). Functions to calculate indices improvement when fragmentation due 
     to barriers is reduced are also included.
 License: MIT + file LICENSE
 Encoding: UTF-8

@@ -89,7 +89,7 @@ inner_d_index_calculation <- function(graph,
   # Error messages if something wrong happens
   if(missing(graph)) stop(
     "'graph' must be defined")
-  if( !(class(barriers_metadata) ==  "data.frame")) stop(
+  if( !is.data.frame(barriers_metadata)) stop(
     "'barriers_metadata' must be a data.frame")
   if( !(id_barrier %in% colnames(barriers_metadata)) ) stop(
     "'id_barrier' must be present among the column names of the input data frame 'barriers_metadata'")
@@ -107,9 +107,9 @@ inner_d_index_calculation <- function(graph,
     "'pass_u' argument must be a edge attribute in 'graph'")
   if( !(pass_d %in% igraph::edge_attr_names(graph)) ) stop(
     "'pass_d' argument must be a edge attribute in 'graph'")
-  if( class(igraph::get.edge.attribute(graph, id_barrier)) != "character") stop(
+  if( !is.character(igraph::get.edge.attribute(graph, id_barrier)) ) stop(
     "'id_barrier' attribute of 'graph' must be of type 'charachter'")
-  if( class(barriers_metadata %>% dplyr::select(matches(id_barrier)) %>% pull) != "character") stop(
+  if( !is.character(barriers_metadata %>% dplyr::select(matches(id_barrier)) %>% pull)) stop(
     "'id_barrier' column of 'barriers_metadata' must be of type 'charachter'")
 
   # Rename graph vertices and barriers metadata based on id_barrier

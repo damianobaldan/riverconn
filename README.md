@@ -9,6 +9,9 @@ The latest version of the package is available from GitHub: https://github.com/d
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.76 to 0.3.8
+* minor fixes for CRAN upload
+
 0.3.6 to 0.3.7
 * vignette updated
 

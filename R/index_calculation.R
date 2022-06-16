@@ -71,7 +71,7 @@ index_calculation <- function(graph,
                               param_u, param_d, param) {
 
   # Error messages
-  if( !(class(graph) ==  "igraph")) stop(
+  if( !igraph::is_igraph(graph)) stop(
     "'graph' must be an 'igraph' object")
   if( !(index_type %in% c("full", "reach", "sum")) ) stop(
     "'index_type' must me either 'full', 'reach', or 'sum'")
@@ -95,7 +95,7 @@ index_calculation <- function(graph,
     "'weight' argument must be a edge attribute in 'graph'")
   if( field_B %in% igraph::edge_attr_names(graph) ) stop(
     "'field_B' argument must be a edge attribute in 'graph'")
-  if( class(igraph::get.vertex.attribute(graph, nodes_id)) != "character") stop(
+  if( !is.character(igraph::get.vertex.attribute(graph, nodes_id))) stop(
     "'nodes_id' attribute of 'graph' must be of type 'charachter'")
 
   if(c_ij_flag == TRUE){
