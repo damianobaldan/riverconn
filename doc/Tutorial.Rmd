@@ -138,9 +138,9 @@ library(doParallel)
 
 ## Preprocessing of input data 
 
-This package relies heavily on the functionalities of the `igraph` package. The [`igraph`](https://cran.r-project.org/web/packages/igraph/index.html) package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy [construction](https://igraph.org/r/doc/aaa-igraph-package.html) of `igraph` objects based on edges and vertices lists or adjacency matrices. The book ['Statistical Analysis of Network Data with R' by Kolaczyk and Csardi (2014)](https://link.springer.com/book/10.1007%2F978-3-030-44129-6) offers a comprehensive tutorial on the possibilities offered by the 'igraph' package.
+This package relies heavily on the functionalities of the `igraph` package. The [`igraph`](https://CRAN.R-project.org/package=igraph) package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy construction of `igraph` objects based on edges and vertices lists or adjacency matrices. The book 'Statistical Analysis of Network Data with R' by Kolaczyk and Csardi (2014) offers a comprehensive tutorial on the possibilities offered by the 'igraph' package.
 
-Describe here why igraph is important.
+A more comprehensive tutorial, including a real-world case study can be found here: http://damianobaldan.github.io/riverconn_tutorial/
 
 ### Input class 'igraph' object
 
