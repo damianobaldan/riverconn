@@ -140,7 +140,7 @@ library(doParallel)
 
 This package relies heavily on the functionalities of the `igraph` package. The [`igraph`](https://CRAN.R-project.org/package=igraph) package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy construction of `igraph` objects based on edges and vertices lists or adjacency matrices. The book 'Statistical Analysis of Network Data with R' by Kolaczyk and Csardi (2014) offers a comprehensive tutorial on the possibilities offered by the 'igraph' package.
 
-A more comprehensive tutorial, including a real-world case study can be found here: http://damianobaldan.github.io/riverconn_tutorial/
+A more comprehensive tutorial, including a real-world case study can be found here: https://damianobaldan.github.io/riverconn_tutorial/
 
 ### Input class 'igraph' object
 
@@ -183,7 +183,7 @@ Here we add the dam information as edge attribute, including the field 'id_dam',
 
 ```{r g decorate, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 # Decorate edges 
-E(g)$id_dam <- c(1, NA, 2, 3, NA, 4, NA, 5, 6, NA,  NA, NA, NA, 7, NA)
+E(g)$id_dam <- c("1", NA, "2", "3", NA, "4", NA, "5", "6", NA,  NA, NA, NA, "7", NA)
 E(g)$type <- ifelse(is.na(E(g)$id_dam), "joint", "dam")
 E(g)
 
@@ -303,18 +303,19 @@ index_calculation(g, c_ij_flag = FALSE,
 The function `index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the 'dams_metadata' object. Parallel calculations can be activated.
 
 ```{r idams metadata, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
-dams_metadata <- data.frame("id_dam" =  c(1, 2, 3, 4, 5, 6, 7),
+dams_metadata <- data.frame("id_dam" =  c("1", "2", "3", "4", "5", "6", "7"),
                             "pass_u_updated" = c(1, 1, 1, 1, 1, 1, 1),
                             "pass_d_updated" = c(1, 1, 1, 1, 1, 1, 1))
 dams_metadata
 
-d_index_calculation (g,
-                     dams_metadata,
-                     parallel = FALSE, ncores = 3,
-                     param_u = 10,  param_d = 10, param = 0.5,
-                     index_type = "full",
-                     dir_distance_type = "asymmetric",
-                     disp_type = "threshold")
+d_index_calculation(g,
+                    barriers_metadata = dams_metadata,
+                    id_barrier = "id_dam",
+                    parallel = FALSE, ncores = 3,
+                    param_u = 10,  param_d = 10, param = 0.5,
+                    index_type = "full",
+                    dir_distance_type = "asymmetric",
+                    disp_type = "threshold")
 
 
 ```
@@ -324,11 +325,12 @@ Calculated index can be joined with the original graph and plotted to check spat
 ```{r plot join, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 
 d_index <- d_index_calculation (g,
-                     dams_metadata,
-                     parallel = FALSE, ncores = 3,
-                     param_u = 10,  param_d = 10,
-                     index_type = "full",
-                     B_ij_flag = FALSE)
+                                barriers_metadata = dams_metadata,
+                                id_barrier = "id_dam",
+                                parallel = FALSE, ncores = 3,
+                                param_u = 10,  param_d = 10,
+                                index_type = "full",
+                                B_ij_flag = FALSE)
 
 # Check edged and nodes attributes
 g_v_df <- igraph::as_data_frame(g, what = "vertices")

@@ -1,785 +1,995 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>Indices to assess riverscape connectivity</title>
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Damiano Baldan" />
+
+<meta name="date" content="2022-06-17" />
+
+<title>riverconn vignette</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
   }
-};
+});
 </script>
 
-<!-- Styles for R syntax highlighter -->
 <style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
-   pre .literal {
-     color: #990073
-   }
 
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
 </style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
 
-<!-- MathJax scripts -->
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
 
 
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
 }
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
 }
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
 }
-
-h1 {
-   font-size:2.2em;
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
 }
-
-h2 {
-   font-size:1.8em;
+#TOC ul ul {
+margin-left: -2em;
 }
-
-h3 {
-   font-size:1.4em;
+#TOC li {
+line-height: 16px;
 }
-
-h4 {
-   font-size:1.0em;
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
 }
-
-h5 {
-   font-size:0.9em;
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
 }
-
-h6 {
-   font-size:0.8em;
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
 }
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
 }
-
-pre, img {
-  max-width: 100%;
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
 }
 pre {
-  overflow-x: auto;
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
 }
-pre code {
-   display: block; padding: 0.5em;
+pre:not([class]) {
+background-color: #f7f7f7;
 }
-
 code {
-  font-size: 92%;
-  border: 1px solid #ccc;
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
 }
-
-code[class] {
-  background-color: #F8F8F8;
+p > code, li > code {
+padding: 2px 0px;
 }
-
-table, td, th {
-  border: none;
+div.figure {
+text-align: center;
 }
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
 }
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
 }
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
 }
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
 
 
 
 </head>
 
 <body>
+
+
+
+
+<h1 class="title toc-ignore">riverconn vignette</h1>
+<h4 class="author">Damiano Baldan</h4>
+<h4 class="date">2022-06-17</h4>
+
+
+<div id="TOC">
+true
+</div>
+
+<div id="indices-to-assess-riverscape-connectivity" class="section level2">
 <h2>Indices to assess riverscape connectivity</h2>
-
-<h3>Riverscape graphs</h3>
-
-<p>This package implements algorithms to compute commonly used indices to assess landscape fragmentation. All those indices assume a conceptualization of the landscape as a graph \(L = (E,V)\), where vertices (nodes) \(V\) represent single reaches, and edges (links) \(E\) represent either confluences or longitudinal barriers. </p>
-
-<p>For example, the graphs below represents a river with ten reaches. The graph on the left is directed, i.e. edges are defined for ordered pair of vertices. The graph on the right is undirected, as the order of vertices for the definition of edges is unimportant. Both graph have a &#39;tree-like&#39; structure, since no loops exist (acyclic graphs): this structure can be used to describe a river system. In both examples, both barriers and confluences are present. The edges between nodes 1 and 2 and 3 and 2 are confluences. The edge between node 2 and 4 is a barrier. </p>
-
-<p><img src="data:image/png;base64,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RoXscfr5ydP32HXnKmQP1NEXfX/CO85vKJ89kHgpieKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qEoHorioSgeiuKhKB6K4qH8D2T93RQjpYnNAAAAAElFTkSuQmCC" alt="plot of chunk graph example"/></p>
-
+<div id="the-river-network-as-a-graph" class="section level3">
+<h3>The river network as a graph</h3>
+<p>This package implements algorithms to compute commonly used indices
+to assess river networks fragmentation. All those indices assume a
+conceptualization of the river networks as a graph <span class="math inline">\(L = (E,V)\)</span>, where vertices (nodes) <span class="math inline">\(V\)</span> represent single reaches, and edges
+(links) <span class="math inline">\(E\)</span> represent either
+confluences or longitudinal barriers.</p>
+<p>For example, the graphs below represents a river with ten reaches.
+The graph on the left is directed, i.e. edges are defined for ordered
+pair of vertices. The graph on the right is undirected, as the order of
+vertices for the definition of edges is unimportant. Both graph have a
+‘tree-like’ structure, since no loops exist (acyclic graphs): this
+structure can be used to describe a river system. In both examples, both
+barriers and confluences are present. The edges between nodes 1 and 2
+and 3 and 2 are confluences. The edge between node 2 and 4 is a
+barrier.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAABiVBMVEUAAAAAACAAAE4AAGMAAHcAAH4AAIsAAI0AAI4AAJEAAJUAAJYAAJ8AALMADakAF4sAGU4AG5MAIp8AJE4AJIsAJpgAJpsAKJ8AKqkAOr0AOscARJ8AZtoQAIsQJpwXAIsbX6QcAIsmAIsmAJEmRJEmRJ8mX6QmaKkokO0qkO0xAIsyAJ80JE40WiA6AIs6AJ86Osc6RJE6Zto6kO06nf9EAItEAJFEAJVEIZNEJptEealJOotSJpVSkalYAItYZp9fJotfkalmAItmAJ9mALNmMalmOsdmtv9oJo1oX5F5RIt5RI95qal72/99qamBiTiQOouQOrOQtv+Q2/+RUo+RX5GRkZuRqZ+RqamcOpGdkJ+d//+pVo+paJGpeZOpeZWpkZWpkZupkaSpqZ+pqaSpqam2Zou2Zpm2/9q2//+8///FWnfbfJXbkJzbkJ/btrPb28fb/9rb///mcmPmiU7mnwDmnyDmnzj/gZn/gab/tqb/tq3/trP/27P/28f/2+3//9r//+3///8ZfBMxAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAGCElEQVR4nO3b+1sUVRyA8dXspKRZWVSAeckultEF7YJWSBeKrEijqDQ0GIosMhQzI1rmL+/M7GKY1gvjDLP0vO/zuCy/7H6fD7PnnGWxkdp/1qh7gE5PIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggqGKgpNqH34CqBtr0QpUDbXahkoGS1bW/LfcZNrqyr6CbfNK/723aqgNa/V3JT7KRlb4G3eYC2tRC5S/StwXavEJVAv1jxd6clb2LpatW5v8BT+lA02M98xnI1LEQBjsAZznOk31tDocwUugRygVqHgs9E5nPq6eS8a5TtQNFlxyo+c5sOrdrtshDlP0SG+/OgL6NN1OvnFzlUxfTXA70Z7xpvn2myAOUDbRtz0TrumlceTLpAKBte+ZbdxpXXi70AOUDfdFafrYemRgN4anp9iIwXnQNuMO27fmltfxsPTI/E8LAyqI0t9Z5Sn+JPXxiNhkPgxEk9Ma1el9rEZjsmm0O1yE099iJuPyEkQgS+uKa1J5ncdda5ykd6IE3kmR6qDdJPgv7k2Sy64PuOND00GAcqme+3CdbS3OPfpTEvawvSX8MhzOYr7IplsdG1jpPBYt02lgYjUDfhP2NhQsHX4pjNK48cTJNl14otEreWdki3ViY6U3T38PhxsJS/1v5PNkoa5unEqCrQ3ERmgxPZ0BxoKRxuetUtufW8BrLga4OZRdMOHoD6HK25a9tnrKBRuM2n5677+MkOb833p3cfiBbiyZrA5rJXkfn7vshTf/YF39Ui10HsrVosi6geFAMO05OPftgXBK7Pz8Yb+8J2Z6WAy31bzhQdoDeeaaZz9NzqT/e7oj/RpLFDGht81TxG8X3D7Xeb8TVeuzx8exofaG2NSjry0Mry/FyNs980hqlnjUodnbLxe5Lp3Og8UdCuH8i29YGVw61G9+1LRd7Lp3O787l87R3sbXNU/6vO67Hizh0zWY8Yfvx/DiUb6n1nIPa8+Tvw34K9x7Pj0Prmad0oOxElqOc3xv2p9m7+nA0XcfJtaJ5skU6PJMvkuubp3SgpdPZxTsRD9G97bdiM31lP8f655lPpob72h/TrW+e0oFm8p9YGBntaiy03qku1gq0Ms9MNk+6/nkq+eAw/sSab2Zj7cz2icV6XlslzVMVUL40hp1fx2v8xXo2r5LmqQrot11xHzsb9oVQ0+Z+6zxpcq3APFV9Nh/Pqo2FDzf+7Pxv5fN8V2CeqoDiKaPx62vP1XR2vrV8nncLzFPZX3dk54/dte5fN1d0nsqAZnaH8FAHARWdpyqg5bGB5us/d8AC3a7wPNUB9dz1/NxARY++/grPU9lLbKn/7k/e65gLqPg81f0J3vVQ7KPMqio4T2VAy59+P9xJQkXnqW4XG2j/QrhDKjpPhQfF1t8MdEiF56lwF5uv56PC21d4nurWoLGOeJ96o6Lz+H81IIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBoL8AsbaOPjClTCEAAAAASUVORK5CYII=" /><!-- --></p>
+</div>
+<div id="generalized-riverscape-connectivity-index" class="section level3">
 <h3>Generalized riverscape connectivity index</h3>
-
-<p>Landscape-level connectivity can be expressed in terms of coincidence probability (Pascual-Hortal and Saura, 2006), i.e. the probability that two random points in a river network are connected. Once the coincidence probability \(I_{ij}\) is defined for each couple of \(i,j\) nodes in the graph, generalized connectivity indices for catchment and reach scales can be calculated.</p>
-
-<h5>Catchment Connectvity index.</h5>
-
-<p>Given this conceptualization, a catchment-scale connectivity index (CCI) can be calculated as:</p>
-
-<p>\[
+<p>river networks-level connectivity can be expressed in terms of
+coincidence probability (Pascual-Hortal and Saura, 2006), i.e. the
+probability that two random points in a river network are connected.
+Once the coincidence probability <span class="math inline">\(I_{ij}\)</span> is defined for each couple of
+<span class="math inline">\(i,j\)</span> nodes in the graph, generalized
+connectivity indices for catchment and reach scales can be
+calculated.</p>
+<div id="catchment-connectvity-index" class="section level5">
+<h5>Catchment Connectvity index</h5>
+<p>Given this conceptualization, a catchment-scale connectivity index
+(CCI) can be calculated as:</p>
+<p><span class="math display">\[
 \ CCI = \sum_{i = 1}^{n} \sum_{j = 1}^{n} I_{ij} \frac{w_i w_j}{W^2}
-\]
-Where \(w_i\) and \(w_j\) are some node-level attributes (weights), and \(W\) is the sum of sum of the nodes weights for the whole landscape.</p>
-
-<h4>Reach Connectivity Index for rivers.</h4>
-
-<p>A reach-scale connectivity index (RCI) can be calculated by limiting the summation to all the connections to the single node \(i\).
-\[
+\]</span> Where <span class="math inline">\(w_i\)</span> and <span class="math inline">\(w_j\)</span> are some node-level attributes
+(weights), and <span class="math inline">\(W\)</span> is the sum of sum
+of the nodes weights for the whole river networks.</p>
+</div>
+<div id="reach-connectivity-index" class="section level4">
+<h4>Reach Connectivity Index</h4>
+<p>A reach-scale connectivity index (RCI) can be calculated by limiting
+the summation to all the connections to the single node <span class="math inline">\(i\)</span>. <span class="math display">\[
 \ RCI_i = \sum_{j = 1}^{n} I_{ij} \frac{w_j}{W}
-\]</p>
-
-<h4>Reach Connectivity Index for rivers.</h4>
-
-<p>Nodes weights can be arbitrarily chosen. Common features used are the reach length (\(l_i\)), area(\(A_i\)), or volume(\(V_i\)). Alternatively, the habitat suitability index (HSI) can be used, defined as the ratio of length/area that is suitable for a specific organism.
-\[
-\ HSI_i = \frac{l_i,suitable}{l_i} \mbox{  ;         } HSI_i = \frac{A_i,suitable}{A_i}
-\]
-Here \(l_i,suitable\) and \(A_i,suitable\) are the fractions of length/area of reach \(i\) that are suitable, and are usually refferred to as weighted suitable length or weighted suitable area.</p>
-
-<h3>Coincidence probability definition</h3>
-
-<p>The coincidence probability depends on several factors: the presence of barriers between nodes \(i\) and \(j\) , the presence of suitable habitats in nodes \(i\) and \(j\), the distance between \(i\) and \(j\), and the quality of the habitat alongside the connection. The value of \(I_{ij}\) is thus determined by several contributions. The harmonic mean of such contributions is used to follow a &#39;one-bad-all-bad&#39; approach:</p>
-
-<p>\[
+\]</span> #### Node weights Nodes weights can be arbitrarily chosen.
+Common features used are the reach length (<span class="math inline">\(l_i\)</span>), area(<span class="math inline">\(A_i\)</span>), or volume(<span class="math inline">\(V_i\)</span>). Alternatively, the habitat
+suitability index (HSI) can be used, defined as the ratio of length/area
+that is suitable for a specific organism. <span class="math display">\[
+\ HSI_i = \frac{l_i,suitable}{l_i} \mbox{  ;         } HSI_i =
+\frac{A_i,suitable}{A_i}
+\]</span> Here <span class="math inline">\(l_i,suitable\)</span> and
+<span class="math inline">\(A_i,suitable\)</span> are the fractions of
+length/area of reach <span class="math inline">\(i\)</span> that are
+suitable, and are usually refferred to as weighted suitable length or
+weighted suitable area.</p>
+</div>
+</div>
+<div id="coincidence-probability" class="section level3">
+<h3>Coincidence probability</h3>
+<p>The coincidence probability depends on several factors: the presence
+of barriers between nodes <span class="math inline">\(i\)</span> and
+<span class="math inline">\(j\)</span> , the presence of suitable
+habitats in nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, the distance between <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, and the quality of the habitat
+alongside the connection. The value of <span class="math inline">\(I_{ij}\)</span> is thus determined by several
+contributions. The harmonic mean of such contributions is used to follow
+a ‘one-bad-all-bad’ approach:</p>
+<p><span class="math display">\[
 \ I_{ij} = c_{ij}B_{ij}
-\]
-where \(c_{ij}\) is a &#39;barrier coincidence probability&#39; depending on the presence of barriers between nodes \(i\) and \(j\), \(f_{ij}\) is a &#39;landscape coincidence probability&#39; depending on the landscape friction in the movement between nodes \(i\) and \(j\), and  \(B_{ij}\) is a &#39;dispersal coincidence probability&#39; depends on the distance between nodes \(i\) and \(j\).</p>
-
-<h5>Barrier coincidence probability.</h5>
-
-<p>The barriers factor depends on the presence of barriers between nodes \(i\) and \(j\), and can be expressed as a function of the types of barriers present in the path expressed as a sequence of passability values. The passability \(p_m\) for the \(m\)-th barrier is defined as the probability that the reaches immediately upstream and downstream the barrier \(m\) are connected.</p>
-
-<p>If the flow directionality is not relevant (i.e. the river graph is undirected),</p>
-
-<p>\[
+\]</span> where <span class="math inline">\(c_{ij}\)</span> is a
+‘barrier coincidence probability’ depending on the presence of barriers
+between nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, <span class="math inline">\(f_{ij}\)</span> is a ‘landscape coincidence
+probability’ depending on the landscape friction in the movement between
+nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, and <span class="math inline">\(B_{ij}\)</span> is a ‘dispersal coincidence
+probability’ depends on the distance between nodes <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>.</p>
+<div id="coincidence-probability-for-barriers" class="section level5">
+<h5>Coincidence probability for barriers</h5>
+<p>The barriers factor depends on the presence of barriers between nodes
+<span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, and can be expressed as a function of
+the types of barriers present in the path expressed as a sequence of
+passability values. The passability <span class="math inline">\(p_m\)</span> for the <span class="math inline">\(m\)</span>-th barrier is defined as the
+probability that the reaches immediately upstream and downstream the
+barrier <span class="math inline">\(m\)</span> are connected.</p>
+<p>If the flow directionality is not relevant (i.e. the river graph is
+undirected),</p>
+<p><span class="math display">\[
 \ c_{ij} = \prod_{m = 1}^{k} p_m^u p_m^d
-\]
-Where the product extends over the \(k\) nodes that are part of the path connecting reaches \(i\) and \(j\), \(p_m^u\) is the upsstream passability of the \(m\)-th barrier and \(p_m^u\) is the upstream passability of the \(m\)-th barrier. This definition based solely on products yields a symmetric coincidence probability (i.e. \(c_{ij} = c_{ji}\)).</p>
-
-<p>A directional version of \(c_{ij}\) can be defined as:
-\[
+\]</span> Where the product extends over the <span class="math inline">\(k\)</span> nodes that are part of the path
+connecting reaches <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, <span class="math inline">\(p_m^u\)</span> is the upsstream passability of the
+<span class="math inline">\(m\)</span>-th barrier and <span class="math inline">\(p_m^u\)</span> is the upstream passability of the
+<span class="math inline">\(m\)</span>-th barrier. This definition based
+solely on products yields a symmetric coincidence probability
+(i.e. <span class="math inline">\(c_{ij} = c_{ji}\)</span>).</p>
+<p>A directional version of <span class="math inline">\(c_{ij}\)</span>
+can be defined as: <span class="math display">\[
 \ c_{ij} = \prod_{m = 1}^{k} p_m^{eq}
-\]
-\[
+\]</span> <span class="math display">\[
 p_m^{eq} = \begin{cases}
-p_m^u & \mbox{if barrier m is encountered moving upstream in the path from i to j } \
-p_m^d & \mbox{if barrier m is encountered moving downstream in the path from i to j }
+p_m^u &amp; \mbox{if barrier m is encountered moving upstream in the
+path from i to j } \\
+p_m^d &amp; \mbox{if barrier m is encountered moving downstream in the
+path from i to j }
 \end{cases}
-\]
-If \(i\) and \(j\) are located in different sub-catchments, the path from i to j will be moving downstream in some sections and upstream in some other secions: this \(p_m^{eq}\) definition ensures the retained passability value is consistent with the directionality of the path from \(i\) to \(j\) (i.e. \(c_{ij} \ne c_{ji}\))</p>
-
-<h5>Dispersal coincidence probability.</h5>
-
-<p>The dispersal coincidence probability can be calculated as a function of the distance between reaches. An exponential dispersal kernel can be used:</p>
-
-<p>\[
+\]</span> If <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> are located in different
+sub-catchments, the path from i to j will be moving downstream in some
+sections and upstream in some other secions: this <span class="math inline">\(p_m^{eq}\)</span> definition ensures the retained
+passability value is consistent with the directionality of the path from
+<span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> (i.e. <span class="math inline">\(c_{ij} \ne c_{ji}\)</span>)</p>
+</div>
+<div id="coincidence-probability-for-dispersal" class="section level5">
+<h5>Coincidence probability for dispersal</h5>
+<p>The dispersal coincidence probability can be calculated as a function
+of the distance between reaches. An exponential dispersal kernel can be
+used:</p>
+<p><span class="math display">\[
 \ B_{ij} = PD^{d_{ij}}
-\]
-where \(PD\) is in the \((0,1)\) interval (smaller values mean more restricted movement), and \(d_{ij}\) is the distance between reaches \(i\) and \(j\). Alternatively, a threshold based probability can be used: 
-\[
+\]</span> where <span class="math inline">\(PD\)</span> is in the <span class="math inline">\((0,1)\)</span> interval (smaller values mean more
+restricted movement), and <span class="math inline">\(d_{ij}\)</span> is
+the distance between reaches <span class="math inline">\(i\)</span> and
+<span class="math inline">\(j\)</span>. Alternatively, a threshold based
+probability can be used: <span class="math display">\[
 \ B_{ij} = \begin{cases}
-0 & \mbox{when } d_{ij}>d_{tr}  \
-1 & \mbox{when } d_{ij}<=d_{tr}  
+0 &amp; \mbox{when } d_{ij}&gt;d_{tr}  \\
+1 &amp; \mbox{when } d_{ij}&lt;=d_{tr}  
 \end{cases}
-\]
-Both definitions can be easily adapted to asymmetric dispersal by defining \(PD_{d}\), \(PD_{u}\), \(d_{tr,u}\), and \(d_{tr,d}\), and calculating \(B_{ij} = B_{ij}^u B_{ij}^d\) where \(B_{ij}^u\) and \(B_{ij}^d\) are the index \(B_{ij}\) contribution calculated for the &#39;downstream moving&#39; and &#39;upstream moving&#39; sections in the path from  reach \(i\) to \(j\).</p>
-
-<p>The distance \(d_{ij}\) can be either the geometric distance, or any other measure of effective distance (e.g. \(d_{ij} / (1-HSI)\) provides an estimate of effective distance that depends on the habitat suitability index between reaches \(i\) and \(j\))</p>
-
+\]</span> Both definitions can be easily adapted to asymmetric dispersal
+by defining <span class="math inline">\(PD_{d}\)</span>, <span class="math inline">\(PD_{u}\)</span>, <span class="math inline">\(d_{tr,u}\)</span>, and <span class="math inline">\(d_{tr,d}\)</span>, and calculating <span class="math inline">\(B_{ij} = B_{ij}^u B_{ij}^d\)</span> where <span class="math inline">\(B_{ij}^u\)</span> and <span class="math inline">\(B_{ij}^d\)</span> are the index <span class="math inline">\(B_{ij}\)</span> contribution calculated for the
+‘downstream moving’ and ‘upstream moving’ sections in the path from
+reach <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span>.</p>
+<p>The distance <span class="math inline">\(d_{ij}\)</span> can be
+either the geometric distance, or any other measure of effective
+distance (e.g. <span class="math inline">\(d_{ij} / (1-HSI)\)</span>
+provides an estimate of effective distance that depends on the habitat
+suitability index between reaches <span class="math inline">\(i\)</span>
+and <span class="math inline">\(j\)</span>)</p>
+</div>
+</div>
+<div id="prioritization-of-barriers" class="section level3">
 <h3>Prioritization of barriers</h3>
-
-<p>All the defined connectivity index can be used to prioritize barriers removal with a &#39;leave-one-out&#39; approach. For each barrier, the index \(dCCI\) can be defined as:
-\[
-\ dCCI_{m} = 100 \frac{CCI - CCI_{m, removed}}{GCI} 
-\]
-where \(GCI\) is the generalized connectivity index calculated for the original landscape with all the barriers implemented, and GCI<em>{m, removed} is the index recalculated when barrier \(m\) is removed or its passability is changed ($dRCI</em>{i}$ can be defined similarly) .</p>
-
-<p>An alternative version of the index for prioritizing barriers can be calculated as the decrease in landscape connectivity after a single barrier is implemented, with a &#39;add-one&#39; approach.</p>
-
+<p>All the defined connectivity index can be used to prioritize barriers
+removal with a ‘leave-one-out’ approach. For each barrier, the index
+<span class="math inline">\(dCCI\)</span> can be defined as: <span class="math display">\[
+\ dCCI_{m} = 100 \frac{CCI - CCI_{m, removed}}{GCI}
+\]</span> where <span class="math inline">\(GCI\)</span> is the
+generalized connectivity index calculated for the original river
+networks with all the barriers implemented, and GCI_{m, removed} is the
+index recalculated when barrier <span class="math inline">\(m\)</span>
+is removed or its passability is changed (<span class="math inline">\(dRCI_{i}\)</span> can be defined similarly) .</p>
+<p>An alternative version of the index for prioritizing barriers can be
+calculated as the decrease in river networks connectivity after a single
+barrier is implemented, with a ‘add-one’ approach.</p>
+</div>
+<div id="time-dependent-connectivity" class="section level3">
 <h3>Time-dependent connectivity</h3>
-
-<p>when barriers metadata on the year of construction and the year of implementation of mitigation measures are available, a time trajectory of GCI can be computed (e.g. segurado et al., 2013).</p>
-
+<p>when barriers metadata on the year of construction and the year of
+implementation of mitigation measures are available, a time trajectory
+of GCI can be computed (e.g. Segurado et al., 2013).</p>
+</div>
+</div>
+<div id="preliminary-steps" class="section level2">
 <h2>Preliminary steps</h2>
-
-<pre><code class="r">library(igraph)
-library(dplyr)
-library(tidyr)
-library(ggnetwork)
-library(viridis)
-library(riverconn)
-library(doParallel)
-</code></pre>
-
-<h2>Input data formatting</h2>
-
-<p>This package relies heavily on the functionalities of the <code>igraph</code> package. The <a href="https://cran.r-project.org/web/packages/igraph/index.html"><code>igraph</code></a> package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy <a href="https://igraph.org/r/doc/aaa-igraph-package.html">construction</a> of <code>igraph</code> objects based on edges and vertices lists or adjacency matrices. The book <a href="https://link.springer.com/book/10.1007%2F978-3-030-44129-6">&#39;Statistical Analysis of Network Data with R&#39; by Kolaczyk and Csardi (2014)</a> offers a comprehensive tutorial on the possibilities offered by the &#39;igraph&#39; package.</p>
-
-<p>Describe here why igraph is important.</p>
-
-<h3>Input class &#39;igraph&#39; object</h3>
-
-<p>All the functions implemented in this package use as main input an object of class <code>igraph</code>. There are different ways an object of class <code>igraph</code> can be created. A symbolic sequence of edges can be used with the function <code>graph_from_literal</code> for small, toy graphs.  </p>
-
-<pre><code class="r">g &lt;- graph_from_literal(1-+2, 2-+5, 3-+4, 4-+5, 6-+7, 7-+10, 8-+9, 9-+10, 
-                        5-+11, 11-+12, 10-+13, 13-+12, 12-+14, 14-+15, 15-+16)
-g
-## IGRAPH e404abc DN-- 16 15 -- 
-## + attr: name (v/c)
-## + edges from e404abc (vertex names):
-##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
-## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
-</code></pre>
-
-<p>Note that when a graph is defined this way, edged and vertices attributes are not defined.</p>
-
-<pre><code class="r"># Edges
-E(g)
-## + 15/15 edges from e404abc (vertex names):
-##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
-## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
-
-# vertices
-V(g)
-## + 16/16 vertices, named, from e404abc:
-##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16
-</code></pre>
-
-<p>The graph can be converted to data frame with the function <code>as_data_frame</code>, specifying if edges or vertices are to be exported. Accordingly, the function <code>graph_from_data_frame</code> can be used to create an igraph object from a data frame.</p>
-
-<pre><code class="r">igraph::as_data_frame(g, what = &quot;edges&quot;)
-##    from to
-## 1     1  2
-## 2     2  5
-## 3     5 11
-## 4     3  4
-## 5     4  5
-## 6     6  7
-## 7     7 10
-## 8    10 13
-## 9     8  9
-## 10    9 10
-## 11   11 12
-## 12   12 14
-## 13   13 12
-## 14   14 15
-## 15   15 16
-
-igraph::as_data_frame(g, what = &quot;vertices&quot;)
-##    name
-## 1     1
-## 2     2
-## 5     5
-## 3     3
-## 4     4
-## 6     6
-## 7     7
-## 10   10
-## 8     8
-## 9     9
-## 11   11
-## 12   12
-## 13   13
-## 14   14
-## 15   15
-## 16   16
-</code></pre>
-
-<p>Finally, an igraph object can be exported to and generated from adjacency matrices using the functions <code>as_adjacency_matrix</code> and <code>graph_from_adjacency_matrix</code>, specifying if edges or vertices are to be exported.</p>
-
-<pre><code class="r">igraph::as_adjacency_matrix(g)
-## 16 x 16 sparse Matrix of class &quot;dgCMatrix&quot;
-##                                   
-## 1  . 1 . . . . . . . . . . . . . .
-## 2  . . 1 . . . . . . . . . . . . .
-## 5  . . . . . . . . . . 1 . . . . .
-## 3  . . . . 1 . . . . . . . . . . .
-## 4  . . 1 . . . . . . . . . . . . .
-## 6  . . . . . . 1 . . . . . . . . .
-## 7  . . . . . . . 1 . . . . . . . .
-## 10 . . . . . . . . . . . . 1 . . .
-## 8  . . . . . . . . . 1 . . . . . .
-## 9  . . . . . . . 1 . . . . . . . .
-## 11 . . . . . . . . . . . 1 . . . .
-## 12 . . . . . . . . . . . . . 1 . .
-## 13 . . . . . . . . . . . 1 . . . .
-## 14 . . . . . . . . . . . . . . 1 .
-## 15 . . . . . . . . . . . . . . . 1
-## 16 . . . . . . . . . . . . . . . .
-</code></pre>
-
-<h3>Decorating the class &#39;igraph&#39; object</h3>
-
-<p>Once the structure of the network is defined, the graph can be decorated with edges and vertices attributes. Attributes can be either added directly to the graph or joined to the edges and vertices data frame. edges and vertices attributes are saved as vectors, so common, data.frame-like operations are possible.</p>
-
-<p>Here we add the dam information as edge attribute, including the field &#39;id_dam&#39;, and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.</p>
-
-<pre><code class="r"># Decorate edges 
-E(g)$id_dam &lt;- c(1, NA, 2, 3, NA, 4, NA, 5, 6, NA,  NA, NA, NA, 7, NA)
-E(g)$type &lt;- ifelse(is.na(E(g)$id_dam), &quot;joint&quot;, &quot;dam&quot;)
-E(g)
-## + 15/15 edges from e404abc (vertex names):
-##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
-## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
-
-# Decorate vertices
-V(g)$length &lt;- c(1, 1, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 4, 5, 6, 9)
-V(g)$HSI &lt;- c(0.2, 0.1, 0.3, 0.4, 0.5, 0.5, 0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8)
-V(g)$Id &lt;- V(g)$name
-V(g)
-## + 16/16 vertices, named, from e404abc:
-##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16
-</code></pre>
-
-<h3>Visualizing the &#39;igraph&#39; object</h3>
-
-<p>The <code>ggnetwork</code> library can be used to plot a igraph object with <code>tidyverse</code>-friendly functions. The function <code>ggnetwork</code> is used to fortify <code>igraph</code> objects with a specified layout. Here the tree layout is used, but for real river networks the coordinates of the reaches centroids can be used.</p>
-
-<pre><code class="r">gg0 &lt;- ggnetwork(g, layout =  layout_as_tree(g %&gt;% as.undirected, root = 16), scale = FALSE)
-
-ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_nodes(alpha = 0.3) +
-  geom_edges(alpha = 0.5, 
-             arrow = arrow(length = unit(10, &quot;pt&quot;), type = &quot;closed&quot;), 
-             aes(color = type)) + 
-  scale_color_viridis(discrete = TRUE)+
-  geom_nodetext(aes(label = name), fontface = &quot;bold&quot;) +
-  theme_blank()
-</code></pre>
-
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAAH4CAMAAACR9g9NAAAB/lBMVEUAAAAAABQAABgAABwAACEAACsAADIAADoAADsAAEQAAGYACBUADjIADkcAHBwAHEcAHV8ANTMANjsAOjoAOpAASIAAYWgAZrYTE1EVAAAcAAAcABwcHAAlSJEoAAAoZYArAAArZUUtLn4uCAAxAAAyAAAyMloyWn45AAA5ABQ5hU45iX46AAA6ADo6AGY6OgA6Ojo6OpA6ZmY6ZpA6ZrY6kLY6kNtBAABBDgBBXKlHHABHbH5IgLNMgFFSIF5SQX5aMgBaMhxafn5bIGlbMyZhP2liJRxlKABlX0FlmrNlqVtmAABmADpmAGZmOpBmZgBmZjpmZmZmZrZmkNtmrn5mrpJmtttmtv9pMx1sRxxsWjJsWkdsfmxyLjJyQH5yQVpyQWxzMwBzgKl7QTR7TUp7WoN+WjJ+Wkd+bEd+fn6ASACAs7OKgKmPNQCPYSGP0ZKQOgCQOjqQOmaQZjqQkDqQtv+Q27aQ2/+aUgCaZSiazWyeUgChXEShgJGhgKmzgEizmmWzs4Czs5qzs7O1XwC17Vu185K2ZgC2Zjq2kJC2//++s1G/cw3YkivYsD3YzV3YzWzahRTaqSXbkDrbkGbbrjvbtmbbtpDb85Lb/7bb/9vb///9qSX9zDP96kD97Vv+rjv+0VP+837+85L/tmb/tpD/25D//7b//9v////lndCxAAAACXBIWXMAAAsSAAALEgHS3X78AAAQCUlEQVR4nO3di3scVRnH8YPBRuNdq9GqiGhNxUVBYoRaxQugNIJYDCsqK4pg1xsFxYiXpRglMXjD1UQNdCqzbHb+S2dmt5dcZq/z7vue8/t9+zyll6c5553PzuymDTsuYZA57Q0wnQgPGuFBIzxohAeN8KARHjTCg0Z40AgPGuFBIzxohAeN8KARHjTCg0Z40AgPGuFBIzxohAeN8KARHjTCgxYqfLtSTZKtilvc0d6J0QKF3664av1spdqafVp7K0YLE75dcW5h7Zkjm9obsVug8Ge2Mvg3f4KX+qLChE+SVnqp/83saruypL0TowUMH7/4us3d5XntnRgtYPjo5Y+u5i/u2SGFC78SR/864Ra1N2K1UOGTJIrTb9qbsFuw8HGcwsex9jbMFix8lMPzlC8qVPi4d8bzlC8oVPioB89TvqBA4WOe8QMKFD6P6H0iPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGihwrcr1foL68453mny8AKF3664hbW/neSNZQsLE757//jnjvN0LyxQ+DNbrlo/m/LfyvvHH16Y8PndpJOHef/44gKGb9QaSeccn+YPL2D42t0zPOMLCxf+9sYjdzreP76oUOGTRiO91Ne0d2G3YOFrGTzlCwsVvpGf8WnaG7FaqPC1HjxP+YIChW/wjB9QoPB5RO8T4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UELFb5dqSbZjSaP8t6yhxco/HbFVet3JU1H+ILChO/eRvyxsxXCFxUo/JmtFP73Jz/FS31RYcLnNxWu//nofwlfVMDwr/zUpVH+8AKGj6KIr+oLCxd+JY7iVwhfVKjwSRKl8JH2JuwWLHwcp/BxrL0NswULH+XwPOWLChU+7p3xPOULChU+6sHzlC8oUPiYZ/yAAoXPI3qfCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA9aqPDtSrX+woZzi9obsVqg8NsVt7D2F1dN/bW3YrQw4bv3j1+rpz9Y0t6L0UKDj/Je/so/3Eq9nlz4gzvd/RU+3+8rNPi4W/SSy67xG+5t/+79ivbGrBUafPdOg1F8MYNvurc/H+V3n+N9B/cXHHzOHufw7crcZtT7ufa2zBUe/IX8DG+l8E2XdmP2swvau7JXYPDpqb3vKT3mc/yhBQXf5d13Ze/dTJz0ewsI/hLt/pdyUe83SH91wcBfxbrvk/Yrj4MA6dsf3xzvDwYC35f0qt8Ljh4bfhTOsOh3l93c19JPXG/5z72/cLOr3V8Y6qEQAPyolEHRp2d8aylpLe0uH91ppeTrS0lzfpg/6D38OIwB0afwu/ftbKzuLleTzpOru19dTXbvHeaU9xx+XMJg6FP4zpO/vG8nE0/Wq+mV3uWX/IF5DT8JXyD02Yu75teXkgw+O+OHOtuzPIaflC4I+gy+fVN6fV+eT1pHd7Ln+Ow/g/MWvgy2AOg75+Y2O09tpmf8/Zde1Q91pfcVviyyAOjTs34xyS/1I+UlfJlc/tM38zMdAL5sKv/px8k7eAkmRHrP4KWI8Oi9gpfkQaP3CF6aBoveG/hpsCDRewI/LRIcei/gp8nhJ31j5D/hAfy0KXykr9VGpTcPr8HgH32t0RiR3ji8FoFv9Cn8QfqNfn+Laxpe8/D7RZ/D76f3FV770GuvP2S5+JdqvS7Lr7u5+1fT79180v7ksltad3v/md4svIXDbmEPw3XgjG/NZ/9g117Mviwn+7q85WqyvufNQYzCWznkVvYxqAPP8c1qfqlvZl+Bl/E/tekDvKXDbWkvxR14VZ+e8em53lzKz3hP4K0damv7OayDn8evu9mbV9sVN3t/1Q94i4fZ4p725v3f3Fk9xFb3NX6m4C0fXst7GydD8NYPrfX9jZYZeB8Oqw97HDYj8L4cUl/2OTgT8D4dTp/22i8D8L4dSt/2e3jq8D4eRnt7Hn1DyvD2DuFwWdv36O/SrApv7fCNkq29Z2/mN9qGFOFtHbrRs7T/7js1X7Why++QcOWtEv5k49/jLR22cbMzQ9R7t/Y+G9q9zwK8nUM2WQbmyMUvRNHeGzJkJ3r+5TfpD9o3V9zRnXW3592wVOANHK7SsjHLgTM+9W7N52+HlMLfspO9PY76GW/jUJWXhXkOe47PvgintZTBL2ZfjaMNb+EwlZ3+TAde1e854w3A6x8imbTnOvB5/J7n+C788p4vs50qvPbhkUx3tgOLD3zDuynCh8yeZWm+lhv0hrZTg7d0WKTyacYpwft0SCbJnzmnAu/P4Zg8X2adArwvh6Ks/JhXCr57G+f0ez8OQ7nFcT7+hpt9QHsrhQnBb1dctV5Pv1+R+fjG2z6Rjv/DSrU53BsKayQD372N9/nrnYO8fXs2/mf/vlZPmsPdH0YjIfgzWyn8Xz+yBQqfj79Wb80+qL2VwqSe41vpte5z2fdCH9943fF7r3RMJgjfqDWQ4bP/b3l3eUl7J0UJwtdqNWT42t0zq4bnl4O/PX3I/9bu4LJl4z9yJ+Cnc0n2Jg3pN7GPbj7r44vB5+/J0hj9f9gPJPPji8Hn78pi+jEvmvnxpeAbvYe84ce8ZPbHl4Kv9SY3/JiXzP74QvAN+w95yTwYX/KfZe1OPZVsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPT3ixbI9PeLFsj094sWyPLwe/7kDvJZ3VrlTrdzUd4E2Fk87Jdz5Wl/rg1tuuuIW1H7x3tYV2//i03eOn1upSH9x42f3jF9aeObIJeDfpfPhbd6Q+uu2y+8dX65+fS+Hh7iadXLz2iXblxjiW+vi2a7mVeH3uj/87AQUfx1EUxVHcOfeu9D8RGn42/kvudNyce/7lE6fT8U3OXzp8Zp714jWr7crH4vwnUVT2KmbrjX/RnU6f7FYuXvOE1fnLP+O77tErP3NuMYm68iYf8zJ1533JrSTJPyvXfKP7U4PzC1zqs1kvXeCiKz9E6ZDxLc4v8Ryfn+bdq1t+8lucW7D949ucX+RV/YXLj3KrFzrR9o5v013mVX1y5fKev6a3ObpUe8ePjI4vAJ/Nefl1bPfxbnJ0ofaOH136JWuVDx8f9jOLo8vky/ilwxfMaHB0kbwZv2z4wgntjS6RP+OXDN9nPnOjC+TR+OXC953O2ujl59P4pcIPmM3Y6KXn1fhlwg+czNboZefX+CXCDzGXqdFLzrPxy4MfaipLo5ebb+OXBj/kTIZGLzXvxi8LfuiJ7IxeZv6NXxL8CPOYGb3EPBy/HPiRprEyenn5OH4p8CPOYmT00vJy/DLgR57Exuhl5ef4JcCPMYeJ0UvK0/Enhx9rCgujl5Ov408MP+YMBkYvJW/HnxR+7An0Ry8jf8efEH6C/auPXkIejz8Z/ES71x598nwefyL4Cffuu7zX408CP/HO/Zb3e/wJ4EvYt8/yno8/Pnwpu/ZX3vfxx4Yvac++yns//rjwpe3YT3n/xx8TvsT9+igfwPjjwZe6W//kQxh/LPiS9+qbfBDjjwNf+k79kg9j/DHgBfbpk3wg448OL7JLf+RDGX9keKE9+iIfzPijwovt0A/5cMYfEV5wfz7IBzT+aPCiu7MvH9L4I8EL7826fFDjjwIvvjPb8mGNPwL8FPZlWT6w8YeHn8qu7MqHNv7Q8FPak1X54MYfFn5qO7IpH974Q8JPkcOifIDjDwc/VQx78iGOPxT8lCmsyQc5/jDwU4ewJR/m+EPAKzBYkg90/MHwKgh25EMdfyC8EoEV+WDH7wO/kd04Tg0gTjrnjirem7bp0pb0xt8Qvgd5MXzLLZytrEiu3b/4IacJnyT1h2afUFu8ee1nHhe9B3mfM76+dv56xXvinv2we4smfP38dR/UW339yK+fOy559PvC/8rp3f68c/IDX9aF/9Frv6i3enPmnvPHlOCTL2hea5tHv/Mh1Uv97vF3K67e2XBvEL35fB/4pnvj9wVX7l/nXPbiSlO+5W5o6K2eJI3vflryelsM364cuaMmuPLAHrntTZpnfFN1/FcrNzw8o/PiLv985v2CSw+o8bvb3voTveWT773+jobeKd+5083cLrl8n0t9rZF+E1x6QMrLa68vvXwxfKORLq33mFdeXnt98eWL4Wv50mqPeeXltdcXX74QvtF7zCk95pWX115ffvlC+FpvaaXHvPLy2uvLL18E39B9yCsvr73+FJbv+8+yqn+Bob689vqyyxPe7PqEB12f8KDrEx50fcKDrk940PUJD7o+4UHXJzzo+oQHXZ/woOsTHnR9woOuT3jQ9QkPuj7hQdcnPOj6hAddn/Cg6xMedH3Cg65PeND1CQ+6PuFB1yc86PqEB12f8KDrEx50fcKDrk940PUJD7o+4UHXJzzo+oQHXZ/woOsTHnR9woOuT3jQ9QkPuj7hQdcnPOj6hAddn/Cg6xMedH3Cg65PeND1CQ+6PuFB1yc86Pp68Gffo3dP4ez29a95QHH5ZOuYW9S702Vnw7lFyQX6wH/7OrcguXT/Xj126pui99gcUPvYqUdnnlZbvjVz6lHRe3n3ubfsMacJn9TXnjmyqbd888iP1+p6y7dm7nlW6d6y7TPfUrx9fNrjMw8qrt58x/s0L/XpM52TvIt43+f4li580q4orr8+u9oWvYF7/1qzqy3R8S3D7y7rHfikObe5uzyvtvx6trzk+Gbhm+lDXnP99k2rmlecJuwZ3/m5m9X9dK4i+/lU/zQ/nWMhR3jQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQCA8a4UEjPGiEB43woBEeNMKDRnjQ/g/bCQVaX1ZvlAAAAABJRU5ErkJggg==" alt="plot of chunk plot igraph"/></p>
-
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggnetwork)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(riverconn)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span></code></pre></div>
+</div>
+<div id="preprocessing-of-input-data" class="section level2">
+<h2>Preprocessing of input data</h2>
+<p>This package relies heavily on the functionalities of the
+<code>igraph</code> package. The <a href="https://CRAN.R-project.org/package=igraph"><code>igraph</code></a>
+package implements routines for simple graphs and network analysis. It
+can handle large graphs very well and provides functions for generating
+random and regular graphs, graph visualization, centrality methods and
+much more. The package allows for easy construction of
+<code>igraph</code> objects based on edges and vertices lists or
+adjacency matrices. The book ‘Statistical Analysis of Network Data with
+R’ by Kolaczyk and Csardi (2014) offers a comprehensive tutorial on the
+possibilities offered by the ‘igraph’ package.</p>
+<p>A more comprehensive tutorial, including a real-world case study can
+be found here: <a href="https://damianobaldan.github.io/riverconn_tutorial/" class="uri">https://damianobaldan.github.io/riverconn_tutorial/</a></p>
+<div id="input-class-igraph-object" class="section level3">
+<h3>Input class ‘igraph’ object</h3>
+<p>All the functions implemented in this package use as main input an
+object of class <code>igraph</code>. There are different ways an object
+of class <code>igraph</code> can be created. A symbolic sequence of
+edges can be used with the function <code>graph_from_literal</code> for
+small, toy graphs.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_literal</span>(<span class="dv">1</span><span class="sc">-+</span><span class="dv">2</span>, <span class="dv">2</span><span class="sc">-+</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">-+</span><span class="dv">4</span>, <span class="dv">4</span><span class="sc">-+</span><span class="dv">5</span>, <span class="dv">6</span><span class="sc">-+</span><span class="dv">7</span>, <span class="dv">7</span><span class="sc">-+</span><span class="dv">10</span>, <span class="dv">8</span><span class="sc">-+</span><span class="dv">9</span>, <span class="dv">9</span><span class="sc">-+</span><span class="dv">10</span>, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">5</span><span class="sc">-+</span><span class="dv">11</span>, <span class="dv">11</span><span class="sc">-+</span><span class="dv">12</span>, <span class="dv">10</span><span class="sc">-+</span><span class="dv">13</span>, <span class="dv">13</span><span class="sc">-+</span><span class="dv">12</span>, <span class="dv">12</span><span class="sc">-+</span><span class="dv">14</span>, <span class="dv">14</span><span class="sc">-+</span><span class="dv">15</span>, <span class="dv">15</span><span class="sc">-+</span><span class="dv">16</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>g</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH 5d80e39 DN-- 16 15 -- </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">## + attr: name (v/c)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from 5d80e39 (vertex names):</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span></code></pre></div>
+<p>Note that when a graph is defined this way, edged and vertices
+attributes are not defined.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Edges</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## + 15/15 edges from 5d80e39 (vertex names):</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># vertices</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## + 16/16 vertices, named, from 5d80e39:</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16</span></span></code></pre></div>
+<p>The graph can be converted to data frame with the function
+<code>as_data_frame</code>, specifying if edges or vertices are to be
+exported. Accordingly, the function <code>graph_from_data_frame</code>
+can be used to create an igraph object from a data frame.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>igraph<span class="sc">::</span><span class="fu">as_data_frame</span>(g, <span class="at">what =</span> <span class="st">&quot;edges&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##    from to</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1  2</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2  5</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     5 11</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     3  4</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     4  5</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6  7</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     7 10</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 8    10 13</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     8  9</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    9 10</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   11 12</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 12   12 14</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 13   13 12</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 14   14 15</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 15   15 16</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>igraph<span class="sc">::</span><span class="fu">as_data_frame</span>(g, <span class="at">what =</span> <span class="st">&quot;vertices&quot;</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="do">##    name</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     5</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     3</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     4</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     7</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   10</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 8     8</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     9</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   11</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 12   12</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 13   13</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 14   14</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 15   15</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 16   16</span></span></code></pre></div>
+<p>Finally, an igraph object can be exported to and generated from
+adjacency matrices using the functions <code>as_adjacency_matrix</code>
+and <code>graph_from_adjacency_matrix</code>, specifying if edges or
+vertices are to be exported.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>igraph<span class="sc">::</span><span class="fu">as_adjacency_matrix</span>(g)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 x 16 sparse Matrix of class &quot;dgCMatrix&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">##                                   </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1  . 1 . . . . . . . . . . . . . .</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2  . . 1 . . . . . . . . . . . . .</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  . . . . . . . . . . 1 . . . . .</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  . . . . 1 . . . . . . . . . . .</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  . . 1 . . . . . . . . . . . . .</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 6  . . . . . . 1 . . . . . . . . .</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 7  . . . . . . . 1 . . . . . . . .</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 . . . . . . . . . . . . 1 . . .</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 8  . . . . . . . . . 1 . . . . . .</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 9  . . . . . . . 1 . . . . . . . .</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 . . . . . . . . . . . 1 . . . .</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 . . . . . . . . . . . . . 1 . .</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 . . . . . . . . . . . 1 . . . .</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 . . . . . . . . . . . . . . 1 .</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 15 . . . . . . . . . . . . . . . 1</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 . . . . . . . . . . . . . . . .</span></span></code></pre></div>
+</div>
+<div id="decorating-the-class-igraph-object" class="section level3">
+<h3>Decorating the class ‘igraph’ object</h3>
+<p>Once the structure of the network is defined, the graph can be
+decorated with edges and vertices attributes. Attributes can be either
+added directly to the graph or joined to the edges and vertices data
+frame. edges and vertices attributes are saved as vectors, so common,
+data.frame-like operations are possible.</p>
+<p>Here we add the dam information as edge attribute, including the
+field ‘id_dam’, and the reach information data as vertices attributes,
+including the length and the corresponding habitat suitability
+index.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decorate edges </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)<span class="sc">$</span>id_dam <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="cn">NA</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="cn">NA</span>, <span class="st">&quot;4&quot;</span>, <span class="cn">NA</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;6&quot;</span>, <span class="cn">NA</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">&quot;7&quot;</span>, <span class="cn">NA</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="fu">E</span>(g)<span class="sc">$</span>id_dam), <span class="st">&quot;joint&quot;</span>, <span class="st">&quot;dam&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## + 15/15 edges from 5d80e39 (vertex names):</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Decorate vertices</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>length <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">7</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">9</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>HSI <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>Id <span class="ot">&lt;-</span> <span class="fu">V</span>(g)<span class="sc">$</span>name</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">## + 16/16 vertices, named, from 5d80e39:</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16</span></span></code></pre></div>
+</div>
+<div id="visualizing-the-igraph-object" class="section level3">
+<h3>Visualizing the ‘igraph’ object</h3>
+<p>The <code>ggnetwork</code> library can be used to plot a igraph
+object with <code>tidyverse</code>-friendly functions. The function
+<code>ggnetwork</code> is used to fortify <code>igraph</code> objects
+with a specified layout. Here the tree layout is used, but for real
+river networks the coordinates of the reaches centroids can be used.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>gg0 <span class="ot">&lt;-</span> <span class="fu">ggnetwork</span>(g, <span class="at">layout =</span>  <span class="fu">layout_as_tree</span>(g <span class="sc">%&gt;%</span> as.undirected, <span class="at">root =</span> <span class="dv">16</span>), <span class="at">scale =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gg0, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_nodes</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edges</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>), <span class="at">type =</span> <span class="st">&quot;closed&quot;</span>), </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">color =</span> type)) <span class="sc">+</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>(<span class="at">discrete =</span> <span class="cn">TRUE</span>)<span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_nodetext</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_blank</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>This function can be used to display all the graph attributes.</p>
-
-<pre><code class="r">ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_edges(alpha = 0.5, 
-             arrow = arrow(length = unit(10, &quot;pt&quot;), type = &quot;open&quot;)) +
-  geom_nodes(aes(size = length, color = HSI)) +
-  scale_color_viridis()+
-  theme_blank()
-</code></pre>
-
-<p><img src="data:image/png;base64,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" alt="plot of chunk plot igraph 2"/></p>
-
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gg0, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edges</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>), <span class="at">type =</span> <span class="st">&quot;open&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_nodes</span>(<span class="fu">aes</span>(<span class="at">size =</span> length, <span class="at">color =</span> HSI)) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>()<span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_blank</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="assigning-network-directionality" class="section level3">
 <h3>Assigning network directionality</h3>
-
-<p>The <code>riverconn</code> package implements the function <code>set_graph_directionality</code> that allows to assign the directionality of the graph once an outlet is defined.</p>
-
-<pre><code class="r">par(mfrow=c(1,3))
-g1 &lt;- set_graph_directionality(g, field_name = &quot;Id&quot;, outlet_name = &quot;16&quot;)
-g2 &lt;- set_graph_directionality(g, field_name = &quot;Id&quot;, outlet_name = &quot;5&quot;)
-plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE))
-plot(g1, layout = layout_as_tree(as.undirected(g1), root = 16, flip.y = FALSE))
-plot(g2, layout = layout_as_tree(as.undirected(g2), root = 5, flip.y = FALSE))
-</code></pre>
-
-<p><img src="data:image/png;base64,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" alt="plot of chunk direction"/></p>
-
+<p>The <code>riverconn</code> package implements the function
+<code>set_graph_directionality</code> that allows to assign the
+directionality of the graph once an outlet is defined.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">set_graph_directionality</span>(g, <span class="at">field_name =</span> <span class="st">&quot;Id&quot;</span>, <span class="at">outlet_name =</span> <span class="st">&quot;16&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">set_graph_directionality</span>(g, <span class="at">field_name =</span> <span class="st">&quot;Id&quot;</span>, <span class="at">outlet_name =</span> <span class="st">&quot;5&quot;</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">as.undirected</span>(g), <span class="at">layout =</span> <span class="fu">layout_as_tree</span>(<span class="fu">as.undirected</span>(g), <span class="at">root =</span> <span class="dv">8</span>, <span class="at">flip.y =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g1, <span class="at">layout =</span> <span class="fu">layout_as_tree</span>(<span class="fu">as.undirected</span>(g1), <span class="at">root =</span> <span class="dv">16</span>, <span class="at">flip.y =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(g2, <span class="at">layout =</span> <span class="fu">layout_as_tree</span>(<span class="fu">as.undirected</span>(g2), <span class="at">root =</span> <span class="dv">5</span>, <span class="at">flip.y =</span> <span class="cn">FALSE</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="indices-calculation" class="section level2">
 <h2>Indices calculation</h2>
-
-<p>The function <code>index_calcualtion</code> is used to calculate all the nuances of the CCI and RCI</p>
-
-<p>Before calculation, the information on the dams passability are needed.</p>
-
-<pre><code class="r"># Check edged and nodes attributes
-g_v_df &lt;- igraph::as_data_frame(g, what = &quot;vertices&quot;)
-g_v_df
-##    name length HSI Id
-## 1     1      1 0.2  1
-## 2     2      1 0.1  2
-## 5     5      2 0.3  5
-## 3     3      3 0.4  3
-## 4     4      4 0.5  4
-## 6     6      1 0.5  6
-## 7     7      5 0.5  7
-## 10   10      1 0.6 10
-## 8     8      7 0.7  8
-## 9     9      7 0.8  9
-## 11   11      3 0.8 11
-## 12   12      2 0.8 12
-## 13   13      4 0.8 13
-## 14   14      5 0.8 14
-## 15   15      6 0.8 15
-## 16   16      9 0.8 16
-g_e_df &lt;- igraph::as_data_frame(g, what = &quot;edges&quot;) %&gt;%
-  mutate(pass_u = ifelse(!is.na(id_dam),0.1,NA),
-         pass_d = ifelse(!is.na(id_dam),0.7,NA))
-g_e_df
-##    from to id_dam  type pass_u pass_d
-## 1     1  2      1   dam    0.1    0.7
-## 2     2  5     NA joint     NA     NA
-## 3     5 11      2   dam    0.1    0.7
-## 4     3  4      3   dam    0.1    0.7
-## 5     4  5     NA joint     NA     NA
-## 6     6  7      4   dam    0.1    0.7
-## 7     7 10     NA joint     NA     NA
-## 8    10 13      5   dam    0.1    0.7
-## 9     8  9      6   dam    0.1    0.7
-## 10    9 10     NA joint     NA     NA
-## 11   11 12     NA joint     NA     NA
-## 12   12 14     NA joint     NA     NA
-## 13   13 12     NA joint     NA     NA
-## 14   14 15      7   dam    0.1    0.7
-## 15   15 16     NA joint     NA     NA
-
-# Recreate graph
-g &lt;- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
-g 
-## IGRAPH e509c95 DN-- 16 15 -- 
-## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/n),
-## | type (e/c), pass_u (e/n), pass_d (e/n)
-## + edges from e509c95 (vertex names):
-##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
-## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
-</code></pre>
-
+<p>The function <code>index_calcualtion</code> is used to calculate all
+the nuances of the CCI and RCI</p>
+<p>Before calculation, the information on the barriers passability are
+needed.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check edged and nodes attributes, add pass_u and pass_d fields</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>g_v_df <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">as_data_frame</span>(g, <span class="at">what =</span> <span class="st">&quot;vertices&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>g_v_df</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">##    name length HSI Id</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1      1 0.2  1</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2      1 0.1  2</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     5      2 0.3  5</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     3      3 0.4  3</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     4      4 0.5  4</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6      1 0.5  6</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     7      5 0.5  7</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   10      1 0.6 10</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 8     8      7 0.7  8</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     9      7 0.8  9</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   11      3 0.8 11</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 12   12      2 0.8 12</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 13   13      4 0.8 13</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 14   14      5 0.8 14</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 15   15      6 0.8 15</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 16   16      9 0.8 16</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>g_e_df <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">as_data_frame</span>(g, <span class="at">what =</span> <span class="st">&quot;edges&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pass_u =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(id_dam),<span class="fl">0.1</span>,<span class="cn">NA</span>),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">pass_d =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(id_dam),<span class="fl">0.7</span>,<span class="cn">NA</span>))</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>g_e_df</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="do">##    from to id_dam  type pass_u pass_d</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1  2      1   dam    0.1    0.7</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2  5   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     5 11      2   dam    0.1    0.7</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     3  4      3   dam    0.1    0.7</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     4  5   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6  7      4   dam    0.1    0.7</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     7 10   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 8    10 13      5   dam    0.1    0.7</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     8  9      6   dam    0.1    0.7</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    9 10   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   11 12   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 12   12 14   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 13   13 12   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 14   14 15      7   dam    0.1    0.7</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 15   15 16   &lt;NA&gt; joint     NA     NA</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Recreate graph</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> g_e_df, <span class="at">vertices =</span> g_v_df)</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>g </span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH 5eeda1d DN-- 16 15 -- </span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="do">## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/c),</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="do">## | type (e/c), pass_u (e/n), pass_d (e/n)</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from 5eeda1d (vertex names):</span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span></code></pre></div>
 <p>Index with default settings.</p>
-
-<pre><code class="r">index_calculation(g, param = 0.9)
-##        num  den     index
-## 1 562.6092 3721 0.1511984
-</code></pre>
-
-<p>Index with default settings, only \(c_{ij}\) or \(B_{ij}\) contributions</p>
-
-<pre><code class="r">index_calculation(g, B_ij_flag = FALSE)
-##        num  den     index
-## 1 791.8553 3721 0.2128071
-index_calculation(g, param = 0.9, c_ij_flag = FALSE)
-##        num  den    index
-## 1 1210.583 3721 0.325338
-</code></pre>
-
-<p>Index with default settings, only \(B_{ij}\) contributions with threshold on the distance</p>
-
-<pre><code class="r">index_calculation(g, c_ij_flag = FALSE,
-                  dir_distance_type = &quot;asymmetric&quot;, 
-                  disp_type = &quot;threshold&quot;, param_u = 0, param_d = 5)
-##   num  den     index
-## 1 413 3721 0.1109917
-index_calculation(g, c_ij_flag = FALSE,
-                  dir_distance_type = &quot;asymmetric&quot;, 
-                  disp_type = &quot;threshold&quot;, param_u = 5, param_d = 10)
-##    num  den     index
-## 1 1045 3721 0.2808385
-index_calculation(g, c_ij_flag = FALSE,
-                  dir_distance_type = &quot;symmetric&quot;, 
-                  disp_type = &quot;threshold&quot;, param = 10)
-##    num  den     index
-## 1 1277 3721 0.3431873
-</code></pre>
-
-<p>Index for reach, inbound connections used, only \(B_{ij}\) contributions with threshold on the distance</p>
-
-<pre><code class="r">index_calculation(g, c_ij_flag = FALSE,
-                  index_type = &quot;reach&quot;, index_mode = &quot;to&quot;,
-                  dir_distance_type = &quot;asymmetric&quot;, 
-                  disp_type = &quot;threshold&quot;, param_u = 0, param_d = 5)
-## # A tibble: 16 x 4
-##    name    num   den  index
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 1         1    61 0.0164
-##  2 10       13    61 0.213 
-##  3 11        7    61 0.115 
-##  4 12       11    61 0.180 
-##  5 13        5    61 0.0820
-##  6 14        7    61 0.115 
-##  7 15        6    61 0.0984
-##  8 16        9    61 0.148 
-##  9 2         2    61 0.0328
-## 10 3         3    61 0.0492
-## 11 4         7    61 0.115 
-## 12 5         8    61 0.131 
-## 13 6         1    61 0.0164
-## 14 7         6    61 0.0984
-## 15 8         7    61 0.115 
-## 16 9         7    61 0.115
-index_calculation(g, c_ij_flag = FALSE,
-                  dir_distance_type = &quot;asymmetric&quot;,
-                  index_type = &quot;reach&quot;, index_mode = &quot;to&quot;,
-                  disp_type = &quot;threshold&quot;, param_u = 5, param_d = 10)
-## # A tibble: 16 x 4
-##    name    num   den  index
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 1        14    61 0.230 
-##  2 10       18    61 0.295 
-##  3 11       33    61 0.541 
-##  4 12       35    61 0.574 
-##  5 13       31    61 0.508 
-##  6 14       18    61 0.295 
-##  7 15       13    61 0.213 
-##  8 16       15    61 0.246 
-##  9 2        14    61 0.230 
-## 10 3         7    61 0.115 
-## 11 4        11    61 0.180 
-## 12 5        33    61 0.541 
-## 13 6         6    61 0.0984
-## 14 7        14    61 0.230 
-## 15 8         7    61 0.115 
-## 16 9        21    61 0.344
-index_calculation(g, c_ij_flag = FALSE,
-                  index_type = &quot;reach&quot;, index_mode = &quot;to&quot;,
-                  dir_distance_type = &quot;symmetric&quot;, 
-                  disp_type = &quot;threshold&quot;, param = 10)
-## # A tibble: 16 x 4
-##    name    num   den index
-##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 1        16    61 0.262
-##  2 10       28    61 0.459
-##  3 11       26    61 0.426
-##  4 12       41    61 0.672
-##  5 13       31    61 0.508
-##  6 14       23    61 0.377
-##  7 15       22    61 0.361
-##  8 16       15    61 0.246
-##  9 2        20    61 0.328
-## 10 3        14    61 0.230
-## 11 4        16    61 0.262
-## 12 5        25    61 0.410
-## 13 6        11    61 0.180
-## 14 7        20    61 0.328
-## 15 8        14    61 0.230
-## 16 9        26    61 0.426
-</code></pre>
-
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">param =</span> <span class="fl">0.9</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">##        num  den     index</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 562.6092 3721 0.1511984</span></span></code></pre></div>
+<p>Index with default settings, only <span class="math inline">\(c_{ij}\)</span> or <span class="math inline">\(B_{ij}\)</span> contributions</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">B_ij_flag =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">##        num  den     index</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 791.8553 3721 0.2128071</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">param =</span> <span class="fl">0.9</span>, <span class="at">c_ij_flag =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="do">##        num  den    index</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 1210.583 3721 0.325338</span></span></code></pre></div>
+<p>Index with default settings, only <span class="math inline">\(B_{ij}\)</span> contributions with threshold on
+the distance</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">c_ij_flag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dir_distance_type =</span> <span class="st">&quot;asymmetric&quot;</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">disp_type =</span> <span class="st">&quot;threshold&quot;</span>, <span class="at">param_u =</span> <span class="dv">0</span>, <span class="at">param_d =</span> <span class="dv">5</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="do">##   num  den     index</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 413 3721 0.1109917</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">c_ij_flag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dir_distance_type =</span> <span class="st">&quot;asymmetric&quot;</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">disp_type =</span> <span class="st">&quot;threshold&quot;</span>, <span class="at">param_u =</span> <span class="dv">5</span>, <span class="at">param_d =</span> <span class="dv">10</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="do">##    num  den     index</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 1045 3721 0.2808385</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">c_ij_flag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dir_distance_type =</span> <span class="st">&quot;symmetric&quot;</span>, </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">disp_type =</span> <span class="st">&quot;threshold&quot;</span>, <span class="at">param =</span> <span class="dv">10</span>)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="do">##    num  den     index</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 1277 3721 0.3431873</span></span></code></pre></div>
+<p>Index for reach, inbound connections used, only <span class="math inline">\(B_{ij}\)</span> contributions with threshold on
+the distance</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">c_ij_flag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">index_type =</span> <span class="st">&quot;reach&quot;</span>, <span class="at">index_mode =</span> <span class="st">&quot;to&quot;</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dir_distance_type =</span> <span class="st">&quot;asymmetric&quot;</span>, </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">disp_type =</span> <span class="st">&quot;threshold&quot;</span>, <span class="at">param_u =</span> <span class="dv">0</span>, <span class="at">param_d =</span> <span class="dv">5</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 16 x 4</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">##    name    num   den  index</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 1         1    61 0.0164</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 10       13    61 0.213 </span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 11        7    61 0.115 </span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 12       11    61 0.180 </span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 13        5    61 0.0820</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 14        7    61 0.115 </span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 15        6    61 0.0984</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 16        9    61 0.148 </span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 2         2    61 0.0328</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 3         3    61 0.0492</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 4         7    61 0.115 </span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 5         8    61 0.131 </span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 6         1    61 0.0164</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 7         6    61 0.0984</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 15 8         7    61 0.115 </span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 9         7    61 0.115</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">c_ij_flag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dir_distance_type =</span> <span class="st">&quot;asymmetric&quot;</span>,</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>                  <span class="at">index_type =</span> <span class="st">&quot;reach&quot;</span>, <span class="at">index_mode =</span> <span class="st">&quot;to&quot;</span>,</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>                  <span class="at">disp_type =</span> <span class="st">&quot;threshold&quot;</span>, <span class="at">param_u =</span> <span class="dv">5</span>, <span class="at">param_d =</span> <span class="dv">10</span>)</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 16 x 4</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="do">##    name    num   den  index</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 1        14    61 0.230 </span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 10       18    61 0.295 </span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 11       33    61 0.541 </span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 12       35    61 0.574 </span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 13       31    61 0.508 </span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 14       18    61 0.295 </span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 15       13    61 0.213 </span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 16       15    61 0.246 </span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 2        14    61 0.230 </span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 3         7    61 0.115 </span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 4        11    61 0.180 </span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 5        33    61 0.541 </span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 6         6    61 0.0984</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 7        14    61 0.230 </span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 15 8         7    61 0.115 </span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 9        21    61 0.344</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="fu">index_calculation</span>(g, <span class="at">c_ij_flag =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>                  <span class="at">index_type =</span> <span class="st">&quot;reach&quot;</span>, <span class="at">index_mode =</span> <span class="st">&quot;to&quot;</span>,</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dir_distance_type =</span> <span class="st">&quot;symmetric&quot;</span>, </span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>                  <span class="at">disp_type =</span> <span class="st">&quot;threshold&quot;</span>, <span class="at">param =</span> <span class="dv">10</span>)</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 16 x 4</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a><span class="do">##    name    num   den index</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  1 1        16    61 0.262</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  2 10       28    61 0.459</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  3 11       26    61 0.426</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  4 12       41    61 0.672</span></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  5 13       31    61 0.508</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  6 14       23    61 0.377</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  7 15       22    61 0.361</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  8 16       15    61 0.246</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  9 2        20    61 0.328</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a><span class="do">## 10 3        14    61 0.230</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a><span class="do">## 11 4        16    61 0.262</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 5        25    61 0.410</span></span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a><span class="do">## 13 6        11    61 0.180</span></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 7        20    61 0.328</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a><span class="do">## 15 8        14    61 0.230</span></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 9        26    61 0.426</span></span></code></pre></div>
+</div>
+<div id="prioritization-calculation-and-visualization" class="section level2">
 <h2>Prioritization calculation and visualization</h2>
+<p>The function <code>index_calcualtion</code> allows to calculate the
+CCI and RCI changes when barriers are removed. Metadata on which dams
+are to be removed and how the passability changes are to be provided in
+the ‘dams_metadata’ object. Parallel calculations can be activated.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dams_metadata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">&quot;id_dam&quot;</span> <span class="ot">=</span>  <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="st">&quot;4&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;6&quot;</span>, <span class="st">&quot;7&quot;</span>),</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;pass_u_updated&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;pass_d_updated&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>dams_metadata</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="do">##   id_dam pass_u_updated pass_d_updated</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 1      1              1              1</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2      2              1              1</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 3      3              1              1</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 4      4              1              1</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 5      5              1              1</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6      6              1              1</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 7      7              1              1</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">d_index_calculation</span>(g,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">barriers_metadata =</span> dams_metadata,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                    <span class="at">id_barrier =</span> <span class="st">&quot;id_dam&quot;</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">parallel =</span> <span class="cn">FALSE</span>, <span class="at">ncores =</span> <span class="dv">3</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">param_u =</span> <span class="dv">10</span>,  <span class="at">param_d =</span> <span class="dv">10</span>, <span class="at">param =</span> <span class="fl">0.5</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">index_type =</span> <span class="st">&quot;full&quot;</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>                    <span class="at">dir_distance_type =</span> <span class="st">&quot;asymmetric&quot;</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">disp_type =</span> <span class="st">&quot;threshold&quot;</span>)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="do">##   id_dam      num  den     index  index_bl   d_index</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 1      1 761.3266 3721 0.2046027 0.2006519  1.968976</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 2      2 906.0160 3721 0.2434872 0.2006519 21.348084</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 3      3 787.2481 3721 0.2115690 0.2006519  5.440798</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 4      4 771.3265 3721 0.2072901 0.2006519  3.308324</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 5      5 986.0332 3721 0.2649915 0.2006519 32.065261</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 6      6 837.7657 3721 0.2251453 0.2006519 12.206919</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 7      7 824.7457 3721 0.2216463 0.2006519 10.463074</span></span></code></pre></div>
+<p>Calculated index can be joined with the original graph and plotted to
+check spatial patterns.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>d_index <span class="ot">&lt;-</span> <span class="fu">d_index_calculation</span> (g,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">barriers_metadata =</span> dams_metadata,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">id_barrier =</span> <span class="st">&quot;id_dam&quot;</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">parallel =</span> <span class="cn">FALSE</span>, <span class="at">ncores =</span> <span class="dv">3</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">param_u =</span> <span class="dv">10</span>,  <span class="at">param_d =</span> <span class="dv">10</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">index_type =</span> <span class="st">&quot;full&quot;</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                                <span class="at">B_ij_flag =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Check edged and nodes attributes</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>g_v_df <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">as_data_frame</span>(g, <span class="at">what =</span> <span class="st">&quot;vertices&quot;</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>g_v_df</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="do">##    name length HSI Id</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1      1 0.2  1</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2      1 0.1  2</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     5      2 0.3  5</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     3      3 0.4  3</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     4      4 0.5  4</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6      1 0.5  6</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     7      5 0.5  7</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   10      1 0.6 10</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 8     8      7 0.7  8</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     9      7 0.8  9</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   11      3 0.8 11</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 12   12      2 0.8 12</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 13   13      4 0.8 13</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 14   14      5 0.8 14</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 15   15      6 0.8 15</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 16   16      9 0.8 16</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>g_e_df <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">as_data_frame</span>(g, <span class="at">what =</span> <span class="st">&quot;edges&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(d_index, <span class="at">by =</span> <span class="st">&quot;id_dam&quot;</span>)</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>g_e_df</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="do">##    from to id_dam  type pass_u pass_d       num  den     index  index_bl</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1  2      1   dam    0.1    0.7  807.3490 3721 0.2169710 0.2128071</span></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2  5   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     5 11      2   dam    0.1    0.7 1008.4973 3721 0.2710286 0.2128071</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     3  4      3   dam    0.1    0.7  837.5552 3721 0.2250887 0.2128071</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     4  5   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6  7      4   dam    0.1    0.7  818.9726 3721 0.2200947 0.2128071</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 7     7 10   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 8    10 13      5   dam    0.1    0.7 1184.2933 3721 0.3182729 0.2128071</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 9     8  9      6   dam    0.1    0.7  976.2077 3721 0.2623509 0.2128071</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 10    9 10   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 11   11 12   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 12   12 14   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 13   13 12   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 14   14 15      7   dam    0.1    0.7 1223.1558 3721 0.3287170 0.2128071</span></span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 15   15 16   &lt;NA&gt; joint     NA     NA        NA   NA        NA        NA</span></span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a><span class="do">##      d_index</span></span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 1   1.956632</span></span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 2         NA</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  27.358782</span></span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 4   5.771242</span></span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 5         NA</span></span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a><span class="do">## 6   3.424522</span></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a><span class="do">## 7         NA</span></span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 8  49.559308</span></span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a><span class="do">## 9  23.281074</span></span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a><span class="do">## 10        NA</span></span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 11        NA</span></span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a><span class="do">## 12        NA</span></span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a><span class="do">## 13        NA</span></span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a><span class="do">## 14 54.467087</span></span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a><span class="do">## 15        NA</span></span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Recreate graph</span></span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> g_e_df, <span class="at">vertices =</span> g_v_df)</span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>g </span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH 60eccca DN-- 16 15 -- </span></span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a><span class="do">## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/c),</span></span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a><span class="do">## | type (e/c), pass_u (e/n), pass_d (e/n), num (e/n), den (e/n), index</span></span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a><span class="do">## | (e/n), index_bl (e/n), d_index (e/n)</span></span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from 60eccca (vertex names):</span></span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Fortify and plot graph</span></span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>gg0 <span class="ot">&lt;-</span> <span class="fu">ggnetwork</span>(g, <span class="at">layout =</span>  <span class="fu">layout_as_tree</span>(g <span class="sc">%&gt;%</span> as.undirected, <span class="at">root =</span> <span class="dv">16</span>), <span class="at">scale =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gg0, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend)) <span class="sc">+</span></span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edges</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>             <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="dv">10</span>, <span class="st">&quot;pt&quot;</span>), <span class="at">type =</span> <span class="st">&quot;open&quot;</span>), </span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">color =</span> d_index)) <span class="sc">+</span></span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_nodes</span>() <span class="sc">+</span></span>
+<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis</span>()<span class="sc">+</span></span>
+<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_blank</span>()</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="references-and-key-literature" class="section level2">
+<h2>References and key literature</h2>
+<p>Belletti, Barbara, et al. “More than one million barriers fragment
+Europe’s rivers.” Nature 588.7838 (2020): 436-441.</p>
+<p>Cote, D., Kehler, D. G., Bourne, C., &amp; Wiersma, Y. F. (2009). A
+new measure of longitudinal connectivity for stream networks. Landscape
+Ecology, 24(1), 101-113.</p>
+<p>Kolaczyk, E. D., &amp; Csárdi, G. (2014). Statistical analysis of
+network data with R (Vol. 65). New York: Springer.</p>
+<p>Jumani, S., Deitch, M. J., Kaplan, D., Anderson, E. P., Krishnaswamy,
+J., Lecours, V., &amp; Whiles, M. R. (2020). River fragmentation and
+flow alteration metrics: a review of methods and directions for future
+research. Environmental Research Letters.</p>
+</div>
 
-<p>The function <code>index_calcualtion</code> allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the &#39;dams_metadata&#39; object. Parallel calculations can be activated.</p>
 
-<pre><code class="r">dams_metadata &lt;- data.frame(&quot;id_dam&quot; =  c(1, 2, 3, 4, 5, 6, 7),
-                            &quot;pass_u_updated&quot; = c(1, 1, 1, 1, 1, 1, 1),
-                            &quot;pass_d_updated&quot; = c(1, 1, 1, 1, 1, 1, 1))
-dams_metadata
-##   id_dam pass_u_updated pass_d_updated
-## 1      1              1              1
-## 2      2              1              1
-## 3      3              1              1
-## 4      4              1              1
-## 5      5              1              1
-## 6      6              1              1
-## 7      7              1              1
 
-d_index_calculation (g,
-                     dams_metadata,
-                     parallel = FALSE, ncores = 3,
-                     param_u = 10,  param_d = 10, param = 0.5,
-                     index_type = &quot;full&quot;,
-                     dir_distance_type = &quot;asymmetric&quot;,
-                     disp_type = &quot;threshold&quot;)
-##   id_dam      num  den     index  index_bl   d_index
-## 1      1 761.3266 3721 0.2046027 0.2006519  1.968976
-## 2      2 906.0160 3721 0.2434872 0.2006519 21.348084
-## 3      3 787.2481 3721 0.2115690 0.2006519  5.440798
-## 4      4 771.3265 3721 0.2072901 0.2006519  3.308324
-## 5      5 986.0332 3721 0.2649915 0.2006519 32.065261
-## 6      6 837.7657 3721 0.2251453 0.2006519 12.206919
-## 7      7 824.7457 3721 0.2216463 0.2006519 10.463074
-</code></pre>
+<!-- code folding -->
 
-<p>Calculated index can be joined with the original graph and plotted to check spatial patterns.</p>
 
-<pre><code class="r">
-d_index &lt;- d_index_calculation (g,
-                     dams_metadata,
-                     parallel = FALSE, ncores = 3,
-                     param_u = 10,  param_d = 10,
-                     index_type = &quot;full&quot;,
-                     B_ij_flag = FALSE)
-
-# Check edged and nodes attributes
-g_v_df &lt;- igraph::as_data_frame(g, what = &quot;vertices&quot;)
-g_v_df
-##    name length HSI Id
-## 1     1      1 0.2  1
-## 2     2      1 0.1  2
-## 5     5      2 0.3  5
-## 3     3      3 0.4  3
-## 4     4      4 0.5  4
-## 6     6      1 0.5  6
-## 7     7      5 0.5  7
-## 10   10      1 0.6 10
-## 8     8      7 0.7  8
-## 9     9      7 0.8  9
-## 11   11      3 0.8 11
-## 12   12      2 0.8 12
-## 13   13      4 0.8 13
-## 14   14      5 0.8 14
-## 15   15      6 0.8 15
-## 16   16      9 0.8 16
-g_e_df &lt;- igraph::as_data_frame(g, what = &quot;edges&quot;) %&gt;%
-  left_join(d_index, by = &quot;id_dam&quot;)
-g_e_df
-##    from to id_dam  type pass_u pass_d       num  den     index  index_bl
-## 1     1  2      1   dam    0.1    0.7  807.3490 3721 0.2169710 0.2128071
-## 2     2  5     NA joint     NA     NA        NA   NA        NA        NA
-## 3     5 11      2   dam    0.1    0.7 1008.4973 3721 0.2710286 0.2128071
-## 4     3  4      3   dam    0.1    0.7  837.5552 3721 0.2250887 0.2128071
-## 5     4  5     NA joint     NA     NA        NA   NA        NA        NA
-## 6     6  7      4   dam    0.1    0.7  818.9726 3721 0.2200947 0.2128071
-## 7     7 10     NA joint     NA     NA        NA   NA        NA        NA
-## 8    10 13      5   dam    0.1    0.7 1184.2933 3721 0.3182729 0.2128071
-## 9     8  9      6   dam    0.1    0.7  976.2077 3721 0.2623509 0.2128071
-## 10    9 10     NA joint     NA     NA        NA   NA        NA        NA
-## 11   11 12     NA joint     NA     NA        NA   NA        NA        NA
-## 12   12 14     NA joint     NA     NA        NA   NA        NA        NA
-## 13   13 12     NA joint     NA     NA        NA   NA        NA        NA
-## 14   14 15      7   dam    0.1    0.7 1223.1558 3721 0.3287170 0.2128071
-## 15   15 16     NA joint     NA     NA        NA   NA        NA        NA
-##      d_index
-## 1   1.956632
-## 2         NA
-## 3  27.358782
-## 4   5.771242
-## 5         NA
-## 6   3.424522
-## 7         NA
-## 8  49.559308
-## 9  23.281074
-## 10        NA
-## 11        NA
-## 12        NA
-## 13        NA
-## 14 54.467087
-## 15        NA
-
-# Recreate graph
-g &lt;- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
-g 
-## IGRAPH eb09e32 DN-- 16 15 -- 
-## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/n),
-## | type (e/c), pass_u (e/n), pass_d (e/n), num (e/n), den (e/n), index
-## | (e/n), index_bl (e/n), d_index (e/n)
-## + edges from eb09e32 (vertex names):
-##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10
-## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16
-
-# Fortify and plot graph
-gg0 &lt;- ggnetwork(g, layout =  layout_as_tree(g %&gt;% as.undirected, root = 16), scale = FALSE)
-ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_edges(alpha = 0.5, size = 3,
-             arrow = arrow(length = unit(10, &quot;pt&quot;), type = &quot;open&quot;), 
-             aes(color = d_index)) +
-  geom_nodes() +
-  scale_color_viridis()+
-  theme_blank()
-</code></pre>
-
-<p><img src="data:image/png;base64,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" alt="plot of chunk plot join"/></p>
-
-<h2>Temporal developement calculation and visualization</h2>
-
-<p>TO FILL</p>
-
-<h2>References</h2>
-
-<p>TO FILL</p>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>
