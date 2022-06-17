@@ -532,22 +532,22 @@ small, toy graphs.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">graph_from_literal</span>(<span class="dv">1</span><span class="sc">-+</span><span class="dv">2</span>, <span class="dv">2</span><span class="sc">-+</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">-+</span><span class="dv">4</span>, <span class="dv">4</span><span class="sc">-+</span><span class="dv">5</span>, <span class="dv">6</span><span class="sc">-+</span><span class="dv">7</span>, <span class="dv">7</span><span class="sc">-+</span><span class="dv">10</span>, <span class="dv">8</span><span class="sc">-+</span><span class="dv">9</span>, <span class="dv">9</span><span class="sc">-+</span><span class="dv">10</span>, </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                        <span class="dv">5</span><span class="sc">-+</span><span class="dv">11</span>, <span class="dv">11</span><span class="sc">-+</span><span class="dv">12</span>, <span class="dv">10</span><span class="sc">-+</span><span class="dv">13</span>, <span class="dv">13</span><span class="sc">-+</span><span class="dv">12</span>, <span class="dv">12</span><span class="sc">-+</span><span class="dv">14</span>, <span class="dv">14</span><span class="sc">-+</span><span class="dv">15</span>, <span class="dv">15</span><span class="sc">-+</span><span class="dv">16</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>g</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH 5d80e39 DN-- 16 15 -- </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH dff02cf DN-- 16 15 -- </span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">## + attr: name (v/c)</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from 5d80e39 (vertex names):</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from dff02cf (vertex names):</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span></code></pre></div>
 <p>Note that when a graph is defined this way, edged and vertices
 attributes are not defined.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Edges</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## + 15/15 edges from 5d80e39 (vertex names):</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## + 15/15 edges from dff02cf (vertex names):</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># vertices</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## + 16/16 vertices, named, from 5d80e39:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## + 16/16 vertices, named, from dff02cf:</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16</span></span></code></pre></div>
 <p>The graph can be converted to data frame with the function
 <code>as_data_frame</code>, specifying if edges or vertices are to be
@@ -628,7 +628,7 @@ index.</p>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)<span class="sc">$</span>id_dam <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;1&quot;</span>, <span class="cn">NA</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="cn">NA</span>, <span class="st">&quot;4&quot;</span>, <span class="cn">NA</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;6&quot;</span>, <span class="cn">NA</span>,  <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="st">&quot;7&quot;</span>, <span class="cn">NA</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="fu">E</span>(g)<span class="sc">$</span>id_dam), <span class="st">&quot;joint&quot;</span>, <span class="st">&quot;dam&quot;</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">E</span>(g)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## + 15/15 edges from 5d80e39 (vertex names):</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="do">## + 15/15 edges from dff02cf (vertex names):</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -637,7 +637,7 @@ index.</p>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>HSI <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span>)</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)<span class="sc">$</span>Id <span class="ot">&lt;-</span> <span class="fu">V</span>(g)<span class="sc">$</span>name</span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(g)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">## + 16/16 vertices, named, from 5d80e39:</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="do">## + 16/16 vertices, named, from dff02cf:</span></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1  2  5  3  4  6  7  10 8  9  11 12 13 14 15 16</span></span></code></pre></div>
 </div>
 <div id="visualizing-the-igraph-object" class="section level3">
@@ -731,10 +731,10 @@ needed.</p>
 <span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Recreate graph</span></span>
 <span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> g_e_df, <span class="at">vertices =</span> g_v_df)</span>
 <span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>g </span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH 5eeda1d DN-- 16 15 -- </span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH e16357d DN-- 16 15 -- </span></span>
 <span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a><span class="do">## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/c),</span></span>
 <span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="do">## | type (e/c), pass_u (e/n), pass_d (e/n)</span></span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from 5eeda1d (vertex names):</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from e16357d (vertex names):</span></span>
 <span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
 <span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span></code></pre></div>
 <p>Index with default settings.</p>
@@ -942,11 +942,11 @@ check spatial patterns.</p>
 <span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Recreate graph</span></span>
 <span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> igraph<span class="sc">::</span><span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> g_e_df, <span class="at">vertices =</span> g_v_df)</span>
 <span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>g </span>
-<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH 60eccca DN-- 16 15 -- </span></span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a><span class="do">## IGRAPH e37479f DN-- 16 15 -- </span></span>
 <span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a><span class="do">## + attr: name (v/c), length (v/n), HSI (v/n), Id (v/c), id_dam (e/c),</span></span>
 <span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a><span class="do">## | type (e/c), pass_u (e/n), pass_d (e/n), num (e/n), den (e/n), index</span></span>
 <span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a><span class="do">## | (e/n), index_bl (e/n), d_index (e/n)</span></span>
-<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from 60eccca (vertex names):</span></span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a><span class="do">## + edges from e37479f (vertex names):</span></span>
 <span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] 1 -&gt;2  2 -&gt;5  5 -&gt;11 3 -&gt;4  4 -&gt;5  6 -&gt;7  7 -&gt;10 10-&gt;13 8 -&gt;9  9 -&gt;10</span></span>
 <span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] 11-&gt;12 12-&gt;14 13-&gt;12 14-&gt;15 15-&gt;16</span></span>
 <span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a></span>
