@@ -50,3 +50,4 @@ The 'param_u', 'param_d', and 'param' values are interpreted differently based o
 When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 }
+\keyword{internal}

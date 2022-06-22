@@ -37,3 +37,4 @@ The equivalent passability for each barrier is calculated as the product of upst
 The equivalent passability of each barrier is calculated as a function of the path connecting each couple of reaches
 and depends on the direction of the path. Check the package vignette for more details.
 }
+\keyword{internal}

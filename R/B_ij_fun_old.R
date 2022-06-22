@@ -29,6 +29,8 @@
 #' @importFrom igraph E V
 #' @importFrom rlang .data
 #'
+#' @keywords internal
+#'
 B_ij_fun_old <- function(graph, field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential", param_u , param_d , param ) {
 
   # Error messages

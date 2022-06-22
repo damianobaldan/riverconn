@@ -48,16 +48,15 @@
 #'
 #' @examples
 #' library(igraph)
-#' g <- igraph::graph_from_literal(1-+2, 2-+5, 3-+4, 4-+5, 6-+7,
-#' 7-+10, 8-+9, 9-+10, 5-+11, 11-+12, 10-+13, 13-+12, 12-+14, 14-+15, 15-+16)
-#' E(g)$id_dam <- c("1", NA, "2", "3", NA, "4", NA, "5", "6", NA,  NA, NA, NA, "7", NA)
-#' E(g)$type <- ifelse(is.na(E(g)$id_dam), "joint", "dam")
-#' V(g)$length <- c(1, 1, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 4, 5, 6, 9)
-#' V(g)$HSI <- c(0.2, 0.1, 0.3, 0.4, 0.5, 0.5, 0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8)
+#' library(igraph)
+#' g <- igraph::graph_from_literal(1-+2, 2-+4, 3-+2, 4-+6, 6-+7, 5-+6, 7-+8, 9-+5, 10-+5 )
+#' E(g)$id_dam <- c(NA, NA, "1", NA, NA, "2", NA, NA, NA)
+#' E(g)$type <- ifelse(is.na(E(g)$id_barrier), "joint", "dam")
+#' V(g)$length <- c(1, 1, 2, 3, 4, 1, 5, 1, 2, 1)
 #' V(g)$Id <- V(g)$name
 #' E(g)$pass_u <- E(g)$pass_d <- ifelse(!is.na(E(g)$id_dam),0.1,NA)
-#' dams_metadata <- data.frame("id_dam" =  c("1", "2", "3", "4", "5", "6", "7"),
-#' "pass_u_updated" = c(1, 1, 1, 1, 1, 1, 1), "pass_d_updated" = c(1, 1, 1, 1, 1, 1, 1))
+#' dams_metadata <- data.frame("id_dam" =  c("1", "2"),
+#' "pass_u_updated" = c(1, 1), "pass_d_updated" = c(1, 1))
 #' d_index <- d_index_calculation(g, barriers_metadata = dams_metadata,
 #' id_barrier = "id_dam", parallel = FALSE, param = 0.6)
 #'
