@@ -27,3 +27,11 @@ relative passability parameters. For example, c can be used for construction, an
 In this case, \code{passability_information} will have the fields 'year_c', 'pass_c_u', and 'pass_c_d', 'year_fp', 'pass_fp_u', and 'pass_fp_d'.
 Then, the input \code{seq_ops = c("c", "fp")}, meaning that first the operation named 'c' occurred, and then the operation named 'fp' occurred.
 }
+\examples{
+barriers_data <- data.frame("id_barrier" = c("1", "2"),
+"year_c" = c(1950, 1990), "pass_c_u" = c(0.1, 0.1), "pass_c_d" = c(0.4, 0.4),
+"year_fp" = c(2000, 2010), "pass_fp_u" = c(0.5, 0.5), "pass_fp_d" = c(0.8, 0.8))
+seq_ops <- c("c", "fp")
+t_metadata <- t_passability_sequencer(barriers_data, seq_ops)
+
+}

@@ -13,7 +13,7 @@ t_index_calculation(
   pass_u = "pass_u",
   pass_d = "pass_d",
   weights_metadata,
-  weight = "weight",
+  weight = "length",
   nodes_id = "name",
   parallel = TRUE,
   ncores
@@ -54,4 +54,28 @@ If \code{index_type = "reach"}, the data.frame is organized by 'year' and 'name'
 }
 \description{
 Calculates time-dependent index when nodes weights or barriers passability are changing
+}
+\examples{
+library(igraph)
+g <- igraph::graph_from_literal(1-+2, 2-+5, 3-+4, 4-+5, 6-+7,
+7-+10, 8-+9, 9-+10, 5-+11, 11-+12, 10-+13, 13-+12, 12-+14, 14-+15, 15-+16)
+E(g)$id_barrier <- c("1", NA, "2", "3", NA, "4", NA, "5", "6", NA,  NA, NA, NA, "7", NA)
+E(g)$type <- ifelse(is.na(E(g)$id_barrier), "joint", "dam")
+V(g)$length <- c(1, 1, 2, 3, 4, 1, 5, 1, 7, 7, 3, 2, 4, 5, 6, 9)
+V(g)$HSI <- c(0.2, 0.1, 0.3, 0.4, 0.5, 0.5, 0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8)
+V(g)$Id <- V(g)$name
+E(g)$pass_u <- E(g)$pass_d <- ifelse(!is.na(E(g)$id_barrier),0.1,NA)
+barriers_data <- data.frame("id_barrier" = c("1", "2", "3", "4", "5", "6", "7"),
+"year_c" = rep(1950, 7), "pass_c_u" = rep(0.1, 7), "pass_c_d" = rep(0.4, 7),
+"year_fp" = rep(2000, 7), "pass_fp_u" = rep(0.5, 7), "pass_fp_d" = rep(0.8, 7))
+seq_ops <- c("c", "fp")
+barriers_metadata <- t_passability_sequencer(barriers_data, seq_ops)
+weights_dataframe <- data.frame("name" = seq(1,16) \%>\% as.character,
+"weight_1900" = seq(1,16) )
+weights_metadata <- t_weights_sequencer(weights_dataframe, weight = "length")
+t_indexmeta <- t_index_calculation(g, barriers_metadata = barriers_metadata,
+weights_metadata = weights_metadata, weight = "length", parallel = FALSE, param = 0.6)
+
+
+
 }

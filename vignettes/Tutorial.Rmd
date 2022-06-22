@@ -28,10 +28,11 @@ For example, the graphs below represents a river with ten reaches. The graph on 
 ```{r graph example, message = FALSE, collapse = TRUE, width = 60, warning = FALSE, echo = FALSE}
 library(igraph)
 g <- graph_from_literal(1-+2, 2-+4, 3-+2, 4-+6, 6-+7, 5-+6, 7-+8, 9-+5, 10-+5 )
+oldpar <- par(mfrow = c(1,1))
 par(mfrow=c(1,2))
 plot(g, layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE))
 plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE))
-
+par <- oldpar
 ```
 
 ### Generalized riverscape connectivity index 

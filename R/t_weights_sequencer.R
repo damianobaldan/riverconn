@@ -5,13 +5,20 @@
 #' separated by an underscore (e.g. when \code{weight = "length"}, the names of the 'weight' columns will be:
 #' 'weight_1990', 'weight_2000', 'weight_2020', etc.).
 #' @param weight a character object containing the label of the columns whose weight change with time
-#' @param nodes_id a character object containing the label of the columns that univoquely identify reaches.
+#' @param nodes_id a character object containing the label of the columns that uniquely identify reaches.
 #'
 #' @return a data frame with columns 'name', 'year', and 'weight' to be used in the function \code{t_index_calculation}
 #' @export
 #'
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom tidyselect starts_with everything
+#'
+#' @examples
+#' weights_dataframe <- data.frame("id" = c("1", "2", "3", "4", "5"),
+#' "weight_1900" = c(10, 15, 100, 50, 40),
+#' "weight_1950"= c(11, 16, 90, 55, 45),
+#' "weight_2000"= c(13, 19, 80, 49, 44))
+#' weights_metadata <- t_weights_sequencer(weights_dataframe, weight = "weight", nodes_id = "id")
 #'
 t_weights_sequencer <- function(weights_information, weight = "length", nodes_id = "name"){
 

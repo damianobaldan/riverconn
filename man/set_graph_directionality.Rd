@@ -20,3 +20,9 @@ an object of class 'igraph' containing a directed graph.
 \description{
 The input graph can be either directed or undirected. If directed, then it is made undirected before directionality is assigned.
 }
+\examples{
+library(igraph)
+g <- igraph::graph_from_literal(1-2, 2-4, 3-2, 4-6, 6-7, 5-6, 7-8, 9-5, 10-5 )
+g1 <- set_graph_directionality(g, field_name = "name", "8")
+
+}

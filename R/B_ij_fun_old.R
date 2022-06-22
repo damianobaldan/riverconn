@@ -13,7 +13,6 @@
 #' @return a matrix in data.frame format whose most relevant columns are 'from', 'to', and 'B_ij'.
 #' For diagnosing purposes, also the distances are reported in the columns
 #' 'n' (undirected distance), 'u'(upstream distance), and 'd'(downstream distance).
-#' @export
 #'
 #' @details
 #' \code{dir_distance_type = "symmetric"} is to be used when the directionality of the river network is not relevant.

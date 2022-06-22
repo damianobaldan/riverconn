@@ -15,7 +15,6 @@
 #' and depends on the direction of the path. Check the package vignette for more details.
 #'
 #' @return a matrix in data.frame format whose columns are 'from', 'to', and 'c_ij'.
-#' @export
 #'
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
