@@ -13,6 +13,11 @@
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
 #'
+#' @examples
+#' library(igraph)
+#' g <- igraph::graph_from_literal(1-2, 2-4, 3-2, 4-6, 6-7, 5-6, 7-8, 9-5, 10-5 )
+#' g1 <- set_graph_directionality(g, field_name = "name", "8")
+#'
 set_graph_directionality <- function(graph, field_name = "name", outlet_name) {
 
   # Error messages
