@@ -55,9 +55,11 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
   # Errors for asymmetric distance
   if( dir_distance_type == "asymmetric"){
     if( missing(param_u) | is.na(param_u) ) stop(
-      "'param_u' must be defined when dir_distance_type = 'asymmetric'")
+      "'param_u' must be defined when dir_distance_type = 'asymmetric' (if you do not want to include
+      dispersal limitation, set 'B_ij_flag = FALSE' in the function's arguments)")
     if( missing(param_d) | is.na(param_d) ) stop(
-      "'param_d' must be defined when dir_distance_type = 'asymmetric'")
+      "'param_d' must be defined when dir_distance_type = 'asymmetric' (if you do not want to include
+      dispersal limitation, set 'B_ij_flag = FALSE' in the function's arguments)")
     if( param_u < 0 | param_d < 0 ) stop(
       "'param_u', 'param_d', and 'param' must be > 0")
     if(  !is.numeric(param_u)) stop(
@@ -66,18 +68,19 @@ B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric",
       "'param_d' must be numeric")
     if(disp_type == "exponential") {
       if( param_u > 1 | param_d > 1 ) stop(
-        "'param_u' and 'param_d' must be < 1 for disp_type == 'exponential'")
+        "'param_u' and 'param_d' must be < 1 for disp_type = 'exponential'")
     }}
 
   # Errors for symmetric distance
   if( dir_distance_type == "symmetric" ) {
     if( missing(param) | is.na(param) )  stop(
-      "'param' must be specified when dir_distance_type = 'symmetric'")
+      "'param' must be specified when dir_distance_type = 'symmetric' (if you do not want to include
+      dispersal limitation, set 'B_ij_flag = FALSE' in the function's arguments)")
     if( param < 0  ) stop(
       "'param_u', 'param_d', and 'param' must be > 0")
     if(disp_type == "exponential") {
       if( param > 1 ) stop(
-        "'param' must be < 1 for disp_type == 'exponential'")
+        "'param' must be < 1 for disp_type = 'exponential'")
     } }
 
 
