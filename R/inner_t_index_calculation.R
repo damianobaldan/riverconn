@@ -269,7 +269,7 @@ inner_t_index_calculation <- function(graph,
         dplyr::mutate(num = index$num, den = index$den, index = index$index) }
 
     if (index_type == "reach") {
-      index <- index %>% dplyr::mutate(year = .data$t)
+      index <- index %>% dplyr::mutate(year = t)
     }
 
     return(index)
