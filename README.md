@@ -9,6 +9,9 @@ The latest version of the package is available from GitHub: https://github.com/d
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.14 to 0.3.15
+* changed matrix-vector multiplication method in index_calculation to avoid running out of memory
+
 0.3.13 to 0.3.14
 * fixed bug in t_index_calculation for index_type = "reach"
 

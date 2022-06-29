@@ -14,9 +14,7 @@
 #' The equivalent passability of each barrier is calculated as a function of the path connecting each couple of reaches
 #' and depends on the direction of the path. Check the package vignette for more details.
 #'
-#' @return a square matrix of size length(V(graph)) containing c_ij values.
-#' The matrix is organized with "from" nodes on the columns and "to" nodes on the rows
-#' @export
+#' @return a matrix in data.frame format whose columns are 'from', 'to', and 'c_ij'.
 #'
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
@@ -60,10 +58,10 @@ c_ij_fun <- function(graph,
     mutate(dist = log10(.data$pass_eq))
 
   # Calculate all shortest paths
-  cij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id)
-
-  # Postprocess matrix
-  cij_mat <- 10^c_ij_mat
+  cij_mat <-  reshape2::melt(
+    dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) ) %>%
+    dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), c_ij = 10^(.data$value)) %>%
+    dplyr::select(.data$from, .data$to, .data$c_ij)
 
   return(cij_mat)
 

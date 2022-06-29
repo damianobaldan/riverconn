@@ -34,7 +34,6 @@
 #' if \code{index_type = c("reach", "sum")}, returns a data frame with the index value (column 'index') for each reach
 #' (the field specified in 'nodes_id' is used for reach identification in the data frame).
 #' In both cases, both numerator and denominator used in the index calculations are reported in the columns 'num' and 'den'.
-#' @export
 #'
 #' @details
 #' Setting \code{c_ij_flag = FALSE} removes from the calculations the effect of barriers, i.e. the c_{ij} contribution
@@ -149,13 +148,17 @@ index_calculation <- function(graph,
 
   # 3. Aggregate c_ij and B_ij
   if(c_ij_flag == TRUE & B_ij_flag == TRUE) {
-    agg_mat <- c_ij_mat * B_ij_mat }
+    agg_mat <- c_ij_mat %>%
+      dplyr::left_join(B_ij_mat, by = c("from", "to")) %>%
+      dplyr::mutate(P = .data$c_ij * .data$B_ij) }
 
   if(c_ij_flag == TRUE & B_ij_flag == FALSE){
-    agg_mat <- c_ij_mat  }
+    agg_mat <- c_ij_mat %>%
+      dplyr::mutate(P = .data$c_ij ) }
 
   if(c_ij_flag == FALSE & B_ij_flag == TRUE) {
-    agg_mat <- B_ij_mat  }
+    agg_mat <- B_ij_mat %>%
+      dplyr::mutate(P = .data$B_ij) }
 
   # 4. Get the weight information
 
@@ -164,42 +167,40 @@ index_calculation <- function(graph,
     igraph::as_data_frame(graph, what = "vertices"),
     ~"weight_node", contains(weight))
 
-  # Create veights vector
-  v_weights <- g_v_df$weight_node
+  # Join probaility matrix with weight information
+  agg_mat <- agg_mat %>%
+    dplyr::left_join( g_v_df %>% dplyr::select(.data$name, .data$weight_node) %>%
+                 dplyr::rename(from = .data$name, weight_from = .data$weight_node), by = "from"  ) %>%
+    dplyr::left_join( g_v_df %>% dplyr::select(.data$name, .data$weight_node) %>%
+                 dplyr::rename(to = .data$name, weight_to = .data$weight_node), by = "to" )
 
   # 5. Calculate indices
 
   # If the full index is to be calculated
   if (index_type == "full") {
 
-    index_num = t(v_weights) %*% agg_mat %*% v_weights
-    index_den = sum(v_weights)^2
+    agg_mat <- agg_mat %>%
+      dplyr::mutate(prod = .data$P * .data$weight_from * .data$weight_to)
+    index_num <- sum( agg_mat$prod )
+    index_den <- ( sum( g_v_df$weight_node ) )^2
     index = index_num / index_den
 
-    index <- data.frame("num" = index_num,
-                        "den" = index_den,
-                        "index" = index)
+    index <- data.frame("num" = index_num, "den" = index_den, "index" = index)
   }
 
   # If the reach index is to be calculated
   if (index_type == "reach") {
 
-    if (index_mode == "to"){
-      index_num =  agg_mat %*% v_weights }
-
-    if (index_mode == "from"){
-      index_num = t(v_weights) %*% agg_mat
-    }
-
-    index_den = sum(v_weights)
-    index = index_num / index_den
-
-    index = data.frame("name" = igraph::V(graph)$name,
-                       "num" = index_num,
-                       "den" = index_den,
-                       "index" = index) %>%
+    index <- agg_mat %>%
+      dplyr::rename_with(~"weight", contains("weight_node") & !contains(index_mode)) %>%
+      dplyr::select(-matches(paste0("weight_",index_mode))) %>%
+      dplyr::rename_with(~"name", contains(index_mode) ) %>%
+      dplyr::rename_with(~ "weight_node", contains("weight_") ) %>%
+      dplyr::mutate(prod = .data$weight_node * .data$P) %>%
+      dplyr::group_by(.data$name) %>%
+      dplyr::summarize(num = sum(.data$prod)) %>%
+      dplyr::mutate(den = sum( g_v_df$weight_node ), index = .data$num/.data$den ) %>%
       dplyr::rename_with(~nodes_id, contains("name") )
-
   }
 
   # If the summation index is to be calculated
