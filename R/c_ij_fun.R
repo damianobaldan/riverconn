@@ -63,7 +63,7 @@ c_ij_fun <- function(graph,
   cij_mat <- dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id)
 
   # Postprocess matrix
-  cij_mat <- 10^c_ij_mat
+  cij_mat <- 10^cij_mat
 
   return(cij_mat)
 

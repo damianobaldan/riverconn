@@ -10,9 +10,9 @@
 #' @param param_d the downstream dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See details.
 #' @param param the dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "symmetric"}. See details.
 #'
-#' @return a square matrix of size length(V(graph)) containing B_ij values.
-#' The matrix is organized with "from" nodes on the columns and "to" nodes on the rows
-#' @export
+#' @return a matrix in data.frame format whose most relevant columns are 'from', 'to', and 'B_ij'.
+#' For diagnosing purposes, also the distances are reported in the columns
+#' 'n' (undirected distance), 'u'(upstream distance), and 'd'(downstream distance).
 #'
 #' @details
 #' \code{dir_distance_type = "symmetric"} is to be used when the directionality of the river network is not relevant.
@@ -43,13 +43,7 @@
 #' E(g)$pass_u <- E(g)$pass_d <- ifelse(!is.na(E(g)$id_dam),0.1,NA)
 #' dist_mat <- B_ij_fun(g, param = 0.9)
 #'
-B_ij_fun <- function(graph,
-                     field_B = "length",
-                     dir_distance_type = "symmetric",
-                     disp_type = "exponential",
-                     param_u ,
-                     param_d ,
-                     param ) {
+B_ij_fun <- function(graph, field_B = "length", dir_distance_type = "symmetric", disp_type = "exponential", param_u , param_d , param ) {
 
   # Error messages
   if( !(field_B %in% igraph::vertex_attr_names(graph)) ) stop(
@@ -108,15 +102,18 @@ B_ij_fun <- function(graph,
       select(.data$from, .data$to, .data$dist)
 
     # Calculate all shortest paths
-    Bij_mat <-  dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id)
+    Bij_mat <- reshape2::melt(
+      dodgr::dodgr_dists(graph_dodgr, from = vertices_id, to = vertices_id) ) %>%
+      dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), n = .data$value) %>%
+      dplyr::select(.data$from, .data$to, .data$n)
 
     # if exponential decay
     if(disp_type == "exponential"){
-      Bij_mat = param^Bij_mat}
+      Bij_mat$B_ij = param^Bij_mat$n }
 
     # if threshold decay
     if(disp_type == "threshold"){
-      Bij_mat = ifelse(Bij_mat <= param, 1, 0) }
+      Bij_mat$B_ij = ifelse(Bij_mat$n < param, 1, 0) }
   }
 
 
@@ -137,7 +134,10 @@ B_ij_fun <- function(graph,
                              mutate(dist = 0))
 
     # Calculate all shortest paths for upstream movement
-    Bij_mat_u <- dodgr::dodgr_dists(graph_dodgr_u, from = vertices_id, to = vertices_id)
+    Bij_mat_u <-reshape2::melt(
+      dodgr::dodgr_dists(graph_dodgr_u, from = vertices_id, to = vertices_id) ) %>%
+      dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), u = .data$value) %>%
+      dplyr::select(.data$from, .data$to, .data$u)
 
     # Create dodgr graph for downstream movement
     graph_dodgr_d <- igraph::as_data_frame(graph, what = "edges") %>%
@@ -151,15 +151,20 @@ B_ij_fun <- function(graph,
                              mutate(dist = 0))
 
     # Calculate all shortest paths for downstream movement
-    Bij_mat_d <- dodgr::dodgr_dists(graph_dodgr_d, from = vertices_id, to = vertices_id)
+    Bij_mat_d <- reshape2::melt(
+      dodgr::dodgr_dists(graph_dodgr_d, from = vertices_id, to = vertices_id) ) %>%
+      dplyr::mutate(from = as.character(.data$Var1), to = as.character(.data$Var2), d = .data$value) %>%
+      dplyr::select(.data$from, .data$to, .data$d)
 
-    # post process matrix if exponential decay
+    Bij_mat <- Bij_mat_u %>% left_join(Bij_mat_d, by = c("from", "to"))
+
+    # if exponential decay
     if(disp_type == "exponential"){
-      Bij_mat = (param_u^Bij_mat_u) * (param_d^Bij_mat_d )}
+      Bij_mat$B_ij = (param_u^Bij_mat$u) * (param_d^Bij_mat$d )}
 
-    # post process matrix
+    # if threshold decay
     if(disp_type == "threshold"){
-      Bij_mat$B_ij = ifelse(Bij_mat_u <= param_u, 1, 0) * ifelse(Bij_mat_d <= param_d, 1, 0)  }
+      Bij_mat$B_ij = ifelse(Bij_mat$u <= param_u, 1, 0) * ifelse(Bij_mat$d <= param_d, 1, 0)  }
   }
 
   return(Bij_mat)
