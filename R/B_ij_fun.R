@@ -159,7 +159,7 @@ B_ij_fun <- function(graph,
 
     # post process matrix
     if(disp_type == "threshold"){
-      Bij_mat$B_ij = ifelse(Bij_mat_u <= param_u, 1, 0) * ifelse(Bij_mat_d <= param_d, 1, 0)  }
+      Bij_mat = ifelse(Bij_mat_u <= param_u, 1, 0) * ifelse(Bij_mat_d <= param_d, 1, 0)  }
   }
 
   return(Bij_mat)

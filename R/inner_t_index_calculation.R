@@ -159,7 +159,7 @@ inner_t_index_calculation <- function(graph,
                                 dplyr::mutate(year = 0))
 
     last_line <- weights_metadata %>%
-      filter(.data$name == name_selection) %>%
+      dplyr::filter(.data$name == name_selection) %>%
       dplyr::filter(year <= year_selection) %>%
       dplyr::arrange(year) %>%
       dplyr::filter(dplyr::row_number() == dplyr::n())
@@ -168,7 +168,6 @@ inner_t_index_calculation <- function(graph,
       "name" = name_selection,
       "year" = year_selection,
       "weight" = last_line$weight
-
     ) %>% list()
 
     return(out) }
@@ -256,7 +255,7 @@ inner_t_index_calculation <- function(graph,
                                pass_confluence = pass_confluence,
                                pass_u = pass_u,
                                pass_d = pass_d,
-                               field_B =  "weight",
+                               field_B =  "field_B",
                                dir_distance_type = dir_distance_type,
                                disp_type = disp_type,
                                param_u = param_u,
@@ -310,7 +309,7 @@ inner_t_index_calculation <- function(graph,
                                                       B_ij_flag = B_ij_flag,
                                                       dir_fragmentation_type = dir_fragmentation_type,
                                                       pass_confluence = pass_confluence,
-                                                      field_B = "length",
+                                                      field_B = "field_B",
                                                       dir_distance_type = dir_distance_type,
                                                       disp_type = disp_type,
                                                       param_u = param_u,
