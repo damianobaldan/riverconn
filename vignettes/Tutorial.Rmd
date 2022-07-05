@@ -32,7 +32,7 @@ oldpar <- par(mfrow = c(1,1))
 par(mfrow=c(1,2))
 plot(g, layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE))
 plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE))
-par <- oldpar
+par(oldpar)
 ```
 
 ### Generalized riverscape connectivity index 
@@ -227,12 +227,14 @@ ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
 ### Assigning network directionality
 The `riverconn` package implements the function `set_graph_directionality` that allows to assign the directionality of the graph once an outlet is defined.
 ```{r direction, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
+oldpar <- par(mfrow = c(1,1))
 par(mfrow=c(1,3))
 g1 <- set_graph_directionality(g, field_name = "Id", outlet_name = "16")
 g2 <- set_graph_directionality(g, field_name = "Id", outlet_name = "5")
 plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.y = FALSE))
 plot(g1, layout = layout_as_tree(as.undirected(g1), root = 16, flip.y = FALSE))
 plot(g2, layout = layout_as_tree(as.undirected(g2), root = 5, flip.y = FALSE))
+par(oldpar)
 ```
 
 

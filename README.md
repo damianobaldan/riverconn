@@ -9,6 +9,12 @@ The latest version of the package is available from GitHub: https://github.com/d
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.1 to 0.3.17
+* vignette updated
+
+0.3.16 to 0.3.17
+* DESCRIPTION file updated
+
 0.3.15 to 0.3.16
 * examples changed
 
