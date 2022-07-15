@@ -24,11 +24,13 @@ set_B_directionality <- function(graph, dir_distance_type = "symmetric", field_B
   # add the length attribute information to the edges information
   graph_e_df <- igraph::as_data_frame(graph, what = "edges") %>%
     dplyr::left_join(graph_v_df %>% rename(from = .data$name), by = "from") %>%
-    dplyr::rename(d_att_from = matches(field_B) ) %>%
-    dplyr::left_join(graph_v_df %>% rename(to = .data$name), by = "to") %>%
-    dplyr::rename(d_att_to = matches(field_B) ) %>%
+    dplyr::mutate(d_att_from =  .[,field_B] ) %>%
+    dplyr::left_join(graph_v_df %>%
+                       rename(to = .data$name) %>%
+                       select(to, contains(field_B, vars = field_B)), by = "to") %>%
+    dplyr::mutate(d_att_to =  .[,field_B] ) %>%
     dplyr::mutate(d_att = (.data$d_att_from + .data$d_att_to) / 2,
-           flag_dir = "n")
+                  flag_dir = "n")
 
   # create intermediate graph that has the distances
   graph_intermediate <- igraph::graph_from_data_frame(d = graph_e_df, vertices = graph_v_df)
