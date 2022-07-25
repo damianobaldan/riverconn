@@ -1,7 +1,7 @@
-#' Calculate index improvement for scenarios of barriers removal
+#' Calculate Reach- and Catchment-scale index improvement for scenarios of barriers removal
 #'
-#' @param graph an object of class 'igraph.' Can be both directed or undirected.
-#' @param ... other arguments passed to the function index_calculation
+#' @param graph an object of class 'igraph'. Can be both directed or undirected.
+#' @param ... other arguments passed to the function 'index_calculation'
 #' @param id_barrier graph edges attribute used to label barriers. Default is \code{"id_barrier"}. Must be of type charachter.
 #' @param barriers_metadata data.frame that must contain a column having the same name as the 'id_barrier' attribute of the graph,
 #' and two columns with the corresponding upstream and downstream improved passabilities

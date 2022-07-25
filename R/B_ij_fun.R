@@ -1,4 +1,4 @@
-#' Calculates B_ij: the coincidence probability due to dispersal
+#' Calculates B_ij: the functional contribution to dispersal probability I_ij
 #'
 #' @param graph an object of class igraph. Can be both directed or undirected.
 #' @param field_B the 'graph' edge attribute to be used to calculate the distance. Default is \code{"length"}.

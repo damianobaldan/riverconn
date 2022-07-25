@@ -1,4 +1,4 @@
-#' Calculates c_ij: the coincidence probability due to the presence of barriers
+#' Calculates c_ij: the structural contribution to the dispersal probability I_ij
 #'
 #' @param graph an object of class igraph. Can be both directed or undirected.
 #' @param dir_fragmentation_type how directionality in c_ij calculations is dealt with:

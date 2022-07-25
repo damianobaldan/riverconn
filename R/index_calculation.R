@@ -10,8 +10,8 @@
 #'  for each reach (\code{index_type = "reach"}), or for each barrier (\code{index_type = "sum"})
 #' @param index_mode indicates if reach index should be calculated based on inbound links ("to") or outbound links ("from").
 #' Only active when \code{index_type = "reach"}.
-#' @param c_ij_flag include in the calculation the barriers.
-#' @param B_ij_flag include in the calculation the dispersal/movement among reaches.
+#' @param c_ij_flag include the presence of barriers in the calculations (c_ij term).
+#' @param B_ij_flag include dispersal/movement among reaches in the calculations (B_ij term).
 #' @param dir_fragmentation_type how directionality in c_ij calculations is dealt with:
 #' \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.
 #' @param pass_confluence a value in the range [0,1] that defines the passability of confluences (default is 1).

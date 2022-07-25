@@ -9,6 +9,9 @@ The latest version of the package is available from GitHub: https://github.com/d
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.18 to 0.3.20
+* updated functions documentation and vignette
+
 0.3.17 to 0.3.18
 * fixed a bug that lead to index_calculation crash when similar vertex attributes are used
 
