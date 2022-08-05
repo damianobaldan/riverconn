@@ -19,9 +19,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Indices to assess riverscape connectivity
 
+The riverconn package is used to calculate indices for river network connectivity. For a review of the indices, see [Jumani et al., 2021](https://doi.org/10.1088/1748-9326/abcb37), while for a list of the functionalities of the package and its architecture, see [Baldan et al., 2022](https://doi.org/10.1016/j.envsoft.2022.105470).
+
+If you use this package, cite it as: https://doi.org/10.1016/j.envsoft.2022.105470.
+
+For a tutorial on how to generate graphs representing rivers from "real world" data see: https://damianobaldan.github.io/riverconn_tutorial/ 
+
 ### The river network as a graph
 
-This package implements algorithms to compute commonly used indices to assess river networks fragmentation. All those indices assume a conceptualization of the river networks as a graph $L = (E,V)$, where vertices (nodes) $V$ represent single reaches, and edges (links) $E$ represent either confluences or longitudinal barriers. 
+This package implements algorithms to compute commonly used indices to assess river networks connectivity All those indices assume a conceptualization of the river networks as a graph $L = (E,V)$, where vertices (nodes) $V$ represent single reaches, and edges (links) $E$ represent either confluences or longitudinal barriers. 
 
 For example, the graphs below represents a river with ten reaches. The graph on the left is directed, i.e. edges are defined for ordered pair of vertices. The graph on the right is undirected, as the order of vertices for the definition of edges is unimportant. Both graph have a 'tree-like' structure, since no loops exist (acyclic graphs): this structure can be used to describe a river system. In both examples, both barriers and confluences are present. The edges between nodes 1 and 2 and 3 and 2 are confluences. The edge between node 2 and 4 is a barrier. 
 
