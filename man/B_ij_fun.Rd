@@ -2,7 +2,7 @@
 % Please edit documentation in R/B_ij_fun.R
 \name{B_ij_fun}
 \alias{B_ij_fun}
-\title{Calculates B_ij: the coincidence probability due to dispersal}
+\title{Calculates B_ij: the functional contribution to dispersal probability I_ij}
 \usage{
 B_ij_fun(
   graph,
@@ -36,7 +36,7 @@ a square matrix of size length(V(graph)) containing B_ij values.
 The matrix is organized with "from" nodes on the columns and "to" nodes on the rows
 }
 \description{
-Calculates B_ij: the coincidence probability due to dispersal
+Calculates B_ij: the functional contribution to dispersal probability I_ij
 }
 \details{
 \code{dir_distance_type = "symmetric"} is to be used when the directionality of the river network is not relevant.

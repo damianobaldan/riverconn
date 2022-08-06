@@ -2,7 +2,7 @@
 % Please edit documentation in R/c_ij_fun.R
 \name{c_ij_fun}
 \alias{c_ij_fun}
-\title{Calculates c_ij: the coincidence probability due to the presence of barriers}
+\title{Calculates c_ij: the structural contribution to the dispersal probability I_ij}
 \usage{
 c_ij_fun(
   graph,
@@ -29,7 +29,7 @@ a square matrix of size length(V(graph)) containing c_ij values.
 The matrix is organized with "from" nodes on the columns and "to" nodes on the rows
 }
 \description{
-Calculates c_ij: the coincidence probability due to the presence of barriers
+Calculates c_ij: the structural contribution to the dispersal probability I_ij
 }
 \details{
 \code{dir_fragmentation_type = "symmetric"} is to be used when the directionality of the river network is not relevant.

@@ -24,11 +24,11 @@ set_B_directionality <- function(graph, dir_distance_type = "symmetric", field_B
   # add the length attribute information to the edges information
   graph_e_df <- igraph::as_data_frame(graph, what = "edges") %>%
     dplyr::left_join(graph_v_df %>% rename(from = .data$name), by = "from") %>%
-    dplyr::mutate(d_att_from =  .[,field_B] ) %>%
+    dplyr::mutate(d_att_from =  .data[[field_B]] ) %>%
     dplyr::left_join(graph_v_df %>%
-                       rename(to = .data$name) %>%
-                       select(to, contains(field_B, vars = field_B)), by = "to") %>%
-    dplyr::mutate(d_att_to =  .[,field_B] ) %>%
+                       dplyr::rename(to = .data$name) %>%
+                       dplyr::select(.data$to, contains(field_B, vars = field_B)), by = "to") %>%
+    dplyr::mutate(d_att_to =  .data[[field_B]] ) %>%
     dplyr::mutate(d_att = (.data$d_att_from + .data$d_att_to) / 2,
                   flag_dir = "n")
 

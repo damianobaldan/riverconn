@@ -188,7 +188,7 @@ index_calculation <- function(graph,
       index_num =  agg_mat %*% v_weights }
 
     if (index_mode == "from"){
-      index_num = t(v_weights) %*% agg_mat
+      index_num = t(t(v_weights) %*% agg_mat)
     }
 
     index_den = sum(v_weights)

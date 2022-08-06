@@ -2,7 +2,7 @@
 % Please edit documentation in R/d_index_calculation.R
 \name{d_index_calculation}
 \alias{d_index_calculation}
-\title{Calculate index improvement for scenarios of barriers removal}
+\title{Calculate Reach- and Catchment-scale index improvement for scenarios of barriers removal}
 \usage{
 d_index_calculation(
   graph,
@@ -17,9 +17,9 @@ d_index_calculation(
 )
 }
 \arguments{
-\item{graph}{an object of class 'igraph.' Can be both directed or undirected.}
+\item{graph}{an object of class 'igraph'. Can be both directed or undirected.}
 
-\item{...}{other arguments passed to the function index_calculation}
+\item{...}{other arguments passed to the function 'index_calculation'}
 
 \item{barriers_metadata}{data.frame that must contain a column having the same name as the 'id_barrier' attribute of the graph,
 and two columns with the corresponding upstream and downstream improved passabilities
@@ -48,7 +48,7 @@ In both cases, both numerator and denominator used in the index calculations are
 The column 'd_index' contains the relative index improvement when each barrier is removed.
 }
 \description{
-Calculate index improvement for scenarios of barriers removal
+Calculate Reach- and Catchment-scale index improvement for scenarios of barriers removal
 }
 \details{
 Setting \code{c_ij_flag = FALSE} (see index_calculation arguments) removes from the calculations the effect of barriers, i.e. the c_{ij} contribution

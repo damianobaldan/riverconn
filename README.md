@@ -9,6 +9,9 @@ The latest version of the package is available from GitHub: https://github.com/d
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+0.3.21 to 0.3.22
+* fixed bug in index_calculation when index_type = "reach" and index_mode = "from"
+
 0.3.20 to 0.3.21
 * updated documentation and vignette
 

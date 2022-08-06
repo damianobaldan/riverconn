@@ -40,9 +40,9 @@ for each reach (\code{index_type = "reach"}), or for each barrier (\code{index_t
 \item{index_mode}{indicates if reach index should be calculated based on inbound links ("to") or outbound links ("from").
 Only active when \code{index_type = "reach"}.}
 
-\item{c_ij_flag}{include in the calculation the barriers.}
+\item{c_ij_flag}{include the presence of barriers in the calculations (c_ij term).}
 
-\item{B_ij_flag}{include in the calculation the dispersal/movement among reaches.}
+\item{B_ij_flag}{include dispersal/movement among reaches in the calculations (B_ij term).}
 
 \item{dir_fragmentation_type}{how directionality in c_ij calculations is dealt with:
 \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.}
