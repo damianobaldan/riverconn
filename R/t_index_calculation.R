@@ -21,6 +21,9 @@
 #' @return a data.frame with a 'year' field and related connectivity index.
 #' If \code{index_type = "reach"}, the data.frame is organized by 'year' and 'name'.
 #'
+#' @references
+#' Baldan, D., Cunillera-Montcusí, D., Funk, A., & Hein, T. (2022). Introducing ‘riverconn’: an R package to assess river connectivity indices. Environmental Modelling & Software, 156, 105470.
+#'
 #' @export
 #'
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
@@ -94,6 +97,8 @@ t_index_calculation <- function(graph = graph,
     NA else list(...)$param_d
   param <- if (is.null(list(...)$param))
     NA else list(...)$param
+  param_l <- if (is.null(list(...)$param_l))
+    NA else list(...)$param_l
 
   # Call the function that calculates the index with the default values
   inner_t_index_calculation(graph = graph,
@@ -118,6 +123,7 @@ t_index_calculation <- function(graph = graph,
                             disp_type = disp_type,
                             param_u = param_u,
                             param_d = param_d,
-                            param = param)
+                            param = param,
+                            param_l = param_l)
 
 }

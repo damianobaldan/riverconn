@@ -28,7 +28,8 @@ inner_d_index_calculation(
   disp_type,
   param_u,
   param_d,
-  param
+  param,
+  param_l
 )
 }
 \arguments{

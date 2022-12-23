@@ -29,6 +29,7 @@
 #' @param param_u check index_calculation function.
 #' @param param_d check index_calculation function.
 #' @param param check index_calculation function.
+#' @param param_ check index_calculation function.
 #'
 #' @return a data.frame with a 'year' field and related connectity index.
 #' If \code{index_type = "reach"}, the data.frame is organized by 'year' and 'name'.
@@ -64,7 +65,8 @@ inner_t_index_calculation <- function(graph,
                                       disp_type ,
                                       param_u ,
                                       param_d ,
-                                      param ){
+                                      param,
+                                      param_l ){
 
   # Error messages if something wrong happens
   if(missing(graph)) stop(
@@ -211,7 +213,8 @@ inner_t_index_calculation <- function(graph,
                             disp_type ,
                             param_u ,
                             param_d ,
-                            param ) {
+                            param,
+                            param_l) {
 
     # Create and update graph edges and vertices
     if(!missing(barriers_metadata)){
@@ -260,7 +263,8 @@ inner_t_index_calculation <- function(graph,
                                disp_type = disp_type,
                                param_u = param_u,
                                param_d = param_d,
-                               param = param)
+                               param = param,
+                               param_l = param_l)
 
     # Output is different for catchment and reach indices (change the catchment output to )
     if (index_type == "full") {
@@ -314,7 +318,8 @@ inner_t_index_calculation <- function(graph,
                                                       disp_type = disp_type,
                                                       param_u = param_u,
                                                       param_d = param_d,
-                                                      param = param)
+                                                      param = param,
+                                                      param_l = param_l)
 
                          }
 
@@ -354,7 +359,8 @@ inner_t_index_calculation <- function(graph,
                                  disp_type = disp_type,
                                  param_u = param_u,
                                  param_d = param_d,
-                                 param = param  ) )
+                                 param = param,
+                                 param_l = param_l) )
   }
 
   return(out_index)

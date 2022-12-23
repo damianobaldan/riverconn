@@ -3,12 +3,18 @@ Git repository for R package rivercon.
 
 Package documentation is available in the vignette and here: https://damianobaldan.github.io/riverconn_tutorial/
 
+Further information on functions implemented in the package and potential uses are described in the paper: https://doi.org/10.1016/j.envsoft.2022.105470
+
 The latest version of the package is available from GitHub: https://github.com/damianobaldan/riverconn
 
 # Installation
 devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
+
+0.3.22 to 0.3.23
+* added disp_type = "leptokurtic" in the index_calculation function
+
 0.3.21 to 0.3.22
 * fixed bug in index_calculation when index_type = "reach" and index_mode = "from"
 

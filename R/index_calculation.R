@@ -20,15 +20,18 @@
 #' @param field_B the 'graph' vertex attribute to be used to calculate the distance. Should not be also an edge attribute.
 #' Default is \code{"length"}.
 #' @param dir_distance_type how directionality in B_ij calculations is dealt with:
-#' \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.
+#' \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details.
 #' @param disp_type the formula used to calculate the probabilities in the B_ij matrix.
-#' Use \code{"exponential"} for exponential decay, or \code{"threshold"} for setting a distance threshold.
+#' Use \code{"exponential"} for exponential decay, \code{"threshold"} for setting a distance threshold,
+#' or \code{"leptokurtic"} for leptokurtic dispersal.
 #' @param param_u  upstream dispersal parameter. Must be a numeric value.
 #' Only used if \code{dir_distance_type = "asymmetric"}. See details below.
 #' @param param_d  downstream dispersal parameter.
 #' Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See below for details.
 #' @param param  dispersal parameter. Must be a numeric value.
 #' Only used if \code{dir_distance_type = "symmetric"}. See details below.
+#' @param param_l the parameters for the leptokurtic dispersal mode. Must be a numeric vector of the
+#' type \code{c(sigma_stat, sigma_mob, p)}. See details below.
 #'
 #' @return If \code{index_type = "full"}, returns a numeric value with the index value (column 'index').
 #' if \code{index_type = c("reach", "sum")}, returns a data frame with the index value (column 'index') for each reach
@@ -52,6 +55,20 @@
 #' The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance and probability.
 #' When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 #' When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
+#'
+#' When \code{disp_type ="leptokurtic"} is selected, a leptokurtic dispersal kernel is used to calculate B_ij.
+#' A leptokurtic dispersal kernel is a mixture of two zero-centered gaussian distributions with standard deviations
+#' \code{sigma_stat} (static part of the population), and \code{sigma_mob} (mobile part of the population).
+#' The probability of dispersal is calculated as: B_ij = p F(0, sigma_stat, d_ij) + (1-p) F(0, sigma_mob, d_ij)
+#' where F is the upper tail of the gaussian cumulative density function.
+#'
+#'
+#' @references
+#' Baldan, D., Cunillera-Montcusí, D., Funk, A., & Hein, T. (2022). Introducing ‘riverconn’: an R package to assess river connectivity indices. Environmental Modelling & Software, 156, 105470.
+#'
+#' Jumani, S., Deitch, M. J., Kaplan, D., Anderson, E. P., Krishnaswamy, J., Lecours, V., & Whiles, M. R. (2020). River fragmentation and flow alteration metrics: a review of methods and directions for future research. Environmental Research Letters, 15(12), 123009.
+#'
+#' Radinger, J., & Wolter, C. (2014). Patterns and predictors of fish dispersal in rivers. Fish and fisheries, 15(3), 456-473.
 #'
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
@@ -81,7 +98,7 @@ index_calculation <- function(graph,
                               field_B = "length",
                               dir_distance_type = "symmetric",
                               disp_type = "exponential",
-                              param_u, param_d, param) {
+                              param_u, param_d, param, param_l) {
 
   # Error messages
   if( !igraph::is_igraph(graph)) stop(
@@ -119,9 +136,10 @@ index_calculation <- function(graph,
 
 
   # What happens if B_ij_flag is false? suppress further warnings
-  if(B_ij_flag == FALSE) {param_u = param_d = param <- NA}
+  if(B_ij_flag == FALSE) {param_u = param_d = param = param_l <- NA}
   if(dir_distance_type == "symmetric") {param_u = param_d <- NA}
   if(dir_distance_type == "asymmetric") {param  <- NA}
+  if(disp_type == "leptokurtic") {param_u = param_d = param  <- NA}
 
   # Set the names of the vertices. By default keep the name argument.
   igraph::V(graph)$name <- igraph::vertex_attr(graph, nodes_id)
@@ -144,7 +162,8 @@ index_calculation <- function(graph,
                          disp_type = disp_type,
                          param_u = param_u,
                          param_d = param_d,
-                         param = param)
+                         param = param,
+                         param_l = param_l)
   }
 
   # 3. Aggregate c_ij and B_ij

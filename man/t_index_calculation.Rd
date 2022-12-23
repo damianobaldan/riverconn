@@ -77,3 +77,6 @@ t_index <- t_index_calculation(g, barriers_metadata = barriers_metadata,
 
 
 }
+\references{
+Baldan, D., Cunillera-Montcusí, D., Funk, A., & Hein, T. (2022). Introducing ‘riverconn’: an R package to assess river connectivity indices. Environmental Modelling & Software, 156, 105470.
+}

@@ -21,7 +21,8 @@ index_calculation(
   disp_type = "exponential",
   param_u,
   param_d,
-  param
+  param,
+  param_l
 )
 }
 \arguments{
@@ -57,10 +58,11 @@ Only active when \code{index_type = "reach"}.}
 Default is \code{"length"}.}
 
 \item{dir_distance_type}{how directionality in B_ij calculations is dealt with:
-\code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details below.}
+\code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details.}
 
 \item{disp_type}{the formula used to calculate the probabilities in the B_ij matrix.
-Use \code{"exponential"} for exponential decay, or \code{"threshold"} for setting a distance threshold.}
+Use \code{"exponential"} for exponential decay, \code{"threshold"} for setting a distance threshold,
+or \code{"leptokurtic"} for leptokurtic dispersal.}
 
 \item{param_u}{upstream dispersal parameter. Must be a numeric value.
 Only used if \code{dir_distance_type = "asymmetric"}. See details below.}
@@ -70,6 +72,9 @@ Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. S
 
 \item{param}{dispersal parameter. Must be a numeric value.
 Only used if \code{dir_distance_type = "symmetric"}. See details below.}
+
+\item{param_l}{the parameters for the leptokurtic dispersal mode. Must be a numeric vector of the
+type \code{c(sigma_stat, sigma_mob, p)}. See details below.}
 }
 \value{
 If \code{index_type = "full"}, returns a numeric value with the index value (column 'index').
@@ -96,6 +101,12 @@ between 'upstream travelled' distance and 'downstream travelled' distance
 The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance and probability.
 When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
+
+When \code{disp_type ="leptokurtic"} is selected, a leptokurtic dispersal kernel is used to calculate B_ij.
+A leptokurtic dispersal kernel is a mixture of two zero-centered gaussian distributions with standard deviations
+\code{sigma_stat} (static part of the population), and \code{sigma_mob} (mobile part of the population).
+The probability of dispersal is calculated as: B_ij = p F(0, sigma_stat, d_ij) + (1-p) F(0, sigma_mob, d_ij)
+where F is the upper tail of the gaussian cumulative density function.
 }
 \examples{
 library(igraph)
@@ -110,4 +121,11 @@ E(g)$pass_u <- E(g)$pass_d <- ifelse(!is.na(E(g)$id_dam),0.1,NA)
 index <- index_calculation(g, param = 0.9)
 
 
+}
+\references{
+Baldan, D., Cunillera-Montcusí, D., Funk, A., & Hein, T. (2022). Introducing ‘riverconn’: an R package to assess river connectivity indices. Environmental Modelling & Software, 156, 105470.
+
+Jumani, S., Deitch, M. J., Kaplan, D., Anderson, E. P., Krishnaswamy, J., Lecours, V., & Whiles, M. R. (2020). River fragmentation and flow alteration metrics: a review of methods and directions for future research. Environmental Research Letters, 15(12), 123009.
+
+Radinger, J., & Wolter, C. (2014). Patterns and predictors of fish dispersal in rivers. Fish and fisheries, 15(3), 456-473.
 }

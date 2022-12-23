@@ -11,7 +11,8 @@ B_ij_fun(
   disp_type = "exponential",
   param_u,
   param_d,
-  param
+  param,
+  param_l
 )
 }
 \arguments{
@@ -23,13 +24,17 @@ B_ij_fun(
 \code{"symmetric"} (i.e. undirected graph) or \code{"asymmetric"} (i.e. directed graph). See details.}
 
 \item{disp_type}{the formula used to calculate the probabilities in the B_ij matrix.
-Use \code{"exponential"} for exponential decay, or \code{"threshold"} for setting a distance threshold.}
+Use \code{"exponential"} for exponential decay, \code{"threshold"} for setting a distance threshold,
+or \code{"leptokurtic"} for leptokurtic dispersal.}
 
 \item{param_u}{the upstream dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See details.}
 
 \item{param_d}{the downstream dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "asymmetric"}. See details.}
 
 \item{param}{the dispersal parameter. Must be a numeric value. Only used if \code{dir_distance_type = "symmetric"}. See details.}
+
+\item{param_l}{the parameters for the leptokurtic dispersal mode. Must be a numeric vector of the
+type \code{c(sigma_stat, sigma_mob, p)}. See details below.}
 }
 \value{
 a square matrix of size length(V(graph)) containing B_ij values.
@@ -48,6 +53,12 @@ between 'upstream travelled' distance and 'downstream travelled' distance
 The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance and probability.
 When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
+
+When \code{disp_type ="leptokurtic"} is selected, a leptokurtic dispersal kernel is used to calculate B_ij.
+A leptokurtic dispersal kernel is a mixture of two zero-centered gaussian distributions with standard deviations
+\code{sigma_stat} (static part of the population), and \code{sigma_mob} (mobile part of the population).
+The probability of dispersal is calculated as: B_ij = p F(0, sigma_stat, d_ij) + (1-p) F(0, sigma_mob, d_ij)
+where F is the upper tail of the gaussian cumulative density function.
 }
 \examples{
 library(igraph)

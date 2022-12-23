@@ -84,7 +84,8 @@ inner_d_index_calculation <- function(graph,
                                       disp_type ,
                                       param_u ,
                                       param_d,
-                                      param ){
+                                      param,
+                                      param_l){
 
   # Error messages if something wrong happens
   if(missing(graph)) stop(
@@ -134,6 +135,7 @@ inner_d_index_calculation <- function(graph,
   if(missing(param_u)) {param_u  <- NA}
   if(missing(param_d)) {param_d  <- NA}
   if(missing(param)) {param  <- NA}
+  if(missing(param_l)) {param_l  <- NA}
 
   ##### function to calculate improvements #####
   one_barrier_removal_index <- function(barrier_to_remove,
@@ -148,7 +150,7 @@ inner_d_index_calculation <- function(graph,
                                         pass_u = "pass_u", pass_d = "pass_d",
                                         field_B = "length", dir_distance_type = "symmetric",
                                         disp_type = "exponential",
-                                        param_u = NA, param_d = NA, param = NA){
+                                        param_u = NA, param_d = NA, param = NA, param_l = NA){
 
     # Error messages
     if(!(barrier_to_remove %in% barriers_metadata$id_barrier)) stop(
@@ -179,7 +181,8 @@ inner_d_index_calculation <- function(graph,
                                disp_type = disp_type,
                                param_u = param_u,
                                param_d = param_d,
-                               param = param)
+                               param = param,
+                               param_l = param_l)
 
     # Output is different for catchment and reach indices
     if (index_type == "full") {
@@ -230,7 +233,8 @@ inner_d_index_calculation <- function(graph,
                                                                     disp_type = disp_type,
                                                                     param_u = param_u,
                                                                     param_d = param_d,
-                                                                    param = param)
+                                                                    param = param,
+                                                                    param_l = param_l)
                            return(out_foreach)
                          }
 
@@ -268,7 +272,8 @@ inner_d_index_calculation <- function(graph,
                                  disp_type = disp_type,
                                  param_u = param_u,
                                  param_d = param_d,
-                                 param = param)  )
+                                 param = param,
+                                 param_l = param_l)  )
   }
 
 
@@ -289,7 +294,8 @@ inner_d_index_calculation <- function(graph,
                                                 disp_type = disp_type,
                                                 param_u = param_u,
                                                 param_d = param_d,
-                                                param = param) %>%
+                                                param = param,
+                                                param_l = param_l) %>%
     rename(num_bl = .data$num, den_bl = .data$den, index_bl = .data$index)
 
   # Different outputs for reach full and sum

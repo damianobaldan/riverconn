@@ -39,6 +39,9 @@
 #' When \code{disp_type ="exponential"} (see index_calculation arguments), those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 #' When \code{disp_type ="threshold"} (see index_calculation arguments), those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 #'
+#' @references
+#' Baldan, D., Cunillera-Montcusí, D., Funk, A., & Hein, T. (2022). Introducing ‘riverconn’: an R package to assess river connectivity indices. Environmental Modelling & Software, 156, 105470.
+#'
 #' @importFrom dplyr select filter summarize left_join rename mutate rename_with contains matches group_by
 #' @importFrom igraph E V
 #' @import doParallel
@@ -111,6 +114,8 @@ d_index_calculation <- function(graph,
     NA else list(...)$param_d
   param <- if (is.null(list(...)$param))
     NA else list(...)$param
+  param_l <- if (is.null(list(...)$param_l))
+    NA else list(...)$param_l
 
   # Call the function that calculates the index with the default values
   inner_d_index_calculation(graph = graph,
