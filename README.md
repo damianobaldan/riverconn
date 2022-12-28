@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.23 to 0.3.24
+* updated documentation for disp_type = "leptokurtic"
+
 0.3.22 to 0.3.23
 * added disp_type = "leptokurtic" in the index_calculation function
 
