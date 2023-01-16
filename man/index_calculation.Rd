@@ -96,9 +96,10 @@ The setting \code{dir_distance_type = "symmetric"} is to be used when the direct
 The distance between reaches midpoints is calculated for each couple of reaches.
 The setting \code{dir_distance_type = "asymmetric"} is to be used when the directionality is relevant.
 The distance between reaches midpoints is calculated for each couple of reaches and splitted
-between 'upstream travelled' distance and 'downstream travelled' distance
+between 'upstream travelled' distance and 'downstream travelled' distance.
+When \code{disp_type ="leptokurtic"} is selected, symmetric dispersal is assumed.
 
-The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance and probability.
+The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance (d_ij) and probability (B_ij).
 When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
 When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 
