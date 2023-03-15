@@ -2,22 +2,24 @@
 title: "riverconn vignette"
 author: "Damiano Baldan"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: TRUE
+    number_sections: TRUE
 vignette: >
-  %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{riverconn vignette}
-  %\usepackage[UTF-8]{inputenc}
-toc: TRUE
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 urlcolor: blue
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(crop = FALSE)
 
 ```
 
 
-## Indices to assess riverscape connectivity
+# Indices to assess riverscape connectivity
 
 The riverconn package is used to calculate indices for river network connectivity. For a review of the indices, see [Jumani et al., 2021](https://doi.org/10.1088/1748-9326/abcb37), while for a list of the functionalities of the package and its architecture, see [Baldan et al., 2022](https://doi.org/10.1016/j.envsoft.2022.105470).
 
@@ -25,7 +27,7 @@ If you use this package, cite it as: https://doi.org/10.1016/j.envsoft.2022.1054
 
 For a tutorial on how to generate graphs representing rivers from "real world" data see: https://damianobaldan.github.io/riverconn_tutorial/ 
 
-### The river network as a graph
+## The river network as a graph
 
 This package implements algorithms to compute commonly used indices to assess river networks connectivity All those indices assume a conceptualization of the river networks as a graph $L = (E,V)$, where vertices (nodes) $V$ represent single reaches, and edges (links) $E$ represent either confluences or longitudinal barriers. 
 
@@ -41,12 +43,12 @@ plot(as.undirected(g), layout = layout_as_tree(as.undirected(g), root = 8, flip.
 par(oldpar)
 ```
 
-### Generalized riverscape connectivity index 
+## Generalized riverscape connectivity index 
 
 river networks-level connectivity can be expressed in terms of coincidence probability (Pascual-Hortal and Saura, 2006), i.e. the probability that two random points in a river network are connected. Once the dispersal probability $I_{ij}$ is defined for each couple of $i,j$ nodes in the graph, generalized connectivity indices for catchment and reach scales can be calculated.
 
 
-##### Catchment Connectvity index
+### Catchment Connectvity index
 
 The catchment-scale connectivity index (CCI) is calculated as:
 
@@ -55,19 +57,21 @@ $$
 $$
 Where $w_i$ and $w_j$ are some node-level attributes (weights), and $W$ is the sum of sum of the nodes weights for the whole river networks.
 
-#### Reach Connectivity Index
+### Reach Connectivity Index
 The reach-scale connectivity index (RCI) is calculated by limiting the summation to all the connections to the single node $i$.
 $$
 \ RCI_i = \sum_{j = 1}^{n} I_{ij} \frac{w_j}{W}
 $$
-#### Node weights
-Nodes weights can be arbitrarily chosen. Common features used are the reach length ($l_i$), area($A_i$), or volume($V_i$). Alternatively, the habitat suitability index (HSI) can be used, defined as the ratio of length/area that is suitable for a specific organism.
-$$
-\ HSI_i = \frac{{l}_{i,suitable}}{l_i} \mbox{  ;         } HSI_i = \frac{{A}_{i,suitable}}{A_i}
-$$
-Here ${l}_{i,suitable}$ and ${A}_{i,suitable}$ are the fractions of length/area of reach $i$ that are suitable, and are usually refferred to as weighted suitable length or weighted suitable area.
+Where $w_j$ are some node-level attributes (weights), and $W$ is the sum of sum of the nodes weights for the whole river networks.
 
-### Dispersal probability
+### Node weights
+Nodes weights can be arbitrarily chosen. Common features used are the reach length $l_i$, area $A_i$, or volume $V_i$. Alternatively, the habitat suitability index (HSI) can be used, defined as the ratio of length/area that is suitable for a specific organism.
+$$
+\ HSI_i = \frac{{l}_{i,suitable}}{l_i}
+$$
+Here ${l}_{i,suitable}$ is the fraction of reach length of reach $i$ that are suitable, and are usually referred to as weighted suitable length or weighted suitable area.
+
+## Dispersal probability
 The dispersal probability depends on several factors: the presence of barriers between nodes $i$ and $j$ , the presence of suitable habitats in nodes $i$ and $j$ and alongside the connection, and the distance between $i$ and $j$. The dispersal probability $I_{ij}$ is thus determined by several contributions. Those contributions are multiplied:
 
 $$
@@ -75,7 +79,7 @@ $$
 $$
 where $c_{ij}$ accounts for the structural connectivity, i.e. it depends exclusively on the presence of barriers between nodes $i$ and $j$, and  $B_{ij}$ accounts for the functional connectivity, i.e. it depends exclusively on the distance and the organisms movement/dispersal abilities.
 
-##### Structural connectivity
+### Structural connectivity
 The structural connectivity depends on the presence of barriers between nodes $i$ and $j$, and can be expressed as a function of the types of barriers present in the path expressed as a sequence of passability values. The passability $p_m$ for the $m$-th barrier is defined as the probability that the reaches immediately upstream and downstream the barrier $m$ are connected.
 
 If the flow directionality is not relevant (i.e. the river graph can be conceptualized as undirected),
@@ -97,8 +101,7 @@ p_m^d & \mbox{if barrier m is encountered moving downstream in the path from i t
 $$
 If $i$ and $j$ are located in different sub-catchments, the path from i to j will be moving downstream in some sections and upstream in some other secions: this $p_m^{eq}$ definition ensures the retained passability value is consistent with the directionality of the path from $i$ to $j$ (i.e. $c_{ij} \ne c_{ji}$)
 
-
-##### Functional connectivity
+### Functional connectivity
 
 Functional connectivity can be calculated as a function of the distance between reaches. An exponential dispersal kernel can be used:
 
@@ -117,7 +120,7 @@ Both definitions can be easily adapted to asymmetric dispersal by defining $PD_{
 The distance $d_{ij}$ can be either the geometric distance, or any other measure of effective distance (e.g. $d_{ij} / (1-{HSI}_{ij})$ provides an estimate of effective distance that depends on the habitat suitability index between reaches $i$ and $j$)
 
 
-### Prioritization of barriers 
+## Prioritization of barriers 
 All the defined connectivity index can be used to prioritize barriers removal with a 'leave-one-out' approach. For each barrier, the index $dCCI$ can be defined as:
 $$
 \ dCCI_{m} = 100 \frac{CCI - CCI_{m, removed}}{GCI} 
@@ -126,9 +129,14 @@ where $CCI$ is the generalized connectivity index calculated for the original ri
 
 An alternative version of the index for prioritizing barriers can be calculated as the decrease in river networks connectivity after a single barrier is implemented, with a 'add-one' approach.
 
-### Time-dependent connectivity
+## Time-dependent connectivity
 When barriers metadata on the year of construction and the year of implementation of mitigation measures are available, a time trajectory of GCI can be computed (e.g. Segurado et al., 2013).
 
+# Preprocessing of input data 
+
+This package relies heavily on the functionalities of the `igraph` package. The `igraph` package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy construction of `igraph` objects based on edges and vertices lists or adjacency matrices. The book 'Statistical Analysis of Network Data with R' by Kolaczyk and Csardi (2014) offers a comprehensive tutorial on the possibilities offered by the 'igraph' package.
+
+A more comprehensive tutorial, including a real-world case study can be found here: https://damianobaldan.github.io/riverconn_tutorial/
 
 ## Preliminary steps
 
@@ -142,14 +150,7 @@ library(riverconn)
 library(doParallel)
 ```
 
-
-## Preprocessing of input data 
-
-This package relies heavily on the functionalities of the `igraph` package. The `igraph` package implements routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more. The package allows for easy construction of `igraph` objects based on edges and vertices lists or adjacency matrices. The book 'Statistical Analysis of Network Data with R' by Kolaczyk and Csardi (2014) offers a comprehensive tutorial on the possibilities offered by the 'igraph' package.
-
-A more comprehensive tutorial, including a real-world case study can be found here: https://damianobaldan.github.io/riverconn_tutorial/
-
-### Input class 'igraph' object
+## Input class 'igraph' object
 
 All the functions implemented in this package use as main input an object of class `igraph`. There are different ways an object of class `igraph` can be created. A symbolic sequence of edges can be used with the function `graph_from_literal` for small, toy graphs.  
 
@@ -183,7 +184,7 @@ igraph::as_adjacency_matrix(g)
 ```
 
 
-### Decorating the class 'igraph' object
+## Decorating the class 'igraph' object
 Once the structure of the network is defined, the graph can be decorated with edges and vertices attributes. Attributes can be either added directly to the graph or joined to the edges and vertices data frame. edges and vertices attributes are saved as vectors, so common, data.frame-like operations are possible.
 
 Here we add the dam information as edge attribute, including the field 'id_dam', and the reach information data as vertices attributes, including the length and the corresponding habitat suitability index.
@@ -203,7 +204,7 @@ V(g)
 ```
 
 
-### Visualizing the 'igraph' object
+## Visualizing the 'igraph' object
 The `ggnetwork` library can be used to plot a igraph object with `tidyverse`-friendly functions. The function `ggnetwork` is used to fortify `igraph` objects with a specified layout. Here the tree layout is used, but for real river networks the coordinates of the reaches centroids can be used.
 ```{r plot igraph, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 gg0 <- ggnetwork(g, layout =  layout_as_tree(g %>% as.undirected, root = 16), scale = FALSE)
@@ -230,7 +231,7 @@ ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
 ```
 
 
-### Assigning network directionality
+## Assigning network directionality
 The `riverconn` package implements the function `set_graph_directionality` that allows to assign the directionality of the graph once an outlet is defined.
 ```{r direction, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
 oldpar <- par(mfrow = c(1,1))
@@ -244,7 +245,7 @@ par(oldpar)
 ```
 
 
-## Indices calculation
+# Indices calculation
 
 The function `index_calcualtion` is used to calculate all the nuances of the CCI and RCI
 
@@ -307,7 +308,7 @@ index_calculation(g, c_ij_flag = FALSE,
 
 ```
 
-## Prioritization calculation and visualization
+# Barriers prioritization calculation and visualization
 
 The function `index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the 'dams_metadata' object. Parallel calculations can be activated.
 
@@ -366,7 +367,7 @@ ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
 ```
 
 
-## References and key literature
+# References and key literature
 
 Belletti, Barbara, et al. “More than one million barriers fragment Europe’s rivers.” Nature 588.7838 (2020): 436-441.
 

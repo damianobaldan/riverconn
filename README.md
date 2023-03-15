@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.25 to 0.3.26
+* fixed issue in vignette visualization
+
 0.3.24 to 0.3.25
 * fixed example in d_index_calculation function
 
