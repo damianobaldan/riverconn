@@ -253,7 +253,7 @@ index_calculation <- function(graph,
       dplyr::rename(name = .data$to) %>%
       dplyr::left_join(g_v_df)
 
-    index = sum(g_e_df$pass*g_e_df$UP_CELLS) / sum(g_e_df$UP_CELLS)
+    index = sum(g_e_df$pass*g_e_df$weight_node) / sum(g_e_df$weight_node)
 
   }
 
