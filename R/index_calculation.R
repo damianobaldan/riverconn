@@ -225,6 +225,12 @@ index_calculation <- function(graph,
   # If the summation index is to be calculated
   if (index_type == "sum") {
 
+    # Error message when dams are not clearly identified
+    if( !("type" %in% igraph::edge_attr_names(graph)) ) stop(
+      "the graph's edges must contain the 'type' attribute with labels 'dam' or
+      'link' depending on the role of the edge (barrier or confluence).
+      Essential to calculate CAFI properly.")
+
     # Rename the passabilities based on user names
     # Set the names of the vertices. By default keep the name argument.
     igraph::E(graph)$pass_u <- igraph::get.edge.attribute(graph, pass_u)
@@ -248,12 +254,13 @@ index_calculation <- function(graph,
       ~"weight_node", contains(weight))
 
     g_e_df <- igraph::as_data_frame(graph, what = "edges") %>%
+      dplyr::filter(.data$type == "dam") %>%
       dplyr::mutate(pass = 1 - .data$pass ) %>%
-      dplyr::select(.data$to, .data$pass) %>%
-      dplyr::rename(name = .data$to) %>%
+      dplyr::select(.data$from, .data$pass) %>%
+      dplyr::rename(name = .data$from) %>%
       dplyr::left_join(g_v_df)
 
-    index = sum(g_e_df$pass*g_e_df$weight_node) / sum(g_e_df$weight_node)
+    index = sum(g_e_df$pass*g_e_df$weight_node / max(g_v_df$weight_node) )
 
   }
 

@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.27 to 0.3.28
+* fixed another bug in index_calculation for index_type = "sum"; added error message
+
 0.3.26 to 0.3.27
 * fixed bug in index_calculation for index_type = "sum"
 
