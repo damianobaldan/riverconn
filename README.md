@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.28 to 0.3.29
+* fixed issue with param_l in inner_d_index_calculation function 
+
 0.3.27 to 0.3.28
 * fixed another bug in index_calculation for index_type = "sum"; added error message
 

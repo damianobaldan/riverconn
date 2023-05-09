@@ -141,6 +141,7 @@ d_index_calculation <- function(graph,
                             disp_type = disp_type,
                             param_u = param_u,
                             param_d = param_d,
+                            param_l = param_l,
                             param = param)
 
 }
