@@ -144,7 +144,6 @@ A more comprehensive tutorial, including a real-world case study can be found he
 library(igraph)
 library(dplyr)
 library(tidyr)
-library(ggnetwork)
 library(viridis)
 library(riverconn)
 library(doParallel)
@@ -201,33 +200,6 @@ V(g)$HSI <- c(0.2, 0.1, 0.3, 0.4, 0.5, 0.5, 0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0
 V(g)$Id <- V(g)$name
 V(g)
 
-```
-
-
-## Visualizing the 'igraph' object
-The `ggnetwork` library can be used to plot a igraph object with `tidyverse`-friendly functions. The function `ggnetwork` is used to fortify `igraph` objects with a specified layout. Here the tree layout is used, but for real river networks the coordinates of the reaches centroids can be used.
-```{r plot igraph, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
-gg0 <- ggnetwork(g, layout =  layout_as_tree(g %>% as.undirected, root = 16), scale = FALSE)
-
-ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_nodes(alpha = 0.3) +
-  geom_edges(alpha = 0.5, 
-             arrow = arrow(length = unit(10, "pt"), type = "closed"), 
-             aes(color = type)) + 
-  scale_color_viridis(discrete = TRUE)+
-  geom_nodetext(aes(label = name), fontface = "bold") +
-  theme_blank()
-
-```
-
-This function can be used to display all the graph attributes.
-```{r plot igraph 2, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
-ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_edges(alpha = 0.5, 
-             arrow = arrow(length = unit(10, "pt"), type = "open")) +
-  geom_nodes(aes(size = length, color = HSI)) +
-  scale_color_viridis()+
-  theme_blank()
 ```
 
 
@@ -308,7 +280,7 @@ index_calculation(g, c_ij_flag = FALSE,
 
 ```
 
-# Barriers prioritization calculation and visualization
+# Barriers prioritization calculation
 
 The function `index_calcualtion` allows to calculate the CCI and RCI changes when barriers are removed. Metadata on which dams are to be removed and how the passability changes are to be provided in the 'dams_metadata' object. Parallel calculations can be activated.
 
@@ -330,41 +302,6 @@ d_index_calculation(g,
 
 ```
 
-
-Calculated index can be joined with the original graph and plotted to check spatial patterns.
-```{r plot join, message = FALSE, collapse = TRUE, width = 60, warning = FALSE}
-
-d_index <- d_index_calculation (g,
-                                barriers_metadata = dams_metadata,
-                                id_barrier = "id_dam",
-                                parallel = FALSE, ncores = 3,
-                                param_u = 10,  param_d = 10,
-                                index_type = "full",
-                                B_ij_flag = FALSE)
-
-# Check edged and nodes attributes
-g_v_df <- igraph::as_data_frame(g, what = "vertices")
-g_v_df
-g_e_df <- igraph::as_data_frame(g, what = "edges") %>%
-  left_join(d_index, by = "id_dam")
-g_e_df
-
-# Recreate graph
-g <- igraph::graph_from_data_frame(d = g_e_df, vertices = g_v_df)
-g 
-
-# Fortify and plot graph
-gg0 <- ggnetwork(g, layout =  layout_as_tree(g %>% as.undirected, root = 16), scale = FALSE)
-ggplot(gg0, aes(x = x, y = y, xend = xend, yend = yend)) +
-  geom_edges(alpha = 0.5, size = 3,
-             arrow = arrow(length = unit(10, "pt"), type = "open"), 
-             aes(color = d_index)) +
-  geom_nodes() +
-  scale_color_viridis()+
-  theme_blank()
-
-
-```
 
 
 # References and key literature

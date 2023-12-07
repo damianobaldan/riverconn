@@ -27,7 +27,6 @@ Imports:
     reshape2
 Suggests:
     knitr,
-    ggnetwork,
     ggplot2,
     viridis,
     rmarkdown

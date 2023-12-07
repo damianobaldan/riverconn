@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.29 to 0.3.30
+* removed ggnetwork dependency
+
 0.3.28 to 0.3.29
 * fixed issue with param_l in inner_d_index_calculation function 
 
