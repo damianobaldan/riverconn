@@ -81,8 +81,6 @@ weight was changed. This data frame can be obtained from easily-formatted data w
 \item{param_d}{check index_calculation function.}
 
 \item{param}{check index_calculation function.}
-
-\item{param_}{check index_calculation function.}
 }
 \value{
 a data.frame with a 'year' field and related connectity index.

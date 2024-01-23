@@ -96,10 +96,10 @@ The column 'd_index' contains the relative index improvement when each barrier i
 Calculate index improvement for scenarios of barriers removal - function not for export
 }
 \details{
-Setting \code{c_ij_flag = FALSE} removes from the calculations the effect of barriers, i.e. the c_{ij} contribution
+Setting \code{c_ij_flag = FALSE} removes from the calculations the effect of barriers, i.e. the c_ij contribution
 is not used in the calculation of the index.
 Setting \code{B_ij_flag = FALSE} removes from the calculations the effect of movement/dispersal,
-i.e. the B_{ij} contribution is not used in the calculation of the index.
+i.e. the B_ij contribution is not used in the calculation of the index.
 Note that it is not possible to set both \code{c_ij_flag = FALSE} and \code{B_ij_flag = FALSE}.
 
 The setting \code{dir_distance_type = "symmetric"} is to be used when the directionality of the river network is not relevant.
@@ -109,7 +109,7 @@ The distance between reaches midpoints is calculated for each couple of reaches 
 between 'upstream travelled' distance and 'downstream travelled' distance
 
 The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance and probability.
-When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
+When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^d_ij.
 When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 }
 \keyword{internal}

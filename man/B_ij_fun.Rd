@@ -52,7 +52,7 @@ between 'upstream travelled' distance and 'downstream travelled' distance.
 When \code{disp_type ="leptokurtic"} is selected, symmetric dispersal is assumed.
 
 The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance (d_ij) and probability (B_ij).
-When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
+When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^d_ij.
 When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 
 When \code{disp_type ="leptokurtic"} is selected, a leptokurtic dispersal kernel is used to calculate B_ij.
