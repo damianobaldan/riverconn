@@ -40,10 +40,10 @@
 #' @export
 #'
 #' @details
-#' Setting \code{c_ij_flag = FALSE} removes from the calculations the effect of barriers, i.e. the c_{ij} contribution
+#' Setting \code{c_ij_flag = FALSE} removes from the calculations the effect of barriers, i.e. the c_ij contribution
 #' is not used in the calculation of the index.
 #' Setting \code{B_ij_flag = FALSE} removes from the calculations the effect of movement/dispersal,
-#' i.e. the B_{ij} contribution is not used in the calculation of the index.
+#' i.e. the B_ij contribution is not used in the calculation of the index.
 #' Note that it is not possible to set both \code{c_ij_flag = FALSE} and \code{B_ij_flag = FALSE}.
 #'
 #' The setting \code{dir_distance_type = "symmetric"} is to be used when the directionality of the river network is not relevant.
@@ -54,7 +54,7 @@
 #' When \code{disp_type ="leptokurtic"} is selected, symmetric dispersal is assumed.
 #'
 #' The 'param_u', 'param_d', and 'param' values are interpreted differently based on the formula used to relate distance (d_ij) and probability (B_ij).
-#' When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^{d_ij}.
+#' When \code{disp_type ="exponential"}, those values are used as the base of the exponential dispersal kernel: B_ij = param^d_ij.
 #' When \code{disp_type ="threshold"}, those values are used to define the maximum dispersal length: B_ij = ifelse(d_ij < param, 1, 0).
 #'
 #' When \code{disp_type ="leptokurtic"} is selected, a leptokurtic dispersal kernel is used to calculate B_ij.

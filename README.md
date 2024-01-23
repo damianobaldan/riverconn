@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.30 to 0.3.31
+* fixed CRAN notes
+
 0.3.29 to 0.3.30
 * removed ggnetwork dependency
 

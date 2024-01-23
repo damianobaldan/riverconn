@@ -29,7 +29,6 @@
 #' @param param_u check index_calculation function.
 #' @param param_d check index_calculation function.
 #' @param param check index_calculation function.
-#' @param param_ check index_calculation function.
 #'
 #' @return a data.frame with a 'year' field and related connectity index.
 #' If \code{index_type = "reach"}, the data.frame is organized by 'year' and 'name'.
