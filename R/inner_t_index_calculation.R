@@ -235,7 +235,7 @@ inner_t_index_calculation <- function(graph,
         dplyr::filter(year == t)
 
       river_graph_df_v <- igraph::as_data_frame(river_graph, what = "vertices") %>%
-        dplyr::select(.data$name, .data$field_B) %>%
+        dplyr::select( .data$name, .data$field_B ) %>%
         dplyr::left_join(weights_metadata_sliced, by = "name")
 
     } else {river_graph_df_v <- igraph::as_data_frame(river_graph, what = "vertices")}

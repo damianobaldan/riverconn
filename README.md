@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.32 to 0.3.33
+* fixed issue with weight_metadata object in inner_t_index_calculation
+
 0.3.31 to 0.3.32
 * default parallel computation option switched to FALSE
 
