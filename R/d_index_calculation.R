@@ -71,7 +71,7 @@ d_index_calculation <- function(graph,
                                 pass_u_updated = "pass_u_updated",
                                 pass_d_updated = "pass_d_updated",
                                 mode = "leave_one_out", # "add_one", # sequence
-                                parallel = TRUE,
+                                parallel = FALSE,
                                 ncores){
 
 

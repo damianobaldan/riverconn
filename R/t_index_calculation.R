@@ -64,7 +64,7 @@ t_index_calculation <- function(graph = graph,
                                 weights_metadata,
                                 weight = "length",
                                 nodes_id = "name",
-                                parallel = TRUE,
+                                parallel = FALSE,
                                 ncores){
 
 

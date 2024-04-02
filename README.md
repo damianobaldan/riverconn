@@ -12,6 +12,9 @@ devtools::install_github("damianobaldan/riverconn", build_vignettes = TRUE)
 
 # Changelog
 
+0.3.31 to 0.3.32
+* default parallel computation option switched to FALSE
+
 0.3.30 to 0.3.31
 * fixed CRAN notes
 
